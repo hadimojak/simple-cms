@@ -1,0 +1,25 @@
+{
+  "name": "simple-cms",
+  "version": "1.0.0",
+  "description": "very simple node cms for publishing posts",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hadimojak/simple-cms.git"
+  },
+  "keywords": [
+    "cms"
+  ],
+  "author": "hadimojak",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hadimojak/simple-cms/issues"
+  },
+  "homepage": "https://github.com/hadimojak/simple-cms#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
