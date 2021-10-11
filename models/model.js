@@ -1,60 +1,104 @@
-const { sequelize, DataTypes, Sequelize, Model } = require('./sequelize');
+const { sequelize, DataTypes, Sequelize, Model } = require('../sequelize');
 
 //for example i create User and Product models and although UserHistory and ProductHistory models and 
 //id (primary key) are build automaticly with sequelize
-class User extends Model { };
-User.init({
+class Admin extends Model { };
+Admin.init({
     firstName: {
         type: DataTypes.STRING,
-        allowNull: true,
+        notNull: true,
+        allowNull: false,
+        notEmpty: true
     }, lastName: {
         type: DataTypes.STRING,
-        allowNull: true
+        notNull: true,
+        allowNull: false,
+        notEmpty: true
+    }, email: {
+        type: DataTypes.STRING,
+        notNull: true,
+        allowNull: false,
+        isEmail: true,
+        notEmpty: true
+    }, number: {
+        type: DataTypes.INTEGER,
+        notNull: true,
+        allowNull: false,
+        isNumeric: true,
+        notEmpty: true,
+    }, isAdmin: {
+        type: DataTypes.BOOLEAN,
+        notNull: true,
+        allowNull: false,
+        notEmpty: false,
+        defaultValue: true
+
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
 },
     {
         sequelize: sequelize, freezeTableName: true,
-        modelName: "user", paranoid: true
+        modelName: "admin", paranoid: true
     }
 );
 
 
-class Product extends Model { };
-Product.init({
-    title: {
+class Editor extends Model { };
+Editor.init({
+    firstName: {
         type: DataTypes.STRING,
-        allowNull: true,
-    }, price: {
+        notNull: true,
+        allowNull: false,
+        notEmpty: true
+    }, lastName: {
+        type: DataTypes.STRING,
+        notNull: true,
+        allowNull: false,
+        notEmpty: true
+    }, email: {
+        type: DataTypes.STRING,
+        notNull: true,
+        allowNull: false,
+        isEmail: true,
+        notEmpty: true
+    }, number: {
         type: DataTypes.INTEGER,
-        allowNull: true
-    }, store: {
-        type: DataTypes.INTEGER,
-        allowNull: true
+        notNull: true,
+        allowNull: false,
+        isNumeric: true,
+        notEmpty: true
+    }, isAdmin: {
+        type: DataTypes.BOOLEAN,
+        notNull: true,
+        allowNull: false,
+        notEmpty: false,
+        defaultValue: false
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
-}, {
-    sequelize: sequelize, freezeTableName: true,
-    modelName: "product", paranoid: true
-}
+},
+    {
+        sequelize: sequelize, freezeTableName: true,
+        modelName: "editor", paranoid: true
+    }
 );
 
-User.hasMany(Product);
-Product.belongsTo(User);
+Admin.hasMany(Editor);
+Editor.belongsTo(Admin);
+
 
 let justOnce = true;
 if (justOnce) {
     (async () => {
-        await User.sync({ alter: true });
-        await Product.sync({ alter: true });
+        await Admin.sync({ alter: true });
+        await Editor.sync({ alter: true });
     })();
 
     justOnce = false;
 }
-console.log(justOnce)
+console.log(justOnce);
 
-const models = [User, Product];
+const models = [Admin, Editor];
 
-module.exports = { models, User, Product };
+module.exports = { models, Admin, Editor };
