@@ -1,9 +1,17 @@
 exports.getEditorProfile = (req, res, next) => {
-    res.json({ data: 'editor profile' });
+    const editorId = req.params.editorId;
+    res.render('editor/editorHome');
 };
 
-exports.addPost = (req, res, next) => {
-    res.json({ data: 'post added' });
+exports.getAddPost = (req, res, next) => {
+    const editorId = req.params.editorId;
+
+    res.json({ data: `get add posts ${editorId} ` });
+};
+exports.postAddPost = (req, res, next) => {
+    const editorId = req.params.editorId;
+
+    res.json({ data: `get add posts ${editorId} ` });
 };
 exports.deletePost = (req, res, next) => {
     res.json({ data: 'post deleted' });
@@ -11,6 +19,7 @@ exports.deletePost = (req, res, next) => {
 exports.getEditPost = (req, res, next) => {
     res.json({ data: 'getign post update from' });
 };
-exports.updatePost = (req, res, next) => {
-    res.json({ data: 'post updated' });
+exports.postEditPost = (req, res, next) => {
+    res.json({ data: 'getign post update from' });
 };
+

@@ -8,15 +8,16 @@ const editorRoutes = require('./routes/editor');
 const endUserRoutes = require('./routes/endUser');
 const installRoutes = require('./routes/installer');
 
+process.setMaxListeners(50);
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname+ '/public'));
 
 // app.use(installRoutes);
 app.use(authRoutes);
-app.use('/admin', adminRoutes);
-// app.use('/editor', editorRoutes);
+app.use(adminRoutes);
+app.use(editorRoutes);
 // app.use(endUserRoutes);
 
 app.listen(3000, () => {

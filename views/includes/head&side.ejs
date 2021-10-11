@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/custome.css">
+    <title><%= pageTitle %> </title>
+</head>
+
+<body>
+
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-info fixed-right text-center">
+
+
+            <div class="collapse navbar-collapse ">
+                <a class="navbar-brand mx-2" href="/admin">اسم کمپانی</a>
+                <a class="navbar-brand mx-2 " style="width: 5rem" href="/admin"><img
+                        class=" border border-thickness border-warning rounded" src="/pictures/indian.png"
+                        alt="نمونه لوگو" width="80" height="80"></a>
+                <ul class="navbar-nav ">
+
+                    <li class="nav-item ">
+                        <div class="dropdown">
+                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/editors' ? 'active' : '' %>" href="#" type="button"
+                                data-toggle="dropdown">کاربر ها</a>
+                            <div class="dropdown-content">
+                                <a href="/admin/editors">کاربر ها </a>
+                                <a href="/admin/addEditor">کاربر جدید</a>
+                            </div>
+                        </div>
+                        <hr class="my-0">
+                    </li>
+
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <a class="nav-link h7 my-0 dropdown-toggle" href="#" type="button"
+                                data-toggle="dropdown">فایل ها</a>
+                            <div class="dropdown-content">
+                                <a href="#">فایل ها </a>
+                                <a href="#">فایل جدید</a>
+                            </div>
+                        </div>
+                        <hr class="my-0">
+                    </li>
+                    <li class=" nav-item">
+                        <div class="dropdown">
+                            <a class="nav-link h7 my-0 dropdown-toggle" href="#" type="button"
+                                data-toggle="dropdown">فهرست ها</a>
+                            <div class="dropdown-content">
+                                <a href="#">فهرست ها </a>
+                                <a href="#">فهرست جدید</a>
+                            </div>
+                        </div>
+                        <hr class="my-0">
+                    </li>
+                    <li class=" nav-item">
+                        <a class="nav-link h7 my-0">تنظیمات عمومی</a>
+                        <hr class="my-0">
+                    </li>
+                    <li class=" nav-item">
+                        <div class="dropdown">
+                            <a class="nav-link h7 my-0 dropdown-toggle" href="#" type="button"
+                                data-toggle="dropdown">ضفحه ها</a>
+                            <div class="dropdown-content">
+                                <a href="#">صفحه ها </a>
+                                <a href="#">صفحه جدید</a>
+                            </div>
+                        </div>
+                        <hr class="my-0">
+                    </li>
+                    <li class=" nav-item ">
+
+                        <div class="dropdown">
+                            <a class="nav-link h7 my-0 dropdown-toggle" href="#" type="button"
+                                data-toggle="dropdown">نوشته ها</a>
+                            <div class="dropdown-content">
+                                <a href="#">نوشته ها </a>
+                                <a href="/editor/:123456/addPost">نوشته جدید</a>
+                            </div>
+                        </div>
+                    </li>
+
+
+                </ul>
+                <a class=" navbar-brand mx-2 h6 text-danger my-0" href="/admin">خروج</a>
+            </div>
+        </nav>
+
+    </header>

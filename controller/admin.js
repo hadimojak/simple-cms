@@ -1,8 +1,14 @@
-exports.getAdminPage = (req, res, next) => {
-    res.render("admin");
+exports.getAdminHomePage = (req, res, next) => {
+    res.render("admin/admin", { pageTitle: 'مدیریت', path: '/admin' });
 };
-exports.addEditor = (req, res, next) => {
-    res.status(200).json({ data: 'editor created' });
+exports.getEditors = (req, res, next) => {
+    res.render("admin/admin", { pageTitle: 'کاربر ها', path: '/editors' });
+};
+exports.getAddEditor = (req, res, next) => {
+    res.render("admin/admin",{ pageTitle: 'کاربر ها', path: '/editors' });
+};
+exports.postAddEditor = (req, res, next) => {
+    res.status(200).json({ data: 'editor deleted' });
 };
 exports.deleteEditor = (req, res, next) => {
     res.status(200).json({ data: 'editor deleted' });
