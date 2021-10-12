@@ -26,10 +26,11 @@ Admin.init({
         isEmail: true,
         notEmpty: true
     }, number: {
-        type: DataTypes.STRING,
+        type: DataTypes.DECIMAL(14),
         notNull: true,
         allowNull: false,
         notEmpty: true,
+        isEmail: true
     }, isAdmin: {
         type: DataTypes.BOOLEAN,
         notNull: true,
