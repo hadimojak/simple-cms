@@ -26,10 +26,9 @@ Admin.init({
         isEmail: true,
         notEmpty: true
     }, number: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         notNull: true,
         allowNull: false,
-        isNumeric: true,
         notEmpty: true,
     }, isAdmin: {
         type: DataTypes.BOOLEAN,
@@ -62,7 +61,7 @@ Editor.init({
         allowNull: false,
         notEmpty: true
     }, password: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         notNull: true,
         allowNull: false,
         notEmpty: true
@@ -90,7 +89,7 @@ Editor.init({
 },
     {
         sequelize: sequelize, freezeTableName: true,
-        modelName: "editor", paranoid: true
+        modelName: "editor", paranoid: true,
     }
 );
 
@@ -107,7 +106,6 @@ if (justOnce) {
 
     justOnce = false;
 }
-console.log(justOnce);
 
 const models = [Admin, Editor];
 

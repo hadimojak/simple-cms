@@ -23,7 +23,7 @@
 
 
             <div class="collapse navbar-collapse ">
-                <a class="navbar-brand mx-2" href="/admin">اسم کمپانی</a>
+                <a class="navbar-brand mx-2" href="/admin">cobex cms</a>
                 <a class="navbar-brand mx-2 " style="width: 5rem" href="/admin"><img
                         class=" border border-thickness border-warning rounded" src="/pictures/indian.png"
                         alt="نمونه لوگو" width="80" height="80"></a>
@@ -70,7 +70,7 @@
                     <li class=" nav-item">
                         <div class="dropdown">
                             <a class="nav-link h7 my-0 dropdown-toggle" href="#" type="button"
-                                data-toggle="dropdown">ضفحه ها</a>
+                                data-toggle="dropdown">صفحه ها</a>
                             <div class="dropdown-content">
                                 <a href="#">صفحه ها </a>
                                 <a href="#">صفحه جدید</a>
@@ -90,9 +90,16 @@
                         </div>
                     </li>
                 </ul>
-                <a id='logout' class=" navbar-brand mx-2 h6 text-warning my-0" href="/logout">خروج</a>
-                <a id='login' class=" navbar-brand mx-2 h6 text-warning my-0" href="/login">ورود</a>
-                <a id="signup" class=" navbar-brand mx-2 h6 text-warning my-0" href="/signup">ثبت نام</a>
+                <div id="enterance">
+                    <form method="post" action="/logout">
+                        <input type="hidden" name="name" value="value" />
+                        <a id='logout' class=" navbar-brand mx-2 h6 text-warning my-0"
+                            onclick="this.parentNode.submit();" href="#">خروج</a>
+                    </form>
+                    <a id='login' class=" navbar-brand mx-2 h6 text-warning my-0" href="/login">ورود</a>
+                    <a id="signup" class=" navbar-brand mx-2 h6 text-warning my-0" href="/signup">ثبت نام</a>
+                </div>
+
             </div>
         </nav>
 

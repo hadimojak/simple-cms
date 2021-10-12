@@ -3,13 +3,13 @@
 
 
     <section class="vh-100 gradient-custom">
-        <div class="container py-5 h-100">
+        <div class="container  h-100">
             <div class="row justify-content-center align-items-center h-100">
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-                        <div class=" card-body p-4 p-md-5  ">
+                        <div class=" card-body   ">
                             
-                                <h3 class=" pb-2 pb-md-0  d-flex justify-content-center ">فرم ثبت نام
+                                <h3 class="   pb-2  d-flex justify-content-center ">افزودن کاربر
                                 </h3>
                                 <% if (errorMessage) { %>
                                     <h6 class=" alert alert-danger d-flex justify-content-center  " role="alert">
@@ -25,7 +25,7 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline">
-                                            <input type="text" id="firstName" dir="rtl" name="firstName"
+                                            <input type="text" id="firstName" dir="rtl" name="firstName" value="<%= oldInput.firstName %>"
                                                 class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'firstName') ? 'invalid' : '' %>" />
                                             <label class="form-label d-flex flex-row-reverse"
                                                 for="firstName">نام</label>
@@ -35,7 +35,7 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline">
-                                            <input type="text" id="lastName" dir="rtl" name="lastName"
+                                            <input type="text" id="lastName" dir="rtl" name="lastName" value="<%= oldInput.lastName %>"
                                                 class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'lastName') ? 'invalid' : '' %>" />
                                             <label class="form-label d-flex flex-row-reverse" for="lastName">نام
                                                 خانوادگی</label>
@@ -48,8 +48,8 @@
                                     <div class="col-md-6 mb-4 d-flex align-items-center ">
 
                                         <div class="form-outline datepicker w-100">
-                                            <input type="tel" class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'phoneNumber') ? 'invalid' : '' %>" id="phoneNumber"
-                                                name="phoneNumber" />
+                                            <input type="number" class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'phoneNumber') ? 'invalid' : '' %>" id="phoneNumber"
+                                                value="<%= oldInput.phoneNumber %>" name="phoneNumber" />
                                             <label for="phoneNumber" class="form-label d-flex flex-row-reverse">شماره
                                                 موبایل</label>
                                         </div>
@@ -78,7 +78,7 @@
 
                                         <div class="form-outline ">
                                             <input type="email" id="email" name='email'
-                                                class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'email') ? 'invalid' : '' %>" />
+                                               value="<%= oldInput.email %>"  class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'email') ? 'invalid' : '' %>" />
                                             <label class="form-label d-flex flex-row-reverse"
                                                 for="email">Email-ایمیل</label>
                                         </div>
@@ -87,13 +87,13 @@
                                     <div class="col-md-6 mb-4 pb-2">
 
                                         <div class="form-outline">
-                                            <input type="password" id="password" name="password"
+                                            <input type="password" id="password" name="password" value="<%= oldInput.password %>"
                                                 class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>" />
                                             <label class="form-label d-flex flex-row-reverse"
                                                 for="password">password-پسورد</label>
                                         </div>
                                         <div class="form-outline">
-                                            <input type="passwordConfirmed" id="passwordConfirmed"
+                                            <input type="password" id="passwordConfirmed" value="<%= oldInput.passwordConfirmed %>"
                                                 name="passwordConfirmed" class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'passwordConfirmed') ? 'invalid' : '' %>" />
                                             <label class="form-label d-flex flex-row-reverse"
                                                 for="passwordConfirmed">تکرار

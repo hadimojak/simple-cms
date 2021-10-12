@@ -1,6 +1,6 @@
 exports.getEditorProfile = (req, res, next) => {
     const editorId = req.params.editorId;
-    res.render('editor/editorHome');
+    res.render('editor/editorHome',{pageTitle:'editor',path:'/editor'});
 };
 
 exports.getAddPost = (req, res, next) => {

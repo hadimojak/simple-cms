@@ -14,16 +14,18 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline">
-                                            <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
-                                            <label class="form-label d-flex flex-row-reverse"
-                                                for="phoneNumber">شماره موبایل</label>
+                                            <input type="tel" id="phoneNumber" class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'phoneNumber') ? 'invalid' : '' %>"
+                                                name="phoneNumber" value="<%= oldInput.phoneNumber %>" />
+                                            <label class="form-label d-flex flex-row-reverse " for="phoneNumber">شماره
+                                                موبایل</label>
                                         </div>
 
                                     </div>
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline">
-                                            <input type="password" id="password" class="form-control form-control-lg" />
+                                            <input type="password" id="password" value="<%= oldInput.password %>" class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>"
+                                                name="password" />
                                             <label class="form-label d-flex flex-row-reverse"
                                                 for="password">password-پسورد</label>
                                         </div>
