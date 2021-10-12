@@ -6,10 +6,6 @@ const { models, Admin, Editor } = require('./models/model');
 const { sequelize, DataTypes, Sequelize, Model } = require('./sequelize');
 // const hook = require('./hooks');
 
-console.log(Object.keys(sequelize.models));
-
-
-
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
 const editorRoutes = require('./routes/editor');
@@ -20,6 +16,7 @@ process.setMaxListeners(50);
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 // app.use(installRoutes);

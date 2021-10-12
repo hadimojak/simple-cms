@@ -10,7 +10,9 @@
     <script src="/assets/js/popper.min.js"></script>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/custome.css">
-    <title><%= pageTitle %> </title>
+    <title>
+        <%= pageTitle %>
+    </title>
 </head>
 
 <body>
@@ -29,8 +31,8 @@
 
                     <li class="nav-item ">
                         <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/editors' ? 'active' : '' %>" href="#" type="button"
-                                data-toggle="dropdown">کاربر ها</a>
+                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/editors' ? 'active' : '' %>"
+                                href="#" type="button" data-toggle="dropdown">کاربر ها</a>
                             <div class="dropdown-content">
                                 <a href="/admin/editors">کاربر ها </a>
                                 <a href="/admin/addEditor">کاربر جدید</a>
@@ -87,10 +89,10 @@
                             </div>
                         </div>
                     </li>
-
-
                 </ul>
-                <a class=" navbar-brand mx-2 h6 text-danger my-0" href="/admin">خروج</a>
+                <a id='logout' class=" navbar-brand mx-2 h6 text-warning my-0" href="/logout">خروج</a>
+                <a id='login' class=" navbar-brand mx-2 h6 text-warning my-0" href="/login">ورود</a>
+                <a id="signup" class=" navbar-brand mx-2 h6 text-warning my-0" href="/signup">ثبت نام</a>
             </div>
         </nav>
 

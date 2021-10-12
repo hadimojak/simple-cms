@@ -14,6 +14,11 @@ Admin.init({
         notNull: true,
         allowNull: false,
         notEmpty: true
+    }, password: {
+        type: DataTypes.STRING,
+        notNull: true,
+        allowNull: false,
+        notEmpty: true
     }, email: {
         type: DataTypes.STRING,
         notNull: true,
@@ -52,6 +57,11 @@ Editor.init({
         allowNull: false,
         notEmpty: true
     }, lastName: {
+        type: DataTypes.STRING,
+        notNull: true,
+        allowNull: false,
+        notEmpty: true
+    }, password: {
         type: DataTypes.STRING,
         notNull: true,
         allowNull: false,
