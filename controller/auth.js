@@ -33,25 +33,28 @@ exports.postSignup = async (req, res, next) => {
             });
     }
 
-    bcrypt.hash(password, 12).then(async hashedPassword => {
-        Editor.findAll({
-            where: {
-                [Op.or]: [{ number: phoneNumber }, { email: email }]
-            }
-        }).then(data => {
-            if (data.length !== 0) { throw data }
-            return data;
-        }).then(() => {
-            return Editor.create({
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: hashedPassword,
-                number: phoneNumber
-            }).then(async (result) => {
+    bcrypt
+        .hash(password, 12)
+        .then(hashedPassword => {
+            return Editor.findAll({
+                where: {
+                    [Op.or]: [{ number: phoneNumber }, { email: email }]
+                }
+            }).then(data => {
+                if (data.length !== 0) { throw data; }
+                return data;
+            }).then((editor) => {
+                return Editor.create({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: hashedPassword,
+                    number: phoneNumber
+                });
+            }).then((result) => {
                 res.redirect('/login');
             });
-        }).catch(async err => {
+        }).catch(err => {
             res.render('signup', {
                 pageTitle: 'ثبت نام',
                 path: '/signup',
@@ -66,7 +69,6 @@ exports.postSignup = async (req, res, next) => {
                 validationErrors: ['email', 'number'],
             });
         });
-    })
 
 
 
