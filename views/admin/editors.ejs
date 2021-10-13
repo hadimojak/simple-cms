@@ -1,0 +1,46 @@
+<%- include('../includes/head&side.ejs') %>
+
+
+    <section class="vh-100 gradient-custom ">
+        <div class="container d-flex ">
+
+            <table class="editorTable table mt-5 ">
+                <thead>
+                    <tr>
+                        <th scope="col ">#</th>
+                        <th scope="col ">نام و نام خاوادگی</th>
+                        <th scope="col  ">شماره همراه</th>
+                        <th scope="col ">ایمیل</th>
+                        <th scope="col ">انتخاب</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i=0; i < EditorArray.length; i++) { %>
+                        <tr>
+                            <th scope="row"><%= i+1 %></th>
+                            <td>
+                                <%= EditorArray[i].firstName %>
+                            </td>
+                            <td>
+                                <%= EditorArray[i].number %>
+                            </td>
+                            <td>
+                                <%= EditorArray[i].email %>
+                            </td>
+                            <td>
+                                <form method="post" action="/admin/editors/editorPhoneNumber">
+                                    <input type="hidden" name="name" value="value" />
+                                    <a id='logout' onclick="this.parentNode.submit();" href="#">انتخاب</a>
+                                </form>
+                            </td>
+                        </tr>
+                        <% } %>
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+
+    </body>
+
+    </html>

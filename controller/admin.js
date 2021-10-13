@@ -1,11 +1,22 @@
+const { Editor } = require('../models/model');
+
+
 exports.getAdminHomePage = (req, res, next) => {
     res.render("admin/admin", { pageTitle: 'مدیریت', path: '/admin' });
 };
 exports.getEditors = (req, res, next) => {
-    res.render("admin/admin", { pageTitle: 'کاربر ها', path: '/editors' });
+    Editor.findAll().
+        then(data => {
+            const EditorArray = [];
+            for (let p of data) { EditorArray.push(p.dataValues); }
+            return EditorArray;
+        })
+        .then(EditorArray => { res.render("admin/editors", { pageTitle: 'کاربر ها', path: '/editors', EditorArray: EditorArray }); })
+        .catch(err => { console.log(err); });
+
 };
 exports.getAddEditor = (req, res, next) => {
-    res.render("admin/admin",{ pageTitle: 'کاربر ها', path: '/editors' });
+    res.render("admin/admin", { pageTitle: 'کاربر ها', path: '/editors' });
 };
 exports.postAddEditor = (req, res, next) => {
     res.status(200).json({ data: 'editor deleted' });

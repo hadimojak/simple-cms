@@ -48,7 +48,7 @@
                                     <div class="col-md-6 mb-4 d-flex align-items-center ">
 
                                         <div class="form-outline datepicker w-100">
-                                            <input type="tel" class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'phoneNumber') ? 'invalid' : '' %>" id="phoneNumber"
+                                            <input type="tel" class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'phoneNumber'|| e ==='number') ? 'invalid' : '' %>" id="phoneNumber"
                                                 value="<%= oldInput.phoneNumber %>" name="phoneNumber" />
                                             <label for="phoneNumber" class="form-label d-flex flex-row-reverse">شماره
                                                 موبایل</label>
@@ -78,7 +78,7 @@
 
                                         <div class="form-outline ">
                                             <input type="email" id="email" name='email'
-                                               value="<%= oldInput.email %>"  class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'email') ? 'invalid' : '' %>" />
+                                               value="<%= oldInput.email %>"  class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'email'|| e ==='email') ? 'invalid' : '' %>" />
                                             <label class="form-label d-flex flex-row-reverse"
                                                 for="email">Email-ایمیل</label>
                                         </div>
@@ -90,7 +90,7 @@
                                             <input type="password" id="password" name="password" value="<%= oldInput.password %>"
                                                 class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>" />
                                             <label class="form-label d-flex flex-row-reverse"
-                                                for="password">password-پسورد</label>
+                                                for="password">password-کلمه عبور</label>
                                         </div>
                                         <div class="form-outline">
                                             <input type="password" id="passwordConfirmed" value="<%= oldInput.passwordConfirmed %>"

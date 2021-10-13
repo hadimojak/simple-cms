@@ -2,19 +2,20 @@
 const { validationResult } = require('express-validator');
 const { Editor } = require('../models/model');
 const bcrypt = require('bcryptjs');
+const { ValidationError, Op } = require('sequelize');
+const { sequelize } = require('../sequelize');
+
 
 exports.getSignup = (req, res, next) => {
     res.render('signup', { pageTitle: 'ثبت نام', path: '/signup', validationErrors: [], errorMessage: '', oldInput: '' });
 };
-exports.postSignup = (req, res, next) => {
+exports.postSignup = async (req, res, next) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const email = req.body.email;
     const phoneNumber = req.body.phoneNumber;
-    console.log(phoneNumber,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     const password = req.body.password;
     const errors = validationResult(req);
-    // console.log(errors.array());
     if (!errors.isEmpty()) {
         return res.render('signup',
             {
@@ -31,16 +32,44 @@ exports.postSignup = (req, res, next) => {
                 validationErrors: errors.array(),
             });
     }
-    Editor.create({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-        number: phoneNumber
+
+    bcrypt.hash(password, 12).then(async hashedPassword => {
+        Editor.findAll({
+            where: {
+                [Op.or]: [{ number: phoneNumber }, { email: email }]
+            }
+        }).then(data => {
+            if (data.length !== 0) { throw data }
+            return data;
+        }).then(() => {
+            return Editor.create({
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: hashedPassword,
+                number: phoneNumber
+            }).then(async (result) => {
+                res.redirect('/login');
+            });
+        }).catch(async err => {
+            res.render('signup', {
+                pageTitle: 'ثبت نام',
+                path: '/signup',
+                errorMessage: '.شماره موبایل یا ایمیل قبلا استفاده شده است',
+                oldInput: {
+                    email: email,
+                    password: password,
+                    firstName: firstName,
+                    lastName: lastName,
+                    phoneNumber: phoneNumber
+                },
+                validationErrors: ['email', 'number'],
+            });
+        });
     })
-        .then(result => {
-            res.redirect("/login");
-        }).catch(err => { console.log(err); });
+
+
+
 };
 
 exports.getLogin = (req, res, next) => {
@@ -51,7 +80,6 @@ exports.postLogin = (req, res, next) => {
     const phoneNumber = req.body.phoneNumber;
     const password = req.body.password;
     const errors = validationResult(req);
-    // console.log(errors);
     if (!errors.isEmpty()) {
         return res.render('login', {
             pageTitle: 'ورود',
