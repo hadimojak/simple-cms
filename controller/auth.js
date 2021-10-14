@@ -6,73 +6,7 @@ const { ValidationError, Op } = require('sequelize');
 const { sequelize } = require('../sequelize');
 
 
-exports.getSignup = (req, res, next) => {
-    res.render('signup', { pageTitle: 'ثبت نام', path: '/signup', validationErrors: [], errorMessage: '', oldInput: '' });
-};
-exports.postSignup = async (req, res, next) => {
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const email = req.body.email;
-    const phoneNumber = req.body.phoneNumber;
-    const password = req.body.password;
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.render('signup',
-            {
-                pageTitle: 'ثبت نام',
-                path: '/signup',
-                errorMessage: errors.array()[0].msg,
-                oldInput: {
-                    email: email,
-                    password: password,
-                    firstName: firstName,
-                    lastName: lastName,
-                    phoneNumber: phoneNumber
-                },
-                validationErrors: errors.array(),
-            });
-    }
 
-    bcrypt
-        .hash(password, 12)
-        .then(hashedPassword => {
-            return Editor.findAll({
-                where: {
-                    [Op.or]: [{ number: phoneNumber }, { email: email }]
-                }
-            }).then(data => {
-                if (data.length !== 0) { throw data; }
-                return data;
-            }).then((editor) => {
-                return Editor.create({
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    password: hashedPassword,
-                    number: phoneNumber
-                });
-            }).then((result) => {
-                res.redirect('/login');
-            });
-        }).catch(err => {
-            res.render('signup', {
-                pageTitle: 'ثبت نام',
-                path: '/signup',
-                errorMessage: '.شماره موبایل یا ایمیل قبلا استفاده شده است',
-                oldInput: {
-                    email: email,
-                    password: password,
-                    firstName: firstName,
-                    lastName: lastName,
-                    phoneNumber: phoneNumber
-                },
-                validationErrors: ['email', 'number'],
-            });
-        });
-
-
-
-};
 
 exports.getLogin = (req, res, next) => {
     res.render('login', { pageTitle: 'ورود', path: '/login', validationErrors: [], errorMessage: '', oldInput: '' });
@@ -94,7 +28,42 @@ exports.postLogin = (req, res, next) => {
             validationErrors: errors.array(),
         });
     }
-    res.redirect(`/editor/${phoneNumber}`);
+    Editor.findAll({ where: { number: phoneNumber } })
+        .then(editor => {
+            if (editor.length === 0) {
+                return res.render('login', {
+                    pageTitle: 'ورود',
+                    path: '/login',
+                    errorMessage: 'some errors',
+                    oldInput: {
+                        password: password,
+                        phoneNumber: phoneNumber
+                    },
+                    validationErrors: ['number', 'password'],
+                });
+
+            }
+            bcrypt.compare(password, editor[0].dataValues.password)
+                .then(doMatch => {
+                    if (doMatch) {
+                        return res.redirect(`/editor/${phoneNumber}`);
+                    }
+                    return res.render('login', {
+                        pageTitle: 'ورود',
+                        path: '/login',
+                        errorMessage: 'some errors',
+                        oldInput: {
+                            password: password,
+                            phoneNumber: phoneNumber
+                        },
+                        validationErrors: ['number', 'password'],
+                    });
+                });
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/login');
+        });
 
 };
 

@@ -28,10 +28,7 @@
                                 <%= EditorArray[i].email %>
                             </td>
                             <td>
-                                <form method="post" action="/admin/editors/editorPhoneNumber">
-                                    <input type="hidden" name="name" value="value" />
-                                    <a id='logout' onclick="this.parentNode.submit();" href="#">انتخاب</a>
-                                </form>
+                                    <a class="btn btn-outline-dark font-weight-bold"  href="/admin/editors/<%= EditorArray[i].number %>">انتخاب</a>
                             </td>
                         </tr>
                         <% } %>

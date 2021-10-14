@@ -8,107 +8,116 @@
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class=" card-body   ">
-                            
-                                <h3 class="   pb-2  d-flex justify-content-center ">افزودن کاربر
-                                </h3>
-                                <% if (errorMessage) { %>
-                                    <h6 class=" alert alert-danger d-flex justify-content-center  " role="alert">
-                                        <%= errorMessage %>
-                                    </h6>
-                                    <% } %>
+
+                            <h3 class="   pb-2  d-flex justify-content-center "><%= selection %> کاربر
+                            </h3>
+                            <% if (errorMessage) { %>
+                                <h6 class=" alert alert-danger d-flex justify-content-center  " role="alert">
+                                    <%= errorMessage %>
+                                </h6>
+                                <% } %>
 
 
 
-                            <form action="/signup" method="post" novalidate>
+                                    <form action="<%= update  ? `/admin/editors/${oldInput.phoneNumber}` : '/admin/addEditor' %>" method="post" novalidate>
 
-                                <div class="row d-flex flex-row-reverse">
-                                    <div class="col-md-6 mb-4">
+                                        <div class="row d-flex flex-row-reverse">
+                                            <div class="col-md-6 mb-4">
 
-                                        <div class="form-outline">
-                                            <input type="text" id="firstName" dir="rtl" name="firstName" value="<%= oldInput.firstName %>"
-                                                class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'firstName') ? 'invalid' : '' %>" />
-                                            <label class="form-label d-flex flex-row-reverse"
-                                                for="firstName">نام</label>
+                                                <div class="form-outline">
+                                                    <input type="text" id="firstName" dir="rtl" name="firstName"
+                                                        value="<%= oldInput.firstName %>"
+                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'firstName') ? 'invalid' : '' %>" />
+                                                    <label class="form-label d-flex flex-row-reverse"
+                                                        for="firstName">نام</label>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline">
+                                                    <input type="text" id="lastName" dir="rtl" name="lastName"
+                                                        value="<%= oldInput.lastName %>"
+                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'lastName') ? 'invalid' : '' %>" />
+                                                    <label class="form-label d-flex flex-row-reverse" for="lastName">نام
+                                                        خانوادگی</label>
+                                                </div>
+
+                                            </div>
                                         </div>
 
-                                    </div>
-                                    <div class="col-md-6 mb-4">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 d-flex align-items-center ">
 
-                                        <div class="form-outline">
-                                            <input type="text" id="lastName" dir="rtl" name="lastName" value="<%= oldInput.lastName %>"
-                                                class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'lastName') ? 'invalid' : '' %>" />
-                                            <label class="form-label d-flex flex-row-reverse" for="lastName">نام
-                                                خانوادگی</label>
+                                                <div class="form-outline datepicker w-100">
+                                                    <input type="tel"
+                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'phoneNumber'|| e ==='number') ? 'invalid' : '' %>"
+                                                        id="phoneNumber" value="<%= oldInput.phoneNumber %>"
+                                                        name="phoneNumber" />
+                                                    <label for="phoneNumber"
+                                                        class="form-label d-flex flex-row-reverse">شماره
+                                                        موبایل</label>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4 d-flex flex-row-reverse">
+
+                                                <h6 class="mb-2 pb-1">: جنسیت</h6>
+
+                                                <div class="form-check form-check-inline ">
+                                                    <input class="form-check-input" type="radio" name="gender"
+                                                        id="gender" value="زن" checked />
+                                                    <label class="form-check-label" for="gender">زن</label>
+                                                </div>
+
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input " type="radio" name="gender"
+                                                        id="gender" value="مرد" />
+                                                    <label class="form-check-label" for="gender">مرد</label>
+                                                </div>
+                                            </div>
                                         </div>
 
-                                    </div>
-                                </div>
+                                        <div class="row d-flex flex-row-reverse">
+                                            <div class="col-md-6 mb-4 pb-2">
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-4 d-flex align-items-center ">
+                                                <div class="form-outline ">
+                                                    <input type="email" id="email" name='email'
+                                                        value="<%= oldInput.email %>"
+                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'email'|| e ==='email') ? 'invalid' : '' %>" />
+                                                    <label class="form-label d-flex flex-row-reverse"
+                                                        for="email">Email-ایمیل</label>
+                                                </div>
 
-                                        <div class="form-outline datepicker w-100">
-                                            <input type="tel" class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'phoneNumber'|| e ==='number') ? 'invalid' : '' %>" id="phoneNumber"
-                                                value="<%= oldInput.phoneNumber %>" name="phoneNumber" />
-                                            <label for="phoneNumber" class="form-label d-flex flex-row-reverse">شماره
-                                                موبایل</label>
+                                            </div>
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline">
+                                                    <input type="password" id="password" name="password"
+                                                        value="<%= oldInput.password %>"
+                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>" />
+                                                    <label class="form-label d-flex flex-row-reverse"
+                                                        for="password">password-کلمه عبور</label>
+                                                </div>
+                                                    <div class="form-outline">
+                                                        <input type="password" id="passwordConfirmed"
+                                                            value="<%= oldInput.passwordConfirmed %>"
+                                                            name="passwordConfirmed"
+                                                            class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'passwordConfirmed') ? 'invalid' : '' %>" />
+                                                        <label class="form-label d-flex flex-row-reverse"
+                                                            for="passwordConfirmed">تکرار
+                                                            پسورد</label>
+                                                    </div>
+                                            </div>
                                         </div>
 
-                                    </div>
-                                    <div class="col-md-6 mb-4 d-flex flex-row-reverse">
 
-                                        <h6 class="mb-2 pb-1">: جنسیت</h6>
-
-                                        <div class="form-check form-check-inline ">
-                                            <input class="form-check-input" type="radio" name="gender" id="gender"
-                                                value="زن" checked />
-                                            <label class="form-check-label" for="gender">زن</label>
+                                        <div class="mt-4 pt-2 d-flex justify-content-center">
+                                            <input class="btn btn-primary btn-lg " type="submit"
+                                                value="<%= selection %>" />
                                         </div>
 
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input " type="radio" name="gender" id="gender"
-                                                value="مرد" />
-                                            <label class="form-check-label" for="gender">مرد</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row d-flex flex-row-reverse">
-                                    <div class="col-md-6 mb-4 pb-2">
-
-                                        <div class="form-outline ">
-                                            <input type="email" id="email" name='email'
-                                               value="<%= oldInput.email %>"  class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'email'|| e ==='email') ? 'invalid' : '' %>" />
-                                            <label class="form-label d-flex flex-row-reverse"
-                                                for="email">Email-ایمیل</label>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4 pb-2">
-
-                                        <div class="form-outline">
-                                            <input type="password" id="password" name="password" value="<%= oldInput.password %>"
-                                                class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>" />
-                                            <label class="form-label d-flex flex-row-reverse"
-                                                for="password">password-کلمه عبور</label>
-                                        </div>
-                                        <div class="form-outline">
-                                            <input type="password" id="passwordConfirmed" value="<%= oldInput.passwordConfirmed %>"
-                                                name="passwordConfirmed" class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'passwordConfirmed') ? 'invalid' : '' %>" />
-                                            <label class="form-label d-flex flex-row-reverse"
-                                                for="passwordConfirmed">تکرار
-                                                پسورد</label>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-
-                                <div class="mt-4 pt-2 d-flex justify-content-center">
-                                    <input class="btn btn-primary btn-lg " type="submit" value="ثبت نام" />
-                                </div>
-
-                            </form>
+                                    </form>
                         </div>
                     </div>
                 </div>
