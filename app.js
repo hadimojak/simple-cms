@@ -1,10 +1,12 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const { models, Admin, Editor } = require('./models/model');
+const { User } = require('./models/model');
 const { sequelize, DataTypes, Sequelize, Model } = require('./sequelize');
 // const hook = require('./hooks');
+const multer = require('multer');
 
+const upload = multer({dest:"uploads/"})
 
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
@@ -27,14 +29,14 @@ app.use(editorRoutes);
 
 
 
-sequelize.sync().then(async data => {
+sequelize.sync({ alter: false }).then(async data => {
     await app.listen(3000, () => {
         console.log('Listening on port: ', 3000);
     }).on('error', (e) => {
         throw new Error(e.message);
     });
 }).then(data => { console.log('db connected'); })
-.catch(err => { console.log(err); });
+    .catch(err => { console.log(err); });
 
 
 

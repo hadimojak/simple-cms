@@ -8,7 +8,10 @@
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
     <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap4-toggle.min.js"></script>
+    <script src="../../public/assets/js/quill.js"></script>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap4-toggle.min.css">
     <link rel="stylesheet" href="/assets/css/custome.css">
     <title>
         <%= pageTitle %>
@@ -25,7 +28,7 @@
             <div class="collapse navbar-collapse ">
                 <a class="navbar-brand mx-2" href="/admin">cobex cms</a>
                 <a class="navbar-brand mx-2 " style="width: 5rem" href="/admin"><img
-                        class=" border border-thickness border-warning rounded" src="/pictures/indian.png"
+                        class="logo-border border border-thickness rounded" src="/pictures/indian.png"
                         alt="نمونه لوگو" width="80" height="80"></a>
                 <ul class="navbar-nav ">
 
@@ -36,6 +39,7 @@
                             <div class="dropdown-content">
                                 <a href="/admin/editors">کاربر ها </a>
                                 <a href="/admin/addEditor">کاربر جدید</a>
+                                <a href="/editor/:takefrom session">مشخصات کاربر</a>
                             </div>
                         </div>
                         <hr class="my-0">
@@ -85,7 +89,7 @@
                                 data-toggle="dropdown">نوشته ها</a>
                             <div class="dropdown-content">
                                 <a href="#">نوشته ها </a>
-                                <a href="/editor/:123456/addPost">نوشته جدید</a>
+                                <a href="/editor/editorPhoneNumber/addPost">نوشته جدید</a>
                             </div>
                         </div>
                     </li>

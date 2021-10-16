@@ -1,0 +1,57 @@
+<%- include('./includes/head&side.ejs') %>
+
+
+  <section class="vh-100 gradient-custom p-5 d-flex flex-column justify-content-center">
+    <link rel="stylesheet" href="/assets/css/monokai-sublime.min.css">
+    <!-- Include stylesheet -->
+    <link href="/assets/css/quill.snow.css" rel="stylesheet">
+
+    <!-- Create the editor container -->
+    <div id="toolbar" class="bg-white"></div>
+    <div id="editor" class="bg-white"></div>
+
+    <div class='d-flex mt-4 justify-content-center'>
+      <button id='saveData' class="btn btn-success btn-lg ">انتشار پست</button>
+    </div>
+
+    <!-- Include the Quill library -->
+    <script src="/assets/js/highlight.min.js"></script>
+    <script src="/assets/js/quill.js"></script>
+    <script src="/assets/js/image-resize.min.js"></script>
+
+    <!-- Initialize Quill editor -->
+    <script>
+      var quill = new Quill('#editor', {
+        modules: {
+          imageResize: {
+            displaySize: true
+          },
+          'syntax': true,
+          'toolbar': [
+            [{ 'font': [] }, { 'size': [] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'script': 'super' }, { 'script': 'sub' }],
+            [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+            ['direction', { 'align': [] }],
+            ['link', 'image', 'video', 'formula'],
+            ['clean']
+          ]
+        }
+        ,
+        theme: 'snow'
+      });
+
+      $('#saveData').click(async function () {
+        const data = quill.root.innerHTML
+        console.log(data)
+      })
+    </script>
+
+
+  </section>
+
+  </body>
+
+  </html>

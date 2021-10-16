@@ -11,24 +11,37 @@
                         <th scope="col ">نام و نام خاوادگی</th>
                         <th scope="col  ">شماره همراه</th>
                         <th scope="col ">ایمیل</th>
+                        <th scope="col ">وضعیت</th>
                         <th scope="col ">انتخاب</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% for (var i=0; i < EditorArray.length; i++) { %>
+                    <% for (var i=0; i < editorArray.length; i++) { %>
                         <tr>
-                            <th scope="row"><%= i+1 %></th>
+                            <th scope="row">
+                                <%= i+1 %>
+                            </th>
                             <td>
-                                <%= EditorArray[i].firstName +' '+ EditorArray[i].lastName %>
+                                <%= editorArray[i].firstName +' '+ editorArray[i].lastName %>
                             </td>
                             <td>
-                                <%= EditorArray[i].number %>
+                                <%= editorArray[i].phoneNumber %>
                             </td>
                             <td>
-                                <%= EditorArray[i].email %>
+                                <%= editorArray[i].email %>
                             </td>
                             <td>
-                                    <a class="btn btn-outline-dark font-weight-bold"  href="/admin/editors/<%= EditorArray[i].number %>">انتخاب</a>
+                                    <% if (editorArray[i].state === true) {%>
+                                        <p class='m-0 p-1 text-success font-weight-bold border rounded  border-success d-inline-flex bg-white'>فعال
+                                    </p>
+                                    <% }else { %>
+                                        <p class='m-0 p-1 text-danger font-weight-bold rounded border border-danger d-inline-flex bg-white'>غیر فعال
+                                        </p>
+                                        <% } %>
+                            </td>
+                            <td>
+                                <a class="p-1 btn btn-outline-dark font-weight-bold bg-white"
+                                    href="/admin/editors/<%= editorArray[i].phoneNumber %>">انتخاب</a>
                             </td>
                         </tr>
                         <% } %>

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controller/admin');
 const { check, body } = require('express-validator');
-const { Editor } = require('../models/model');
+const { User } = require('../models/Model');
 
 router.get('/admin', adminController.getAdminHomePage);
 router.get('/admin/editors', adminController.getEditors);
@@ -20,6 +20,7 @@ router.post('/admin/addEditor',
         return true;
     })],
     adminController.postAddEditor);
+    
 router.get('/admin/editors/:editorPhoneNumber', adminController.getUpdateEditor);
 router.post('/admin/editors/:editorPhoneNumber', [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
     .withMessage('.نام باید بدون فاصله  باشد').toLowerCase(),

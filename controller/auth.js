@@ -1,12 +1,14 @@
 
 const { validationResult } = require('express-validator');
-const { Editor } = require('../models/model');
+const { User } = require('../models/Model');
 const bcrypt = require('bcryptjs');
 const { ValidationError, Op } = require('sequelize');
 const { sequelize } = require('../sequelize');
 
 
-
+exports.getHome = (req, res, next) => { 
+    res.render('home',{pageTitle:"خانه",path:'/home'})
+};
 
 exports.getLogin = (req, res, next) => {
     res.render('login', { pageTitle: 'ورود', path: '/login', validationErrors: [], errorMessage: '', oldInput: '' });
@@ -28,7 +30,7 @@ exports.postLogin = (req, res, next) => {
             validationErrors: errors.array(),
         });
     }
-    Editor.findAll({ where: { number: phoneNumber } })
+    User.findAll({ where: { number: phoneNumber } })
         .then(editor => {
             if (editor.length === 0) {
                 return res.render('login', {

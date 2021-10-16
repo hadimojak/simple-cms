@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controller/auth');
 const { check, body } = require('express-validator');
-const { Editor } = require('../models/model');
+const { User } = require('../models/model');
 
-
+router.get('/', authController.getHome);
 
 router.get('/login', authController.getLogin);
 router.post('/login',

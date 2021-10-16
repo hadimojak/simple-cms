@@ -9,7 +9,8 @@
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class=" card-body   ">
 
-                            <h3 class="   pb-2  d-flex justify-content-center "><%= selection %> کاربر
+                            <h3 class="   pb-2  d-flex justify-content-center ">
+                                <%= selection %> کاربر
                             </h3>
                             <% if (errorMessage) { %>
                                 <h6 class=" alert alert-danger d-flex justify-content-center  " role="alert">
@@ -19,7 +20,9 @@
 
 
 
-                                    <form action="<%= update  ? `/admin/editors/${oldInput.phoneNumber}` : '/admin/addEditor' %>" method="post" novalidate>
+                                    <form
+                                        action="<%= update  ? `/admin/editors/${oldInput.phoneNumber}` : '/admin/addEditor' %>"
+                                        method="post" novalidate>
 
                                         <div class="row d-flex flex-row-reverse">
                                             <div class="col-md-6 mb-4">
@@ -51,7 +54,7 @@
 
                                                 <div class="form-outline datepicker w-100">
                                                     <input type="tel"
-                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'phoneNumber'|| e ==='number') ? 'invalid' : '' %>"
+                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'phoneNumber'|| e ==='phoneNumber') ? 'invalid' : '' %>"
                                                         id="phoneNumber" value="<%= oldInput.phoneNumber %>"
                                                         name="phoneNumber" />
                                                     <label for="phoneNumber"
@@ -60,26 +63,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col-md-6 mb-4 d-flex flex-row-reverse">
-
-                                                <h6 class="mb-2 pb-1">: جنسیت</h6>
-
-                                                <div class="form-check form-check-inline ">
-                                                    <input class="form-check-input" type="radio" name="gender"
-                                                        id="gender" value="زن" checked />
-                                                    <label class="form-check-label" for="gender">زن</label>
-                                                </div>
-
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input " type="radio" name="gender"
-                                                        id="gender" value="مرد" />
-                                                    <label class="form-check-label" for="gender">مرد</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row d-flex flex-row-reverse">
-                                            <div class="col-md-6 mb-4 pb-2">
+                                            <div class="col-md-6 mb-4 d-flex align-items-center ">
 
                                                 <div class="form-outline ">
                                                     <input type="email" id="email" name='email'
@@ -90,25 +74,47 @@
                                                 </div>
 
                                             </div>
+
+                                        </div>
+
+                                        <div class="row d-flex flex-row-reverse">
                                             <div class="col-md-6 mb-4 pb-2">
 
+                                                
+                                                <% if(update){ %>
+                                                    <div class="form-outline d-flex justify-content-around pt-2">
+                                                        <input type="checkbox" checked data-toggle="toggle" name="state"
+                                                            data-on="فعال" data-off="غیر فعال" data-onstyle="success"
+                                                            data-offstyle="danger">
+
+                                                        <label class="form-check-label d-flex flex-row-reverse "
+                                                            for="state">وضعیت</label>
+                                                    </div>
+                                                    <% } %>
+                                            </div>
+                                            <div class="col-md-6 mb-4 pb-2">
                                                 <div class="form-outline">
                                                     <input type="password" id="password" name="password"
                                                         value="<%= oldInput.password %>"
                                                         class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>" />
                                                     <label class="form-label d-flex flex-row-reverse"
-                                                        for="password">password-کلمه عبور</label>
+                                                        for="password">کلمه عبور</label>
                                                 </div>
-                                                    <div class="form-outline">
-                                                        <input type="password" id="passwordConfirmed"
-                                                            value="<%= oldInput.passwordConfirmed %>"
-                                                            name="passwordConfirmed"
-                                                            class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'passwordConfirmed') ? 'invalid' : '' %>" />
-                                                        <label class="form-label d-flex flex-row-reverse"
-                                                            for="passwordConfirmed">تکرار
-                                                            پسورد</label>
-                                                    </div>
+                                                <div class="form-outline">
+                                                    <input type="password" id="passwordConfirmed"
+                                                        value="<%= oldInput.passwordConfirmed %>"
+                                                        name="passwordConfirmed"
+                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'passwordConfirmed') ? 'invalid' : '' %>" />
+                                                    <label class="form-label d-flex flex-row-reverse"
+                                                        for="passwordConfirmed"> تکرار کلمه عبور
+                                                    </label>
+                                                </div>
+
                                             </div>
+
+
+
+
                                         </div>
 
 
