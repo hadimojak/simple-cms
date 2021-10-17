@@ -1,0 +1,48 @@
+<%- include('../includes/head&side.ejs') %>
+
+
+    <section class="vh-100 gradient-custom  m-4 ">
+
+
+        <div class="container-fluid">
+            <div class="px-lg">
+
+                <!-- For demo purpose -->
+
+                <!-- End -->
+
+                <div class="row">
+                    <!-- Gallery item -->
+                    <% for (var i=0; i < imageUrl.length; i++){ %>
+                        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                            <div class="bg-white rounded shadow-sm"><img src="<%= imageUrl[i] %>" style=" width: 100%;height: 15vw;object-fit: cover;" alt="" class="card-img-top">
+                                <div class="p-4">
+                                    <p class="text-dark m-0 d-flex justify-content-center">
+                                        <%= imageName[i] %>
+                                    </p>
+                                    <div
+                                        class="d-flex  align-items-center justify-content-center rounded-pill bg-light px-0 py-2 ">
+                                        <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span
+                                                class="font-weight-bold">انتخاب</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+
+                            <!-- End -->
+
+
+
+                </div>
+                <div class="py-5 text-right"><a href="#" class="btn btn-dark px-5 py-3 text-uppercase">Show me more</a>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+    </body>
+
+    </html>

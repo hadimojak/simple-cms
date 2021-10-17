@@ -6,7 +6,7 @@ const { sequelize, DataTypes, Sequelize, Model } = require('./sequelize');
 // const hook = require('./hooks');
 const multer = require('multer');
 
-const upload = multer({dest:"uploads/"})
+const upload = multer({ dest: "uploads/" });
 
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
@@ -20,6 +20,7 @@ app.set("views", "views");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/uploads'));
 
 // app.use(installRoutes);
 app.use(authRoutes);

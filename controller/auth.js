@@ -7,6 +7,7 @@ const { sequelize } = require('../sequelize');
 
 
 exports.getHome = (req, res, next) => { 
+    console.log('aaaaaaaaaaaaaaaaaaaaa')
     res.render('home',{pageTitle:"خانه",path:'/home'})
 };
 
