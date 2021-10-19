@@ -1,12 +1,19 @@
 const express = require('express');
 const app = express();
-const path = require('path');
-const { User } = require('./models/model');
 const { sequelize, DataTypes, Sequelize, Model } = require('./sequelize');
 // const hook = require('./hooks');
 const multer = require('multer');
 
-const upload = multer({ dest: "uploads/" });
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/media');
+    }, filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+exports.upload = multer({ storage: storage });
+
 
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
@@ -20,7 +27,8 @@ app.set("views", "views");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
-app.use(express.static(__dirname + '/uploads'));
+
+app.use('/uploads', express.static('uploads'));
 
 // app.use(installRoutes);
 app.use(authRoutes);

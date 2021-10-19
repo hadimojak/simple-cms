@@ -23,9 +23,13 @@
 
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-info fixed-right text-center">
+            <button class="navbar-toggler" type="button"
+                        data-toggle="collapse" data-target="#sideMenu" aria-controls="sideMenu"
+                        aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span>
+                    </button>
 
 
-            <div class="collapse navbar-collapse ">
+            <div class="collapse navbar-collapse " id='sideMenu'>
                 <a class="navbar-brand mx-2" href="/admin">cobex cms</a>
                 <a class="navbar-brand mx-2 " style="width: 5rem" href="/admin"><img
                         class="logo-border border border-thickness rounded" src="/pictures/indian.png"
@@ -38,7 +42,6 @@
                                  type="button" data-toggle="dropdown">کاربر ها</a>
                             <div class="dropdown-content">
                                 <a href="/admin/editors">کاربر ها </a>
-                                <a href="/admin/addEditor">کاربر جدید</a>
                                 <a href="/editor/:takefrom session">مشخصات کاربر</a>
                             </div>
                         </div>
@@ -47,12 +50,8 @@
 
                     <li class="nav-item">
                         <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle"  type="button"
-                                data-toggle="dropdown">فایل ها</a>
-                            <div class="dropdown-content">
-                                <a href="/editor/storage">فایل ها </a>
-                                <a href="#">فایل جدید</a>
-                            </div>
+                            <a class="nav-link h7 my-0 dropdown-toggle" href="/editor/storage" type="button"
+                                >فایل ها</a>
                         </div>
                         <hr class="my-0">
                     </li>

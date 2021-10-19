@@ -4,6 +4,7 @@ const $ = require("jquery")(window);
 const fs = require('fs');
 const path = require('path');
 
+
 exports.getEditorProfile = (req, res, next) => {
     res.render('editor/editorHome', { pageTitle: 'editor', path: '/editor' });
 };
@@ -41,13 +42,13 @@ exports.postEditPost = (req, res, next) => {
 
 exports.getAllFiles = (req, res, next) => {
     const imagesArray = [];
-    const images = fs.readdirSync(path.join(__dirname, '..', 'uploads', 'images'),
+    const images = fs.readdirSync(path.join(__dirname, '..', 'uploads', 'media'),
         { encoding: 'utf8' });
     images.forEach(p => {
-        imagesArray.push('/images/' + p);
+        imagesArray.push('/uploads/media/' + p);
     });
 
-    res.render('editor/allFiles', { pageTitle: 'فایل ها', path: '/storage', imageUrl: imagesArray,imageName:images });
+    res.render('editor/allFiles', { pageTitle: 'فایل ها', path: '/storage', imageUrl: imagesArray, imageName: images });
 
 };
 
@@ -62,3 +63,7 @@ exports.deleteFile = (req, res, next) => {
 };
 
 
+exports.postUpload = (req, res, next) => {
+    console.log(req.body, req.file);
+    res.redirect('/editor/storage')
+};

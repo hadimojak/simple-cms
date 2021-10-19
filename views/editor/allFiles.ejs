@@ -5,38 +5,97 @@
 
 
         <div class="container-fluid">
-            <div class="px-lg">
 
-                <!-- For demo purpose -->
+            <div class="py-3 ">
+                <nav class=" navbar navbar-expand-md navbar-dark bg-dark ">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#fileFilterMenu"
+                        aria-controls="fileFilterMenu" aria-expanded="false" aria-label="Toggle navigation"> <span
+                            class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse " id="fileFilterMenu" style="direction: rtl;">
+                        <form onsubmit="event.preventDefault()" class="form-inline my-2 my-lg-0"> <input
+                                class="form-control mr-sm-2 " type="text" placeholder="Search">
+                            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+                        <ul class="navbar-nav  ">
 
-                <!-- End -->
 
-                <div class="row">
-                    <!-- Gallery item -->
-                    <% for (var i=0; i < imageUrl.length; i++){ %>
-                        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                            <div class="bg-white rounded shadow-sm"><img src="<%= imageUrl[i] %>" style=" width: 100%;height: 15vw;object-fit: cover;" alt="" class="card-img-top">
-                                <div class="p-4">
-                                    <p class="text-dark m-0 d-flex justify-content-center">
-                                        <%= imageName[i] %>
-                                    </p>
-                                    <div
-                                        class="d-flex  align-items-center justify-content-center rounded-pill bg-light px-0 py-2 ">
-                                        <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span
-                                                class="font-weight-bold">انتخاب</span></p>
+                            <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">عکس</a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">فیلم</a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">pdf</a> </li>
+                            <li class="nav-item" style="direction: ltr;">
+
+                                <button id='uploadFile' type="button" class="btn btn-info my-2 my-sm-0"
+                                    data-toggle="modal" data-target="#myModal">بارگذاری</button>
+                                <!-- Modal -->
+                                <div id="myModal" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" aria-label="Close"
+                                                    data-dismiss="modal"><span class="text-danger"
+                                                        aria-hidden="true">×</span></button>
+                                                <h4 class="modal-title">بارگذاری فایل</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Form -->
+
+                                                <form method='post' action='/editor/uploadFile'
+                                                    enctype="multipart/form-data">
+                                                    <p>انتخاب فایل :</p>
+                                                    <input type='file' name='file' id='file' class='form-control'>
+                                                    <br>
+                                                    <input type='submit' class='btn btn-info' value='Upload'
+                                                        id='btn_upload'>
+                                                </form>
+
+                                                <!-- Preview-->
+                                                <div id='preview'></div>
+                                            </div>
+
+                                        </div>
+
                                     </div>
+                                </div>
+
+                            </li>
+                        </ul>
+
+
+                    </div>
+                </nav>
+            </div>
+            <!-- For demo purpose -->
+
+            <!-- End -->
+
+            <div class="row">
+                <!-- Gallery item -->
+                <% for (var i=0; i < imageUrl.length; i++){ %>
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="bg-white rounded shadow-sm"><img src="<%= imageUrl[i] %>"
+                                style=" width: 100%;height: 15vw;object-fit: cover;" alt="" class="card-img-top">
+                            <div class="p-4">
+                                <p class="text-dark m-0 d-flex justify-content-center">
+                                    <%= imageName[i] %>
+                                </p>
+                                <div
+                                    class="d-flex  align-items-center justify-content-center rounded-pill bg-light px-0 py-2 ">
+                                    <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span
+                                            class="font-weight-bold">انتخاب</span></p>
                                 </div>
                             </div>
                         </div>
-                        <% } %>
+                    </div>
+                    <% } %>
 
-                            <!-- End -->
+                        <!-- End -->
 
 
 
-                </div>
-                <div class="py-5 text-right"><a href="#" class="btn btn-dark px-5 py-3 text-uppercase">Show me more</a>
-                </div>
+
             </div>
         </div>
 
