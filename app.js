@@ -30,7 +30,7 @@ app.use(editorRoutes);
 
 
 
-sequelize.sync({ alter: false }).then(async data => {
+sequelize.sync({ alter: true }).then(async data => {
     await app.listen(3000, () => {
         console.log('Listening on port: ', 3000);
     }).on('error', (e) => {

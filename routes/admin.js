@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controller/admin');
 const { check, body } = require('express-validator');
-const { User } = require('../models/Model');
 
 router.get('/admin', adminController.getAdminHomePage);
-router.get('/admin/editors', adminController.getEditors);
-router.get('/admin/addEditor', adminController.getAddEditor);
-router.post('/admin/addEditor',
+router.get('/admin/users', adminController.getUsers);
+router.get('/admin/addUser', adminController.getAddUser);
+
+router.post('/admin/addUser',
     [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
         .withMessage('.نام باید بدون فاصله  باشد').toLowerCase(),
     body('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
@@ -19,7 +19,7 @@ router.post('/admin/addEditor',
         if (value !== req.body.password) { throw new Error(); }
         return true;
     })],
-    adminController.postAddEditor);
+    adminController.postAddUser);
     
 router.get('/admin/editors/:editorPhoneNumber', adminController.getUpdateEditor);
 router.post('/admin/editors/:editorPhoneNumber', [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))

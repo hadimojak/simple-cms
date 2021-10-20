@@ -6,9 +6,7 @@ const { ValidationError, Op } = require('sequelize');
 const { sequelize } = require('../sequelize');
 
 
-exports.getHome = (req, res, next) => { 
-    res.render('home',{pageTitle:"خانه",path:'/home'})
-};
+
 
 exports.getLogin = (req, res, next) => {
     res.render('login', { pageTitle: 'ورود', path: '/login', validationErrors: [], errorMessage: '', oldInput: '' });

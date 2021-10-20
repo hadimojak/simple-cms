@@ -4,7 +4,6 @@ const authController = require('../controller/auth');
 const { check, body } = require('express-validator');
 const { User } = require('../models/model');
 
-router.get('/', authController.getHome);
 
 router.get('/login', authController.getLogin);
 router.post('/login',

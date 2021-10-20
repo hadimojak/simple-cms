@@ -10,10 +10,27 @@ exports.getAdminHomePage = (req, res, next) => {
     res.render("admin/admin", { pageTitle: 'مدیریت', path: '/admin' });
 };
 
+exports.getUsers = (req, res, next) => {
+    User.findAll().
+        then(data => {
+            const editorArray = [];
+            for (let p of data) { editorArray.push(p.dataValues); }
+            return editorArray;
+        })
+        .then(editorArray => {
+            res.render("admin/users",
+                {
+                    pageTitle: 'کاربر ها',
+                    path: '/users',
+                    editorArray: editorArray
+                });
+        })
+        .catch(err => { console.log(err); });
 
+};
 
-exports.getAddEditor = (req, res, next) => {
-    res.render('signup', {
+exports.getAddUser = (req, res, next) => {
+    res.render('admin/signup', {
         pageTitle: 'ثبت نام',
         path: '/signup',
         validationErrors: [],
@@ -22,7 +39,7 @@ exports.getAddEditor = (req, res, next) => {
     });
 };
 
-exports.postAddEditor = (req, res, next) => {
+exports.postAddUser = (req, res, next) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const email = req.body.email;
@@ -30,7 +47,7 @@ exports.postAddEditor = (req, res, next) => {
     const password = req.body.password;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('signup',
+        return res.render('admin/signup',
             {
                 pageTitle: 'ثبت نام',
                 path: '/signup',
@@ -85,24 +102,7 @@ exports.postAddEditor = (req, res, next) => {
         });
 };
 
-exports.getEditors = (req, res, next) => {
-    User.findAll().
-        then(data => {
-            const editorArray = [];
-            for (let p of data) { editorArray.push(p.dataValues); }
-            return editorArray;
-        })
-        .then(editorArray => {
-            res.render("admin/editors",
-                {
-                    pageTitle: 'کاربر ها',
-                    path: '/editors',
-                    editorArray: editorArray
-                });
-        })
-        .catch(err => { console.log(err); });
 
-};
 
 exports.getUpdateEditor = (req, res, next) => {
     const phoneNumber = req.params.editorPhoneNumber;
