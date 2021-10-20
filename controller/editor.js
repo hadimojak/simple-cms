@@ -1,8 +1,15 @@
 const fs = require('fs');
 const path = require('path');
-const pdf = require('pdf-thumbnail');
-const gm = require('gm');
-const { PDFNet } = require('@pdftron/pdfnet-node');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../uploads/media');
+    }, filename: function (req, file, cb) {
+        cb(null, req.body.fileName + '.' + file.mimetype.split('/')[1]);
+    }
+});
+exports.upload = 
+
 
 exports.getEditorProfile = (req, res, next) => {
     res.render('editor/editorHome', { pageTitle: 'editor', path: '/editor' });
@@ -78,20 +85,19 @@ exports.deleteFile = (req, res, next) => {
 };
 
 
-exports.postUpload = (req, res, next) => {
-    const fileName = req.file.originalname;
-    if (fileName.split('.')[1] === 'pdf') {
-        PDFNet.initialize('demo:1634646868519:78bd88e90300000000a42b22ff1a99ac02686e42e084032143298c2e2f')
-            .then(async data => {
-                const posixFilePath = path.join(__dirname, '..', 'uploads', 'media', fileName).split(path.sep).join(path.posix.sep);
-                const doc = await PDFNet.PDFDoc.createFromFilePath(posixFilePath);
-                const thumb = await PDFNet.PDFDraw.create(90);
-                const pg = await doc.getPage(1);
-                await thumb.export(pg, path.join(__dirname, '..', 'uploads', 'thumb', `thumb_${fileName.split('.')[0]}.png`).split(path.sep).join(path.posix.sep), 'png');
-                PDFNet.shutdown();
-            });
-    } else if (fileName.split('.')[1] === 'jpg')
+exports.postUploadFile = (req, res, next) => {
+    
+    console.log(req.file);
+    var ext = path.extname(req.file.originalname);
+    console.log(ext);
+    // if (fileName.split('.')[1] === 'mp4') {
+    //     const tg = new ThumbnailGenerator({
+    //         sourcePath: '../uploads/media/jjjj.mp4',
+    //         thumbnailPath: '../uploads/thumb/',
+    //     });
+    //     tg.generate().then(console.log());
+    // }
 
 
-        res.redirect('/editor/storage');
+    res.redirect('/editor/storage');
 };

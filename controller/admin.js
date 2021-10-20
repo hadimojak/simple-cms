@@ -65,7 +65,7 @@ exports.postAddEditor = (req, res, next) => {
             }
             res.redirect('/login');
         }).catch(err => {
-            console.log(err.errors[0].path.split('.')[1]);
+            // console.log(err.errors[0].path.split('.')[1]);
             const unique = err.errors[0].path.split('.')[1];
             res.render('signup', {
                 pageTitle: 'ثبت نام',
@@ -136,7 +136,7 @@ exports.postUpdateEditor = (req, res, next) => {
     const phoneNumber = req.body.phoneNumber;
     const password = req.body.password;
     const state = req.body.state === 'on' ? 1 : 0;
-    console.log(state, 'lllllllllllllll', phoneNumber);
+    // console.log(state, 'lllllllllllllll', phoneNumber);
     if (!errors.isEmpty()) {
         return res.render('signup',
             {

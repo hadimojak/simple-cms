@@ -1,13 +1,13 @@
 <%- include('../includes/head&side.ejs') %>
 
 
-    <section class="vh-100 gradient-custom  m-4 ">
+    <section class="vh-100 gradient-custom  p-4 ">
 
 
         <div class="container-fluid">
 
             <div class="py-3 ">
-                <nav class=" navbar navbar-expand-md navbar-dark bg-dark ">
+                <nav class=" navbar navbar-expand-md navbar-dark bg-dark rounded-lg">
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#fileFilterMenu"
                         aria-controls="fileFilterMenu" aria-expanded="false" aria-label="Toggle navigation"> <span
                             class="navbar-toggler-icon"></span>
@@ -21,8 +21,7 @@
 
 
                             <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">عکس</a> </li>
-                            <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">فیلم</a> </li>
-                            <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">pdf</a> </li>
+                            <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">فایل</a> </li>
                             <li class="nav-item" style="direction: ltr;">
 
                                 <button id='uploadFile' type="button" class="btn btn-info my-2 my-sm-0"
@@ -42,14 +41,28 @@
                                             <div class="modal-body">
                                                 <!-- Form -->
 
-                                                <form method='post' action='/editor/uploadFile'
-                                                    enctype="multipart/form-data">
-                                                    <p>انتخاب فایل :</p>
+
+
+                                                <form name="uploadForm" method='post' action='/editor/uploadFile'
+                                                    enctype="multipart/form-data" onsubmit="return validateForm()">
+                                                    <label for="fileName">نام فایل (بدون فاصله و نقطه)</label>
+                                                    <input type='text' name='fileName' id='fileName'
+                                                        class='form-control'>
                                                     <input type='file' name='file' id='file' class='form-control'>
                                                     <br>
                                                     <input type='submit' class='btn btn-info' value='Upload'
                                                         id='btn_upload'>
                                                 </form>
+
+                                                <script>
+                                                    function validateForm() {
+                                                        let x = document.forms["uploadForm"]["fileName"].value;
+                                                        if (x == "" || x.includes('.') || x.includes(' ')) {
+                                                            alert("نام مناسب برای فایل انتخاب نکرده اید.");
+                                                            return false;
+                                                        }
+                                                    }
+                                                </script>
 
                                                 <!-- Preview-->
                                                 <div id='preview'></div>
@@ -73,9 +86,9 @@
 
             <div class="row">
                 <!-- Gallery item -->
-                
 
-                        <!-- End -->
+
+                <!-- End -->
 
 
 

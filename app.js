@@ -1,18 +1,10 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 const { sequelize, DataTypes, Sequelize, Model } = require('./sequelize');
 // const hook = require('./hooks');
-const multer = require('multer');
 
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads/media');
-    }, filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
-exports.upload = multer({ storage: storage });
 
 
 const adminRoutes = require('./routes/admin');
