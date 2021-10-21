@@ -6,7 +6,7 @@ const connection = {
     }
 };
 
-const sequelize = new Sequelize('cms', 'root', '0015166031', connection
+const sequelize = new Sequelize('cms', 'root', '2525', connection
 );
 
 module.exports = { sequelize, Sequelize, DataTypes, Model };

@@ -13,41 +13,52 @@
                         <th scope="col ">ایمیل</th>
                         <th scope="col ">وضعیت</th>
                         <th scope="col ">انتخاب</th>
+                        <th scope="col ">حذف</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% for (var i=0; i < editorArray.length; i++) { %>
+                    <% for (var i=0; i < userArray.length; i++) { %>
                         <tr>
                             <th scope="row">
                                 <%= i+1 %>
                             </th>
                             <td>
-                                <%= editorArray[i].firstName +' '+ editorArray[i].lastName %>
+                                <%= userArray[i].firstName +' '+ userArray[i].lastName %>
                             </td>
                             <td>
-                                <%= editorArray[i].phoneNumber %>
+                                <%= userArray[i].phoneNumber %>
                             </td>
                             <td>
-                                <%= editorArray[i].email %>
+                                <%= userArray[i].email %>
                             </td>
                             <td>
-                                    <% if (editorArray[i].state === true) {%>
-                                        <p class='m-0 p-1 text-success font-weight-bold border rounded  border-success d-inline-flex bg-white'>فعال
+                                    <% if (userArray[i].state === true) {%>
+                                        <p class=' m-0 p-1 text-success font-weight-bold border rounded border-success
+                                    d-inline-flex bg-white'>فعال
                                     </p>
                                     <% }else { %>
-                                        <p class='m-0 p-1 text-danger font-weight-bold rounded border border-danger d-inline-flex bg-white'>غیر فعال
+                                        <p
+                                            class='m-0 p-1 text-danger font-weight-bold rounded border border-danger d-inline-flex bg-white'>
+                                            غیر فعال
                                         </p>
                                         <% } %>
                             </td>
                             <td>
                                 <a class="m-0 p-1 text-success font-weight-bold rounded border border-success d-inline-flex bg-white"
-                                    href="/admin/editors/<%= editorArray[i].phoneNumber %>">انتخاب</a>
+                                    href="/admin/users/<%= userArray[i].phoneNumber %>">انتخاب</a>
+                            </td>
+                            <td>
+                                <form action="/admin/users/delete/<%= userArray[i].phoneNumber %>" method="post"><button
+                                        class="m-0 p-1 text-danger font-weight-bold rounded border border-danger d-inline-flex bg-white"
+                                        type="submit">حذف</button></form>
+
                             </td>
                         </tr>
                         <% } %>
                 </tbody>
             </table>
-            <a class="m-0 p-1 text-success font-weight-bold rounded border border-success d-inline-flex bg-white " href="/admin/addUser">ایجاد کاربر جدید</a>
+            <a class="m-0 p-1 text-success font-weight-bold rounded border border-success d-inline-flex bg-white "
+                href="/admin/addUser">ایجاد کاربر جدید</a>
 
         </div>
     </section>

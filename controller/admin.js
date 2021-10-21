@@ -3,32 +3,29 @@ const { ValidationError, Op, where } = require('sequelize');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 
-
-
-
+// admin home page
 exports.getAdminHomePage = (req, res, next) => {
     res.render("admin/admin", { pageTitle: 'مدیریت', path: '/admin' });
 };
-
+// admin users
 exports.getUsers = (req, res, next) => {
     User.findAll().
         then(data => {
-            const editorArray = [];
-            for (let p of data) { editorArray.push(p.dataValues); }
-            return editorArray;
+            const userArray = [];
+            for (let p of data) { userArray.push(p.dataValues); }
+            return userArray;
         })
-        .then(editorArray => {
+        .then(userArray => {
             res.render("admin/users",
                 {
                     pageTitle: 'کاربر ها',
                     path: '/users',
-                    editorArray: editorArray
+                    userArray: userArray
                 });
         })
         .catch(err => { console.log(err); });
 
 };
-
 exports.getAddUser = (req, res, next) => {
     res.render('admin/signup', {
         pageTitle: 'ثبت نام',
@@ -38,7 +35,6 @@ exports.getAddUser = (req, res, next) => {
         selection: 'ثبت نام', update: false,
     });
 };
-
 exports.postAddUser = (req, res, next) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
@@ -101,14 +97,11 @@ exports.postAddUser = (req, res, next) => {
             });
         });
 };
-
-
-
-exports.getUpdateEditor = (req, res, next) => {
-    const phoneNumber = req.params.editorPhoneNumber;
+exports.getUpdateUser = (req, res, next) => {
+    const phoneNumber = req.params.userPhoneNumber;
     User.findAll({ where: { phoneNumber: phoneNumber } })
         .then(data => {
-            res.render('signup', {
+            res.render('admin/signup', {
                 pageTitle: 'به روز رسانی کاربر',
                 path: '/editors',
                 errorMessage: '',
@@ -126,9 +119,7 @@ exports.getUpdateEditor = (req, res, next) => {
         })
         .catch(err => { console.log(err); });
 };
-
-
-exports.postUpdateEditor = (req, res, next) => {
+exports.postUpdateUser = (req, res, next) => {
     const errors = validationResult(req);
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
@@ -138,7 +129,7 @@ exports.postUpdateEditor = (req, res, next) => {
     const state = req.body.state === 'on' ? 1 : 0;
     // console.log(state, 'lllllllllllllll', phoneNumber);
     if (!errors.isEmpty()) {
-        return res.render('signup',
+        return res.render('admin/signup',
             {
                 pageTitle: 'به روز رسانی کاربر',
                 path: '/editors',
@@ -167,7 +158,7 @@ exports.postUpdateEditor = (req, res, next) => {
                         phoneNumber: phoneNumber,
                         state: state
                     }, { where: { phoneNumber: phoneNumber } });
-                    res.redirect('/admin/editors');
+                    res.redirect('/admin/users');
 
                 } catch (err) {
                     throw err;
@@ -180,21 +171,42 @@ exports.postUpdateEditor = (req, res, next) => {
 
     }
 };
-
-exports.deleteEditor = (req, res, next) => {
-    res.status(200).json({ data: 'editor deleted' });
-};
-exports.disableEditor = (req, res, next) => {
-    res.status(200).json({ data: 'editor disabled' });
-};
-exports.enableEditor = (req, res, next) => {
-    res.status(200).json({ data: 'editor enabled' });
+exports.deleteUser = (req, res, next) => {
+    const phoneNumber = req.params.userPhoneNumber;
+    console.log(phoneNumber);
+    res.redirect('/admin/users');
 };
 
+// admin posts
+exports.getPosts = (req, res, next) => {
+    res.json({ data: 'post deleted' });
+};
+exports.getAddPost = (req, res, next) => {
+    res.render('createPost', { pageTitle: 'نوشته جدید', path: '/editor' });
+    // res.json({ data: `get add posts ${editorId} ` });
+};
+exports.postAddPost = (req, res, next) => {
+    // const editorId = req.params.editorId;
+    // console.log(req.body.post);
+    const newPost = req.body.post;
+    const postFileName = Date.now() + 'post' + ".html";
+    fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'posts', postFileName)
+        , newPost, (err) => { console.log(err); });
+
+
+    res.redirect('/');
+    // const element = document.createElement('body');
+    // element = s;
+
+};
+exports.getEditPost = (req, res, next) => { };
+exports.postEditPost = (req, res, next) => { };
+exports.deletePost = (req, res, next) => { };
+
+// admin pages 
 exports.getPages = (req, res, next) => {
     res.status(200).json({ data: 'get all the pages' });
 };
-
 exports.getSinglePage = (req, res, next) => {
     res.status(200).json({ data: 'get single pages' });
 };
@@ -204,24 +216,79 @@ exports.postCreatePage = (req, res, next) => {
 exports.getCreatePage = (req, res, next) => {
     res.status(200).json({ data: 'get crate page' });
 };
-
-exports.getEditMenu = (req, res, next) => {
-    res.json({ data: 'get edit menu' });
+exports.getEditPage = (req, res, next) => {
+    res.status(200).json({ data: 'get crate page' });
+};
+exports.postEditPage = (req, res, next) => {
+    res.status(200).json({ data: 'get crate page' });
+};
+exports.deletePage = (req, res, next) => {
+    res.status(200).json({ data: 'get crate page' });
 };
 
-
-exports.postEditMenu = (req, res, next) => {
+// admin menus
+exports.getMenus = (req, res, next) => {
+    res.json({ data: 'get edit menu' });
+};
+exports.getAddMenu = (req, res, next) => {
+    res.json({ data: 'post edit menu' });
+};
+ exports.postAddMenu = (req, res, next) => {
+    res.json({ data: 'post edit menu' });
+};
+ exports.getEditMenu = (req, res, next) => {
+    res.json({ data: 'post edit menu' });
+};
+ exports.postEditMenu = (req, res, next) => {
+    res.json({ data: 'post edit menu' });
+};
+ exports.deleteMenu = (req, res, next) => {
     res.json({ data: 'post edit menu' });
 };
 
-exports.getMediaFilePage = (req, res, next) => {
-    res.json({ data: 'get inventory page' });
+// admin files
+exports.getAllFiles = (req, res, next) => {
+    const fileArray = [];
+    const definitelyPosix = path.join(__dirname, '..', 'uploads', 'media').split(path.sep).join(path.posix.sep);
+    fs.readdir(definitelyPosix, (err, files) => {
+        if (err)
+            console.log(err);
+        else {
+            files.forEach(async file => {
+                if (file.split('.')[1] === 'pdf') {
+
+
+                    // const definitelyPosix = path.join(__dirname, '..', 'uploads', 'media', file).split(path.sep).join(path.posix.sep);
+                    // const pdfBuffer = fs.readFileSync(definitelyPosix);
+                    // console.log(pdfBuffer);
+                    // pdf(pdfBuffer, options).then(data => {
+                    //     fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'media', 'thumb_' + file)
+                    //         , data, (err) => { console.log(err); });
+
+                    // }).catch(err => { console.log(err); });
+                }
+
+            });
+        }
+        res.render('editor/allFiles', { pageTitle: 'فایل ها', path: '/storage' });
+
+    });
 };
-exports.filePreview = (req, res, next) => {
-    res.json({ data: 'filePreview' });
-};
-exports.updateFile = (req, res, next) => {
-    res.json({ data: 'updateFile' });
+exports.postUploadFile = (req, res, next) => {
+
+    console.log(req.file);
+    var ext = path.extname(req.file.originalname);
+    console.log(ext);
+    // if (fileName.split('.')[1] === 'mp4') {
+    //     const tg = new ThumbnailGenerator({
+    //         sourcePath: '../uploads/media/jjjj.mp4',
+    //         thumbnailPath: '../uploads/thumb/',
+    //     });
+    //     tg.generate().then(console.log());
+    // }
+
+
+    res.redirect('/editor/storage');
 };
 exports.deleteFile = (req, res, next) => {
     res.json({ data: 'deleteFile' });

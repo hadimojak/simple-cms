@@ -2,11 +2,33 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controller/admin');
 const { check, body } = require('express-validator');
+const path = require('path');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/media');
+    }, filename: function (req, file, cb) {
+        cb(null, req.body.fileName + '.' + file.mimetype.split('/')[1]);
+    }
+});
+exports.upload = multer({
+    storage: storage,
+    fileFilter: function (req, file, callback) {
+        var ext = path.extname(file.originalname);
+        if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif'
+            && ext !== '.jpeg' && ext !== '.pdf' && ext !== '.zip'
+            && ext !== '.rar' && ext !== ".mp4" && ext !== '.mpeg') {
+            return callback(null, false);
+        }
+        callback(null, true);
+    }, preservePath: true
+}).single('file');
 
+
+// if(user is superUser show her the users routes)
 router.get('/admin', adminController.getAdminHomePage);
 router.get('/admin/users', adminController.getUsers);
 router.get('/admin/addUser', adminController.getAddUser);
-
 router.post('/admin/addUser',
     [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
         .withMessage('.نام باید بدون فاصله  باشد').toLowerCase(),
@@ -20,9 +42,8 @@ router.post('/admin/addUser',
         return true;
     })],
     adminController.postAddUser);
-    
-router.get('/admin/editors/:editorPhoneNumber', adminController.getUpdateEditor);
-router.post('/admin/editors/:editorPhoneNumber', [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
+router.get('/admin/updateUser/:userPhoneNumber', adminController.getUpdateUser);
+router.post('/admin/updateUser', [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
     .withMessage('.نام باید بدون فاصله  باشد').toLowerCase(),
 body('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
     .withMessage('.نام خانوادگی باید بدون فاصله  باشد').toLowerCase(),
@@ -32,24 +53,56 @@ body('password', '.پسورد باید شامل حروف و عدد باشد و �
 body('passwordConfirmed', ".تکرار پسورد برابر نیست").trim().notEmpty().escape().custom((value, { req }) => {
     if (value !== req.body.password) { throw new Error(); }
     return true;
-})], adminController.postUpdateEditor);
+})], adminController.postUpdateUser);
+router.delete('/admin/delete/user/:userPhoneNumber', adminController.deleteUser);
+
+// if(user is normalUser show her only her files)
+router.get("/admin/storage", adminController.getAllFiles);
+router.post('/admin/uploadFile', [multer({
+    storage: storage,
+    fileFilter: function (req, file, callback) {
+        var ext = path.extname(file.originalname);
+        if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif'
+            && ext !== '.jpeg' && ext !== '.pdf' && ext !== '.zip'
+            && ext !== '.rar' && ext !== ".mp4" && ext !== '.mpeg') {
+            return callback(null, false);
+        }
+        callback(null, true);
+    }, preservePath: true
+}).single('file'), function (req, res, callback) {
+    if (!req.file) {
+        res.redirect('/admin/storage');
+    } else { callback(null, true); }
+}], adminController.postUploadFile);
+router.delete("/admin/delete/storage/:fileName", adminController.deleteFile);
+
+// if(user is normal user show het only her posts)
+router.get('/admin/posts', adminController.getPosts);
+router.post('/admin/posts/aprovePost/:postId', adminController.getPosts);
+router.get('/admin/addPost', adminController.getAddPost);
+router.post('/admin/addPost', adminController.postAddPost);
+router.get('/admin/updatePost/:postId', adminController.getEditPost);
+router.post('/admin/updatePost', adminController.postEditPost);
+router.delete('/admin/delete/post/:postId', adminController.deletePost);
 
 
-
-router.post('/admin/deleteEditor', adminController.deleteEditor);
-router.post('/admin/disableEditor', adminController.disableEditor);
-router.post('/admin/enableEditor', adminController.enableEditor);
-
+// if(user is superUser show her the pages routes)
 router.get('/admin/pages', adminController.getPages);
-router.get('/admin/pages/pageName', adminController.getSinglePage);
-router.post('/admin/pages/createPage', adminController.postCreatePage);
-router.get('/admin/pages/createPage', adminController.getCreatePage);
-router.get('/admin/pages/editmenu', adminController.getEditMenu);
-router.post('/admin/pages/editmenu', adminController.postEditMenu);
+router.get('/admin/pages/:pageName', adminController.getSinglePage);
+router.post('/admin/createPage', adminController.postCreatePage);
+router.get('/admin/createPage', adminController.getCreatePage);
+router.get('/admin/updatePage/:pageId', adminController.getEditPage);
+router.post('/admin/updatePage', adminController.postEditPage);
+router.delete('/admin/delete/page/:pageId', adminController.deletePage);
 
-router.get("/admin/storage", adminController.getMediaFilePage);
-router.get("/admin/storage/fileName", adminController.filePreview);
-router.post("/admin/storage/fileName/update", adminController.updateFile);
-router.post("/admin/storage/fileName/delete", adminController.deleteFile);
+//if(user is super User show her menus )
+router.get('/admin/Menus', adminController.getMenus);
+router.get('/admin/addMenu', adminController.getAddMenu);
+router.post('/admin/addMenu', adminController.postAddMenu);
+router.get('/admin/updateMenu/:menuId', adminController.getEditMenu);
+router.post('/admin/updateMenu', adminController.postEditMenu);
+router.delete('/admin/delete/page/:menuId', adminController.deleteMenu);
+
+
 
 module.exports = router;
