@@ -49,33 +49,33 @@
 
                     <li class="nav-item">
                         <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle" href="/admin/storage" type="button">فایل ها</a>
+                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/storage' ? 'active' : '' %>" href="/admin/storage" type="button">فایل ها</a>
                         </div>
                         <hr class="my-0">
                     </li>
                     <li class=" nav-item">
                         <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle" href="/admin/Menus" type="button">فهرست ها</a>
+                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/menu' ? 'active' : '' %>" href="/admin/Menus" type="button">فهرست ها</a>
                         </div>
 
                         <hr class="my-0">
                     </li>
                     <li class=" nav-item">
                         <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle" href="/admin/settings" type="button">تنظیمات</a>
+                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/setting' ? 'active' : '' %>" href="/admin/settings" type="button">تنظیمات</a>
                         </div>
                         <hr class="my-0">
                     </li>
                     <li class=" nav-item">
                         <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle" href="/admin/pages" type="button">صفحه ها</a>
+                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/page' ? 'active' : '' %>" href="/admin/pages" type="button">صفحه ها</a>
                         </div>
                         <hr class="my-0">
                     </li>
                     <li class=" nav-item ">
 
                         <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle" href="#" type="button"
+                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/post' ? 'active' : '' %>" href="#" type="button"
                                 data-toggle="dropdown">نوشته ها</a>
                             <div class="dropdown-content">
                                 <a href="/admin/posts">نوشته ها </a>

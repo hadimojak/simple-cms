@@ -242,7 +242,7 @@ exports.deleteFile = (req, res, next) => {
 
 // admin menus
 exports.getMenus = (req, res, next) => {
-    res.json({ data: 'get edit menu' });
+    res.render("admin/admin", { pageTitle: 'منو ها', path: '/menu' });
 };
 exports.getAddMenu = (req, res, next) => {
     res.json({ data: 'post edit menu' });
@@ -260,13 +260,15 @@ exports.deleteMenu = (req, res, next) => {
     res.json({ data: 'post edit menu' });
 };
 
+
+//get admin settings
 exports.getSettings = (req, res, next) => {
-    res.json({ data: 'settings' });
+    res.render("admin/admin", { pageTitle: 'تنظیمات', path: '/setting' });
 };
 
 // admin posts
 exports.getPosts = (req, res, next) => {
-    res.json({ data: 'post deleted' });
+    res.render("admin/admin", { pageTitle: 'نوشته ها', path: '/post' });
 };
 exports.getAddPost = (req, res, next) => {
     res.render('admin/createPost', { pageTitle: 'نوشته جدید', path: '/post' });
@@ -292,7 +294,7 @@ exports.deletePost = (req, res, next) => { };
 
 // admin pages 
 exports.getPages = (req, res, next) => {
-    res.status(200).json({ data: 'get all the pages' });
+    res.render("admin/admin", { pageTitle: 'صفحه ها', path: '/page' });
 };
 exports.getSinglePage = (req, res, next) => {
     res.status(200).json({ data: 'get single pages' });

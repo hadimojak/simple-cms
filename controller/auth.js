@@ -9,7 +9,7 @@ const { sequelize } = require('../sequelize');
 
 
 exports.getLogin = (req, res, next) => {
-    res.render('login', { pageTitle: 'ورود', path: '/login', validationErrors: [], errorMessage: '', oldInput: '' });
+    res.render('auth/login', { pageTitle: 'ورود', path: '/login', validationErrors: [], errorMessage: '', oldInput: '' });
 };
 
 exports.postLogin = (req, res, next) => {
@@ -17,7 +17,7 @@ exports.postLogin = (req, res, next) => {
     const password = req.body.password;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('login', {
+        return res.render('auth/login', {
             pageTitle: 'ورود',
             path: '/login',
             errorMessage: errors.array()[0].msg,
@@ -31,7 +31,7 @@ exports.postLogin = (req, res, next) => {
     User.findAll({ where: { number: phoneNumber } })
         .then(editor => {
             if (editor.length === 0) {
-                return res.render('login', {
+                return res.render('auth/login', {
                     pageTitle: 'ورود',
                     path: '/login',
                     errorMessage: 'some errors',
@@ -66,7 +66,12 @@ exports.postLogin = (req, res, next) => {
         });
 
 };
-
+exports.getReset = (req, res, next) => {
+    res.json({ data: 'password reset' });
+};
+exports.postReset = (req, res, next) => {
+    res.json({ data: 'password reset' });
+};
 exports.logout = (req, res, next) => {
     res.json({ data: 'user logout' });
 };
