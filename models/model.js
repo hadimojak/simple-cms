@@ -39,6 +39,9 @@ const Media = sequelize.define('Media', {
     fileName: {
         type: DataTypes.STRING,
         allowNull: false,
+    }, originalName: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }, path: {
         type: DataTypes.STRING,
         allowNull: false,
