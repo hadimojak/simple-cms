@@ -25,15 +25,15 @@
                             <td>
                                 <%= userArray[i].firstName +' '+ userArray[i].lastName %>
                             </td>
-                            <td>
-                                <%= userArray[i].phoneNumber %>
+                            <td id=' phoneNumber'>
+                                    <%= userArray[i].phoneNumber %>
                             </td>
                             <td>
                                 <%= userArray[i].email %>
                             </td>
                             <td>
-                                    <% if (userArray[i].state === true) {%>
-                                        <p class=' m-0 p-1 text-success font-weight-bold border rounded border-success
+                                <% if (userArray[i].state===true) {%>
+                                    <p class=' m-0 p-1 text-success font-weight-bold border rounded border-success
                                     d-inline-flex bg-white'>فعال
                                     </p>
                                     <% }else { %>
@@ -48,10 +48,32 @@
                                     href="/admin/users/<%= userArray[i].phoneNumber %>">انتخاب</a>
                             </td>
                             <td>
-                                <form action="/admin/users/delete/<%= userArray[i].phoneNumber %>" method="post"><button
-                                        class="m-0 p-1 text-danger font-weight-bold rounded border border-danger d-inline-flex bg-white"
-                                        type="submit">حذف</button></form>
+                                <input value='<%= userArray[i].phoneNumber %>' type="hidden"></input>
+                                <input onclick="deleteRow(this)"
+                                    class="m-0 p-1 text-danger font-weight-bold rounded border border-danger d-inline-flex bg-white"
+                                    type="button" value="حذف"></input>
+                                <script>
 
+                                    function deleteRow(p) {
+                                        const row = p.parentNode.parentNode
+                                        const phoneNumber = p.previousElementSibling.value
+                                        fetch(`/admin/delete/user/${phoneNumber}`, {
+                                            method: "DELETE",
+                                            headers: {
+                                            },
+                                        })
+                                            .then((result) => {
+                                                return result.json();
+                                            })
+                                            .then((data) => {
+                                                console.log(data);
+                                                row.parentNode.removeChild(row);
+                                            })
+                                            .catch((err) => {
+                                                console.log(err);
+                                            });
+                                    }
+                                </script>
                             </td>
                         </tr>
                         <% } %>

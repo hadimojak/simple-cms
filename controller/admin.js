@@ -2,6 +2,9 @@ const { User } = require('../models/Model');
 const { ValidationError, Op, where } = require('sequelize');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const path = require('path');
+const fs = require('fs');
+const imageThumbnail = require('image-thumbnail');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
@@ -9,10 +12,13 @@ exports.getAdminHomePage = (req, res, next) => {
 };
 // admin users
 exports.getUsers = (req, res, next) => {
-    User.findAll().
+    User.findAll({ paranoid: false }).
         then(data => {
             const userArray = [];
-            for (let p of data) { userArray.push(p.dataValues); }
+            for (let p of data) {
+                console.log(p.dataValues);
+                userArray.push(p.dataValues);
+            }
             return userArray;
         })
         .then(userArray => {
@@ -103,7 +109,7 @@ exports.getUpdateUser = (req, res, next) => {
         .then(data => {
             res.render('admin/signup', {
                 pageTitle: 'به روز رسانی کاربر',
-                path: '/editors',
+                path: '/users',
                 errorMessage: '',
                 oldInput: {
                     email: data[0].dataValues.email,
@@ -132,7 +138,7 @@ exports.postUpdateUser = (req, res, next) => {
         return res.render('admin/signup',
             {
                 pageTitle: 'به روز رسانی کاربر',
-                path: '/editors',
+                path: '/users',
                 errorMessage: errors.array()[0].msg,
                 oldInput: {
                     email: email,
@@ -174,7 +180,88 @@ exports.postUpdateUser = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
     const phoneNumber = req.params.userPhoneNumber;
     console.log(phoneNumber);
-    res.redirect('/admin/users');
+    User.destroy({ where: { phoneNumber: phoneNumber } })
+        .then(user => {
+            res.json({ data: 'user deleted succesfully' });
+        });
+};
+
+// admin files
+exports.getAllFiles = (req, res, next) => {
+    const fileArray = [];
+
+    const definitelyPosix = path.join(__dirname, '..', 'uploads', 'media').split(path.sep).join(path.posix.sep);
+    fs.readdir(definitelyPosix, (err, files) => {
+        if (err)
+            console.log(err);
+        else {
+            files.forEach(async file => {
+                if (file.split('.')[1] === 'pdf') {
+
+
+                    // const definitelyPosix = path.join(__dirname, '..', 'uploads', 'media', file).split(path.sep).join(path.posix.sep);
+                    // const pdfBuffer = fs.readFileSync(definitelyPosix);
+                    // console.log(pdfBuffer);
+                    // pdf(pdfBuffer, options).then(data => {
+                    //     fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'media', 'thumb_' + file)
+                    //         , data, (err) => { console.log(err); });
+
+                    // }).catch(err => { console.log(err); });
+                }
+
+            });
+        }
+        res.render('admin/allFiles', { pageTitle: 'فایل ها', path: '/storage' });
+
+    });
+};
+exports.postUploadFile = (req, res, next) => {
+    console.log(req.file);
+    var ext = path.extname(req.file.originalname);
+    console.log(ext);
+    let options = { width: 150, height: 150 };
+    imageThumbnail(req.file.path,options)
+        .then(thumbnail => {
+            fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'thumb', req.file.filename), thumbnail);
+        })
+        .catch(err => { console.log(err); });
+    // if (fileName.split('.')[1] === 'mp4') {
+    //     const tg = new ThumbnailGenerator({
+    //         sourcePath: '../uploads/media/jjjj.mp4',
+    //         thumbnailPath: '../uploads/thumb/',
+    //     });
+    //     tg.generate().then(console.log());
+    // }
+
+
+    res.redirect('/admin/storage');
+};
+exports.deleteFile = (req, res, next) => {
+    res.json({ data: 'deleteFile' });
+};
+
+// admin menus
+exports.getMenus = (req, res, next) => {
+    res.json({ data: 'get edit menu' });
+};
+exports.getAddMenu = (req, res, next) => {
+    res.json({ data: 'post edit menu' });
+};
+exports.postAddMenu = (req, res, next) => {
+    res.json({ data: 'post edit menu' });
+};
+exports.getEditMenu = (req, res, next) => {
+    res.json({ data: 'post edit menu' });
+};
+exports.postEditMenu = (req, res, next) => {
+    res.json({ data: 'post edit menu' });
+};
+exports.deleteMenu = (req, res, next) => {
+    res.json({ data: 'post edit menu' });
+};
+
+exports.getSettings = (req, res, next) => {
+    res.json({ data: 'settings' });
 };
 
 // admin posts
@@ -182,7 +269,7 @@ exports.getPosts = (req, res, next) => {
     res.json({ data: 'post deleted' });
 };
 exports.getAddPost = (req, res, next) => {
-    res.render('createPost', { pageTitle: 'نوشته جدید', path: '/editor' });
+    res.render('admin/createPost', { pageTitle: 'نوشته جدید', path: '/post' });
     // res.json({ data: `get add posts ${editorId} ` });
 };
 exports.postAddPost = (req, res, next) => {
@@ -226,70 +313,5 @@ exports.deletePage = (req, res, next) => {
     res.status(200).json({ data: 'get crate page' });
 };
 
-// admin menus
-exports.getMenus = (req, res, next) => {
-    res.json({ data: 'get edit menu' });
-};
-exports.getAddMenu = (req, res, next) => {
-    res.json({ data: 'post edit menu' });
-};
- exports.postAddMenu = (req, res, next) => {
-    res.json({ data: 'post edit menu' });
-};
- exports.getEditMenu = (req, res, next) => {
-    res.json({ data: 'post edit menu' });
-};
- exports.postEditMenu = (req, res, next) => {
-    res.json({ data: 'post edit menu' });
-};
- exports.deleteMenu = (req, res, next) => {
-    res.json({ data: 'post edit menu' });
-};
-
-// admin files
-exports.getAllFiles = (req, res, next) => {
-    const fileArray = [];
-    const definitelyPosix = path.join(__dirname, '..', 'uploads', 'media').split(path.sep).join(path.posix.sep);
-    fs.readdir(definitelyPosix, (err, files) => {
-        if (err)
-            console.log(err);
-        else {
-            files.forEach(async file => {
-                if (file.split('.')[1] === 'pdf') {
 
 
-                    // const definitelyPosix = path.join(__dirname, '..', 'uploads', 'media', file).split(path.sep).join(path.posix.sep);
-                    // const pdfBuffer = fs.readFileSync(definitelyPosix);
-                    // console.log(pdfBuffer);
-                    // pdf(pdfBuffer, options).then(data => {
-                    //     fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'media', 'thumb_' + file)
-                    //         , data, (err) => { console.log(err); });
-
-                    // }).catch(err => { console.log(err); });
-                }
-
-            });
-        }
-        res.render('editor/allFiles', { pageTitle: 'فایل ها', path: '/storage' });
-
-    });
-};
-exports.postUploadFile = (req, res, next) => {
-
-    console.log(req.file);
-    var ext = path.extname(req.file.originalname);
-    console.log(ext);
-    // if (fileName.split('.')[1] === 'mp4') {
-    //     const tg = new ThumbnailGenerator({
-    //         sourcePath: '../uploads/media/jjjj.mp4',
-    //         thumbnailPath: '../uploads/thumb/',
-    //     });
-    //     tg.generate().then(console.log());
-    // }
-
-
-    res.redirect('/editor/storage');
-};
-exports.deleteFile = (req, res, next) => {
-    res.json({ data: 'deleteFile' });
-};

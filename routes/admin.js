@@ -76,6 +76,17 @@ router.post('/admin/uploadFile', [multer({
 }], adminController.postUploadFile);
 router.delete("/admin/delete/storage/:fileName", adminController.deleteFile);
 
+//if(user is super User show her menus )
+router.get('/admin/Menus', adminController.getMenus);
+router.get('/admin/addMenu', adminController.getAddMenu);
+router.post('/admin/addMenu', adminController.postAddMenu);
+router.get('/admin/updateMenu/:menuId', adminController.getEditMenu);
+router.post('/admin/updateMenu', adminController.postEditMenu);
+router.delete('/admin/delete/page/:menuId', adminController.deleteMenu);
+
+//if user is super user
+router.get('/admin/settings', adminController.getSettings);
+
 // if(user is normal user show het only her posts)
 router.get('/admin/posts', adminController.getPosts);
 router.post('/admin/posts/aprovePost/:postId', adminController.getPosts);
@@ -88,20 +99,14 @@ router.delete('/admin/delete/post/:postId', adminController.deletePost);
 
 // if(user is superUser show her the pages routes)
 router.get('/admin/pages', adminController.getPages);
-router.get('/admin/pages/:pageName', adminController.getSinglePage);
+router.get('/admin/pages/:pageId', adminController.getSinglePage);
 router.post('/admin/createPage', adminController.postCreatePage);
 router.get('/admin/createPage', adminController.getCreatePage);
 router.get('/admin/updatePage/:pageId', adminController.getEditPage);
 router.post('/admin/updatePage', adminController.postEditPage);
 router.delete('/admin/delete/page/:pageId', adminController.deletePage);
 
-//if(user is super User show her menus )
-router.get('/admin/Menus', adminController.getMenus);
-router.get('/admin/addMenu', adminController.getAddMenu);
-router.post('/admin/addMenu', adminController.postAddMenu);
-router.get('/admin/updateMenu/:menuId', adminController.getEditMenu);
-router.post('/admin/updateMenu', adminController.postEditMenu);
-router.delete('/admin/delete/page/:menuId', adminController.deleteMenu);
+
 
 
 
