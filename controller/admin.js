@@ -16,7 +16,6 @@ exports.getUsers = (req, res, next) => {
         then(data => {
             const userArray = [];
             for (let p of data) {
-                console.log(p.dataValues);
                 userArray.push(p.dataValues);
             }
             return userArray;
@@ -84,7 +83,6 @@ exports.postAddUser = (req, res, next) => {
             }
             res.redirect('/login');
         }).catch(err => {
-            // console.log(err.errors[0].path.split('.')[1]);
             const unique = err.errors[0].path.split('.')[1];
             res.render('signup', {
                 pageTitle: 'ثبت نام',
@@ -133,7 +131,6 @@ exports.postUpdateUser = (req, res, next) => {
     const phoneNumber = req.body.phoneNumber;
     const password = req.body.password;
     const state = req.body.state === 'on' ? 1 : 0;
-    // console.log(state, 'lllllllllllllll', phoneNumber);
     if (!errors.isEmpty()) {
         return res.render('admin/signup',
             {
@@ -213,7 +210,6 @@ exports.getAllFiles = (req, res, next) => {
     res.render('admin/allFiles', { pageTitle: 'فایل ها', path: '/storage' });
 };
 exports.postUploadFile = (req, res, next) => {
-    console.log(req.file)
     const ext = path.extname(req.file.originalname);
     const options = { width: 128, height: 128 };
     if (ext === '.png' || ext === '.jpg' || ext === ".jpeg") {
@@ -261,20 +257,14 @@ exports.getPosts = (req, res, next) => {
 };
 exports.getAddPost = (req, res, next) => {
     res.render('admin/createPost', { pageTitle: 'نوشته جدید', path: '/post' });
-    // res.json({ data: `get add posts ${editorId} ` });
 };
 exports.postAddPost = (req, res, next) => {
-    // const editorId = req.params.editorId;
-    // console.log(req.body.post);
     const newPost = req.body.post;
     const postFileName = Date.now() + 'post' + ".html";
     fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'posts', postFileName)
         , newPost, (err) => { console.log(err); });
-
-
     res.redirect('/');
-    // const element = document.createElement('body');
-    // element = s;
+
 
 };
 exports.getEditPost = (req, res, next) => { };
