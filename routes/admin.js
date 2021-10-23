@@ -8,6 +8,12 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads/media');
     }, filename: function (req, file, cb) {
+        if (file.mimetype === 'application/octet-stream') {
+            return cb(null, req.body.fileName + '.rar');
+        }
+        if (file.mimetype === 'application/x-zip-compressed') {
+            return cb(null, req.body.fileName + '.zip');
+        }
         cb(null, req.body.fileName + '.' + file.mimetype.split('/')[1]);
     }
 });

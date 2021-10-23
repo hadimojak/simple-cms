@@ -45,7 +45,7 @@
                             </td>
                             <td>
                                 <a class="m-0 p-1 text-success font-weight-bold rounded border border-success d-inline-flex bg-white"
-                                    href="/admin/users/<%= userArray[i].phoneNumber %>">انتخاب</a>
+                                    href="/admin/updateUser/<%= userArray[i].phoneNumber %>">انتخاب</a>
                             </td>
                             <td>
                                 <input value='<%= userArray[i].phoneNumber %>' type="hidden"></input>
@@ -66,7 +66,6 @@
                                                 return result.json();
                                             })
                                             .then((data) => {
-                                                console.log(data);
                                                 row.parentNode.removeChild(row);
                                             })
                                             .catch((err) => {
