@@ -28,7 +28,7 @@ exports.postLogin = (req, res, next) => {
             validationErrors: errors.array(),
         });
     }
-    User.findAll({ where: { number: phoneNumber } })
+    User.findAll({ where: { phoneNumber: phoneNumber } })
         .then(editor => {
             if (editor.length === 0) {
                 return res.render('auth/login', {
@@ -46,7 +46,7 @@ exports.postLogin = (req, res, next) => {
             bcrypt.compare(password, editor[0].dataValues.password)
                 .then(doMatch => {
                     if (doMatch) {
-                        return res.redirect(`/editor/${phoneNumber}`);
+                        return res.redirect(`/admin`);
                     }
                     return res.render('login', {
                         pageTitle: 'ورود',

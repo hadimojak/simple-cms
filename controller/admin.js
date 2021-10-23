@@ -196,18 +196,7 @@ exports.getAllFiles = (req, res, next) => {
             console.log(err);
         else {
             files.forEach(async file => {
-                if (file.split('.')[1] === 'pdf') {
-
-
-                    // const definitelyPosix = path.join(__dirname, '..', 'uploads', 'media', file).split(path.sep).join(path.posix.sep);
-                    // const pdfBuffer = fs.readFileSync(definitelyPosix);
-                    // console.log(pdfBuffer);
-                    // pdf(pdfBuffer, options).then(data => {
-                    //     fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'media', 'thumb_' + file)
-                    //         , data, (err) => { console.log(err); });
-
-                    // }).catch(err => { console.log(err); });
-                }
+                fileArray.push(file);
 
             });
         }
@@ -220,7 +209,7 @@ exports.postUploadFile = (req, res, next) => {
     var ext = path.extname(req.file.originalname);
     console.log(ext);
     let options = { width: 150, height: 150 };
-    imageThumbnail(req.file.path,options)
+    imageThumbnail(req.file.path, options)
         .then(thumbnail => {
             fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'thumb', req.file.filename), thumbnail);
         })
