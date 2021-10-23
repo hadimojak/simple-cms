@@ -194,17 +194,25 @@ exports.getAllFiles = (req, res, next) => {
         if (err)
             console.log(err);
         else {
-            files.forEach(async file => {
-                fileArray.push(file);
+            files.forEach(file => {
+                if (file.split('.')[1] === 'png' || file.split('.')[1] === 'jpg' || file.split('.')[1] === 'jpeg') {
+                    fileArray.push({ src: `uploads/thumb/${file}` });
+                } else {
+                    fileArray.push({ src: `uploads/media/${file}` });
+                }
             });
+            console.log(fileArray.length, fileArray);
+            res.render('admin/allFiles', { pageTitle: 'فایل ها', path: '/storage', fileArray: fileArray });
+
+
         }
-        res.render('admin/allFiles', { pageTitle: 'فایل ها', path: '/storage' });
 
     });
 };
 exports.postUploadFile = (req, res, next) => {
     var ext = path.extname(req.file.originalname);
     let options = { width: 128, height: 128 };
+    console.log(req.file)
     if (ext === 'png' || ext === 'jpg' || ext === "jpeg") {
         imageThumbnail(req.file.path, options)
             .then(thumbnail => {
@@ -212,11 +220,7 @@ exports.postUploadFile = (req, res, next) => {
             })
             .catch(err => { console.log(err); });
     }
-
     res.redirect('/admin/storage');
-
-
-
 };
 exports.deleteFile = (req, res, next) => {
     res.json({ data: 'deleteFile' });
