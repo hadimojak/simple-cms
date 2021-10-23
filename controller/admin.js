@@ -188,36 +188,32 @@ exports.deleteUser = (req, res, next) => {
 // admin files
 exports.filesApi = (req, res, next) => {
     const fileArray = [];
-
     const definitelyPosix = path.join(__dirname, '..', 'uploads', 'media').split(path.sep).join(path.posix.sep);
     fs.readdir(definitelyPosix, (err, files) => {
         if (err)
             console.log(err);
         else {
-            let i = 1;
             files.forEach(file => {
                 if (file.split('.')[1] === 'png' || file.split('.')[1] === 'jpg' || file.split('.')[1] === 'jpeg') {
-                    fileArray.push({ id: i++, src: `/uploads/media/${file}`, thumb: `/uploads/thumb/${file}`, fileName: file, ext: file.split('.')[1] });
+                    fileArray.push({ id:1, src: `/uploads/media/${file}`, thumb: `/uploads/thumb/${file}`, fileName: file, ext: file.split('.')[1] });
                 } else if (file.split('.')[1] === 'pdf') {
-                    fileArray.push({ id: i++, src: `/uploads/media/${file}`, thumb: `/pictures/pdf.png`, fileName: file, ext: file.split('.')[1] });
+                    fileArray.push({ id:1, src: `/uploads/media/${file}`, thumb: `/pictures/pdf.png`, fileName: file, ext: file.split('.')[1] });
                 } else if (file.split('.')[1] === 'rar' || file.split('.')[1] === 'zip') {
-                    fileArray.push({ id: i++, src: `/uploads/media/${file}`, thumb: `/pictures/file.png`, fileName: file, ext: file.split('.')[1] });
+                    fileArray.push({ id:1, src: `/uploads/media/${file}`, thumb: `/pictures/file.png`, fileName: file, ext: file.split('.')[1] });
                 } else if (file.split('.')[1] === 'mp4' || file.split('.')[1] === 'mkv') {
-                    fileArray.push({ id: i++, src: `/uploads/media/${file}`, thumb: `/pictures/video.png`, fileName: file, ext: file.split('.')[1] });
+                    fileArray.push({ id:1, src: `/uploads/media/${file}`, thumb: `/pictures/video.png`, fileName: file, ext: file.split('.')[1] });
                 }
             });
             res.json(fileArray);
-
         }
     });
 };
 
 exports.getAllFiles = (req, res, next) => {
-
     res.render('admin/allFiles', { pageTitle: 'فایل ها', path: '/storage' });
-
 };
 exports.postUploadFile = (req, res, next) => {
+    console.log(req.file)
     const ext = path.extname(req.file.originalname);
     const options = { width: 128, height: 128 };
     if (ext === '.png' || ext === '.jpg' || ext === ".jpeg") {
