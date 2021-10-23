@@ -80,6 +80,7 @@ router.post('/admin/uploadFile', [multer({
         res.redirect('/admin/storage');
     } else { callback(null, true); }
 }], adminController.postUploadFile);
+router.get('/admin/storage/fileData',adminController.filesApi)
 router.delete("/admin/delete/storage/:fileName", adminController.deleteFile);
 
 //if(user is super User show her menus )

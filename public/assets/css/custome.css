@@ -91,13 +91,9 @@ body {
 
   .gradient-custom {
     /* fallback for old browsers */
-    background: #abd9ff;
+    background: rgb(223, 166, 209)
   
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to bottom right, rgb(196, 132, 180), rgb(109, 191, 230));
   
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to bottom right, rgb(207, 134, 195), rgb(142, 221, 252))
   }
   
   

@@ -1,0 +1,29 @@
+<div class="row" id='fileGallery'>
+    <!-- Gallery item -->
+    <% for (let file of fileArray ){ %>
+        <div class="col-xl-2 col-sm-4 col-md-2 mb-2">
+            <div class="bg-white rounded shadow-sm">
+                <img src="<%= file.thumb %>" alt="" class="img-fluid card-img-top">
+                <div class="p-0 ">
+                    <h5 class="text-center m-0">
+                        <%= file.fileName %>
+                    </h5>
+                    <div
+                        class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-0">
+                        <a class="badge badge-success px-1 rounded-pill font-weight-bold "
+                            href="#"><span class="font-weight-bold">انتخاب</span></a>
+                        <a class="badge badge-danger px-1 rounded-pill font-weight-bold "
+                            href="#">حذف
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+
+            <!-- End -->
+
+</div>
+
+
+http://localhost:3000/admin/storage/fileData
