@@ -211,16 +211,19 @@ exports.postUploadFile = (req, res, next) => {
     console.log(req.file);
     const ext = path.extname(req.file.originalname);
     const options = { width: 128, height: 128 };
+    let thumbLoc;
     if (ext === '.png' || ext === '.jpg' || ext === ".jpeg") {
         imageThumbnail(req.file.path, options)
             .then(thumbnail => {
                 fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'thumb', req.file.filename), thumbnail);
             })
             .catch(err => { console.log(err); });
+        thumbLoc = `/uploads/thumb/${req.file.filename}`;
     }
+    thumbLoc = '/pictures/pdf.png';
     Media.create({
-        fileName: req.file.filename, originalName: req.file.originalname,
-        path: req.file.destination, mimetype: req.file.mimetype, size: req.file.size
+        fileName: req.file.filename, originalName: req.file.originalname, thumb: thumbLoc,
+        path: (req.file.destination).split('.')[1], mimetype: req.file.mimetype, size: req.file.size / 1000
     }).then(file => {
         res.redirect('/admin/storage');
     });
