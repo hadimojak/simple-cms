@@ -68,10 +68,10 @@
                 <div class=" container-fluid">
                     <div class="row">
                         <!-- Gallery item -->
-                        <% for (let i=0;i<fileArray.length;i++ ){ %>
+                        <% for (let file of fileArray ){ %>
                             <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
                                 <div class="bg-white rounded shadow-sm">
-                                    <img src="/uploads/media/d.png" alt="" class="img-fluid card-img-top">
+                                    <img src="<%= file.thumb %>" alt="" class="img-fluid card-img-top">
                                     <div class="p-4">
                                         <h5> <a href="#" class="text-dark">Red paint cup</a></h5>
                                         <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur

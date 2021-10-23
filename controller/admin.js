@@ -195,13 +195,14 @@ exports.getAllFiles = (req, res, next) => {
             console.log(err);
         else {
             files.forEach(file => {
+
                 if (file.split('.')[1] === 'png' || file.split('.')[1] === 'jpg' || file.split('.')[1] === 'jpeg') {
-                    fileArray.push({ src: `uploads/thumb/${file}` });
+                    fileArray.push({ src: `/uploads/media/${file}`, thumb: `/uploads/thumb/${file}`, fileName: file.split('.')[0] });
                 } else {
-                    fileArray.push({ src: `uploads/media/${file}` });
+                    fileArray.push({ src: `/uploads/media/${file}`,thumb: `/pictures/pdf.png` ,fileName: file.split('.')[0] });
                 }
             });
-            console.log(fileArray.length, fileArray);
+            console.log(fileArray);
             res.render('admin/allFiles', { pageTitle: 'فایل ها', path: '/storage', fileArray: fileArray });
 
 
@@ -212,7 +213,7 @@ exports.getAllFiles = (req, res, next) => {
 exports.postUploadFile = (req, res, next) => {
     var ext = path.extname(req.file.originalname);
     let options = { width: 128, height: 128 };
-    console.log(req.file)
+    console.log(req.file);
     if (ext === 'png' || ext === 'jpg' || ext === "jpeg") {
         imageThumbnail(req.file.path, options)
             .then(thumbnail => {
