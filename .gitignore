@@ -1,5 +1,4 @@
 node_modules
-uploads/thumb/*
-uploads/media/*
+
 !uploads/thumb/.keep
 !uploads/media/.keep
