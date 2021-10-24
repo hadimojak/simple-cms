@@ -1,5 +1,5 @@
 node_modules
 uploads/thumb/*
 uploads/media/*
-!uploads/thumb/.gitkeep
-!uploads/media/.gitkeep
+!uploads/thumb/.keep
+!uploads/media/.keep
