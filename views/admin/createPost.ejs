@@ -23,53 +23,67 @@
     <script src="/assets/js/quill.js"></script>
     <script src="/assets/js/image-resize.min.js"></script>
 
+    <div class="modal fade" id="galleryModal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content p-2">
+          <%- include('../includes/fileGallery.ejs') %>
+        </div>
+      </div>
+    </div>
     <!-- Initialize Quill editor -->
     <script>
-
-
-
       var quill = new Quill('#editor', {
         modules: {
-
           imageResize: {
             displaySize: true
           },
           'syntax': true,
-          'toolbar': [
-            ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-            ['blockquote', 'code-block'],
-
-            [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-            [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-            [{ 'direction': 'rtl' }],                         // text direction
-
-            [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-             [ 'link', 'image', 'video', 'formula' ],
-            [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-            [{ 'font': [] }],
-            [{ 'align': [] }],
-
-            ['clean']
-          ]
+          toolbar: {
+            container:
+              [
+                ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                ['blockquote', 'code-block'],
+                [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+                [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+                [{ 'direction': 'rtl' }],                         // text direction
+                [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['link', 'image', 'formula'],
+                [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                [{ 'font': [] }],
+                [{ 'align': [] }],
+                ['clean']
+              ], handlers: { image: imageHandler }
+          }
         },
         theme: 'snow'
       });
 
+      function imageHandler() {
+        var range = this.quill.getSelection();
+        $('#galleryModal').modal('show')
+        // var value = prompt('please copy paste the image url here.');
+        // if (value) {
+        //   this.quill.insertEmbed(range.index, 'image', value, Quill.sources.USER);
+        // }
+      }
+
+
+      //send post to backend
       $('form').submit(function (e) {
         let content = quill.editor.scroll.domNode.innerHTML;
         // console.log(content)
         $.ajax(
           {
-            url: "/editor/editorPhoneNumber/addPost",
+            url: "/admin/addPost",
             async: true,
             type: "POST",
             data: { post: content },
             encode: true,
             success: function (result) {
-              window.location.replace('/');
+              window.location.replace('/admin/posts');
             }
           });
         e.preventDefault()

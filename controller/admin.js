@@ -291,7 +291,7 @@ exports.postAddPost = (req, res, next) => {
     const postFileName = Date.now() + 'post' + ".html";
     fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'posts', postFileName)
         , newPost, (err) => { console.log(err); });
-    res.redirect('/');
+    res.redirect('/admin/posts');
 
 
 };
