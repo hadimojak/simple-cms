@@ -112,8 +112,13 @@
         select.click(function () {
 
             var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
-                console.log(row.path)
-                quill.insertEmbed(100,'image',row.path)
+                console.log(row.ext)
+                if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg') {
+                    quill.insertEmbed(100, 'image', row.path)
+                }
+                if (row.ext === '.mp4' || row.ext === ".mkv" || row.ext === '.3gp') {
+                    quill.insertEmbed(100, 'video', row.path)
+                }
             })
             $('#galleryModal').modal('hide')
         })
