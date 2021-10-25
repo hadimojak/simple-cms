@@ -60,7 +60,8 @@
                             <tr>
                                 <th data-field="fileName" data-sortable="true">نام</th>
                                 <th data-field="ext" data-sortable="true">نوع</th>
-                                <th data-field="ext" data-sortable="true" data-formatter="imgFormatter">پیش نمایش</th>
+                                <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
+                                <th data-field="thumb" data-sortable="true" data-formatter="imgFormatter">پیش نمایش</th>
                                 <th data-field="state" data-checkbox="true"></th>
                             </tr>
                         </thead>
@@ -73,49 +74,42 @@
     </section>
     <script>
         function imgFormatter(val, row) {
-            switch (val.toLowerCase()) {
-                case 'jpeg':
-                case 'png':
-                case 'jpg':
-                    return `<img width="48" hegiht="48" src="${row.thumb}" alt="${row.thumb}" />`;
-
-                case 'mp4':
-                case 'mkv':
-                case '3gp':
-                    return `<img width="48" hegiht="48" src="/pictures/video.png" alt="/pictures/video.png" />`;
-
-                default:
-                    return `<img width="48" hegiht="48" src="/pictures/file.png" alt="/pictures/file.png" />`;
-            }
+            return `<img width="48" hegiht="48" src="${row.thumb}" alt="${row.thumb}" />`;
         }
 
-        const button = $('#deleteFile')
+        const remove = $('#deleteFile')
         const table = $('#table')
 
         $(function () {
-            button.click(function () {
-                var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
-                    console.log(row)
-                    // fetch(`/admin/delete/user/${phoneNumber}`, {
-                    //     method: "DELETE",
-                    //     headers: {
-                    //     },
-                    // })
-                    //     .then((result) => {
-                    //         return result.json();
-                    //     })
-                    //     .then((data) => {
-                    //         row.parentNode.removeChild(row);
-                    //     })
-                    //     .catch((err) => {
-                    //         console.log(err);
-                    //     });
-                })
-                // $table.bootstrapTable('remove', {
-                //     field: 'id',
-                //     values: ids
-                // })
+            table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+                remove.prop('disabled', !table.bootstrapTable('getSelections').length)
             })
+            remove.click(function () {
+                var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
+                    fetch(`/admin/delete/storage/${row.fileName}`, {
+                        method: "DELETE",
+                        headers: {
+                        },
+                    })
+                        .then((response) => {
+                            return response.json();
+                        })
+                        .then((result) => {
+                            console.log(result)
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                    return row.id
+                })
+
+                table.bootstrapTable('remove', {
+                    field: 'id',
+                    values: ids
+                })
+                remove.prop('disabled', true)
+            })
+
         })
     </script>
     </body>
