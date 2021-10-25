@@ -7,7 +7,6 @@ models.forEach(async p => {
     const historyTableName = p.getTableName().toLowerCase() + 'history';
     const body = {};
 
-    // console.log(p.rawAttributes['firstName'])
     const attributesNumber = Object.keys(p.rawAttributes).filter(y => {
         if (y !== 'id' && y !== 'deletedAt' && y !== 'updatedAt' && y !== 'createdAt') {
             return y;

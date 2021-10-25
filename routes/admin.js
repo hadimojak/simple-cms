@@ -4,6 +4,8 @@ const adminController = require('../controller/admin');
 const { check, body } = require('express-validator');
 const path = require('path');
 const multer = require('multer');
+const { Media } = require('../models/Model');
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads/media');
@@ -17,19 +19,6 @@ const storage = multer.diskStorage({
         cb(null, req.body.fileName + '.' + file.mimetype.split('/')[1]);
     }
 });
-exports.upload = multer({
-    storage: storage,
-    fileFilter: function (req, file, callback) {
-        var ext = path.extname(file.originalname);
-        if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif'
-            && ext !== '.jpeg' && ext !== '.pdf' && ext !== '.zip'
-            && ext !== '.rar' && ext !== ".mp4" && ext !== '.mpeg') {
-            return callback(null, false);
-        }
-        callback(null, true);
-    }, preservePath: true
-}).single('file');
-
 
 // if(user is superUser show her the users routes)
 router.get('/admin', adminController.getAdminHomePage);
@@ -67,20 +56,28 @@ router.get("/admin/storage", adminController.getAllFiles);
 router.post('/admin/uploadFile', [multer({
     storage: storage,
     fileFilter: function (req, file, callback) {
-        var ext = path.extname(file.originalname);
-        if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif'
-            && ext !== '.jpeg' && ext !== '.pdf' && ext !== '.zip'
-            && ext !== '.rar' && ext !== ".mp4" && ext !== '.mpeg') {
-            return callback(null, false);
-        }
-        callback(null, true);
+        Media.findOne({ where: { fileName: req.body.fileName } })
+            .then(data => {
+                if (data) {
+                    return callback(null, false);
+                } else {
+                    var ext = path.extname(file.originalname);
+                    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif'
+                        && ext !== '.jpeg' && ext !== '.pdf' && ext !== '.zip'
+                        && ext !== '.rar' && ext !== ".mp4" && ext !== '.mpeg') {
+                        return callback(null, false);
+                    }
+                    callback(null, true);
+                }
+            })
+            .catch(err => { console.log(err); });
     }, preservePath: true
 }).single('file'), function (req, res, callback) {
     if (!req.file) {
         res.redirect('/admin/storage');
     } else { callback(null, true); }
 }], adminController.postUploadFile);
-router.get('/admin/storage/fileData',adminController.filesApi)
+router.get('/admin/storage/fileData', adminController.filesApi);
 router.delete("/admin/delete/storage/:fileName", adminController.deleteFile);
 
 //if(user is super User show her menus )

@@ -2,7 +2,7 @@ const { Sequelize, DataTypes, Model } = require('sequelize');
 const connection = {
     host: 'localhost', dialect: 'mysql', dialectOptions: {
         supportBigNumbers: true,
-        bigNumberStrings: true, useUTC: false, dateStrings: true,
+        bigNumberStrings: true, dateStrings: true,
         typeCast: true
     },timezone: '+03:30'
 };

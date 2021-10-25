@@ -217,25 +217,38 @@ exports.postUploadFile = (req, res, next) => {
         thumbLoc = '/pictures/video.png';
     }
     Media.create({
-        fileName: req.file.filename,
+        fileName: req.file.filename.split('.')[0],
         originalName: req.file.originalname,
         thumb: thumbLoc,
-        path: (req.file.destination).split('.')[1],
+        path: (req.file.destination).split('.')[1] + `/${req.file.filename}`,
         mimetype: req.file.mimetype,
         ext: ext,
         size: req.file.size / 1000,
-        UserId: 2,
+        UserId: 1,
     }).then(file => {
         res.redirect('/admin/storage');
     });
 };
 exports.deleteFile = (req, res, next) => {
     const fileName = req.params.fileName;
+    //delete files from storage
+    Media.findOne({ where: { fileName: fileName } })
+        .then(file => {
+
+            fs.unlinkSync(path.join(__dirname, '..', file.dataValues.path), function (err) {
+                if (err) return console.log(err);
+            });
+            if (file.dataValues.ext === '.jpg' || file.dataValues.ext === ".png" || file.dataValues.ext === '.jpeg') {
+                fs.unlinkSync(path.join(__dirname, '..', file.dataValues.thumb), function (err) {
+                    if (err) return console.log(err);
+                });
+            }
+        }).catch(err => console.log(err));
+    //delete files drom dataBase
     Media.destroy({ where: { fileName: fileName } })
         .then(file => {
             return res.json({ data: file + " is deleted" });
         })
-        .then(data => console.log(data))
         .catch(err => { console.log(err); });
 };
 
