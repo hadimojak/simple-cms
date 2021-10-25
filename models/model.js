@@ -1,3 +1,6 @@
+
+
+
 const { sequelize, DataTypes, Sequelize } = require('../sequelize');
 
 const User = sequelize.define('User', {
@@ -40,6 +43,9 @@ const Media = sequelize.define('Media', {
         type: DataTypes.STRING,
         allowNull: false,
     }, originalName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    }, thumb: {
         type: DataTypes.STRING,
         allowNull: false,
     }, path: {
@@ -136,4 +142,4 @@ Post.belongsTo(User);
 User.hasMany(Menu, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
 Menu.belongsTo(User);
 
-module.exports = { User,Media,Menu,Page,Setting,Post };
+module.exports = { User, Media, Menu, Page, Setting, Post };
