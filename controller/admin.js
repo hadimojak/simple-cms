@@ -9,6 +9,7 @@ const imageThumbnail = require('image-thumbnail');
 exports.getAdminHomePage = (req, res, next) => {
     res.render("admin/admin", { pageTitle: 'مدیریت', path: '/admin' });
 };
+
 // admin users
 exports.getUsers = (req, res, next) => {
     User.findAll({ paranoid: false }).
