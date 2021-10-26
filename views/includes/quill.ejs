@@ -1,86 +1,101 @@
 <script src="/assets/js/highlight.min.js"></script>
 <script src="/assets/js/quill.js"></script>
 <script src="/assets/js/image-resize.min.js"></script>
-<link rel="stylesheet" href="/assets/css/monokai-sublime.min.css">
+<link rel="stylesheet" href="/assets/css/monokai-sublime.min.css" />
 <!-- Include stylesheet -->
-<link href="/assets/css/quill.snow.css" rel="stylesheet">
+<link href="/assets/css/quill.snow.css" rel="stylesheet" />
 
-<form id='saveData' action="/admin/addPost" method="post">
-    <input id="contentName" value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="contentName">
-    <label for="contentName">نام پست</label>
-    <div id="toolbar" class=""></div>
-    <div id="editor" class="bg-white mh-100"></div>
+<form id="saveData" action="/admin/addPost" method="post">
+  <input
+    id="contentName"
+    value="<%= oldInput.title  ? oldInput.title : '' %>"
+    type="text"
+    name="contentName"
+  />
+  <label for="contentName">نام پست</label>
+  <div id="toolbar" class=""></div>
+  <div id="editor" class="bg-white mh-100"></div>
 
-    <input class="btn btn-success btn-lg " value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" data-="">
+  <input
+    class="btn btn-success btn-lg"
+    value="<%= update === true ? 'ویرایش' : 'ذخیره' %>"
+    type="submit"
+    data-=""
+  />
 </form>
 <!-- Initialize Quill editor -->
 <script>
-    var quill = new Quill('#editor', {
-        modules: {
-            imageResize: {
-                displaySize: true
-            },
-            'syntax': true,
-            toolbar: {
-                container:
-                    [
-                        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-                        ['blockquote', 'code-block'],
-                        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                        [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-                        [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-                        [{ 'direction': 'rtl' }],                         // text direction
-                        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                        ['link', 'image', 'video', 'formula'],
-                        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-                        [{ 'font': [] }],
-                        [{ 'align': [] }],
-                        ['clean']
-                    ], handlers: { image: imageHandler, video: videoHandler }
-            }
-        },
-        theme: 'snow'
+  var quill = new Quill("#editor", {
+    modules: {
+      imageResize: {
+        displaySize: true,
+      },
+      syntax: true,
+      toolbar: {
+        container: [
+          ["bold", "italic", "underline", "strike"], // toggled buttons
+          ["blockquote", "code-block"],
+          [{ header: 1 }, { header: 2 }], // custom button values
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ script: "sub" }, { script: "super" }], // superscript/subscript
+          [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+          [{ direction: "rtl" }], // text direction
+          [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          ["link", "image", "video", "formula"],
+          [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+          [{ font: [] }],
+          [{ align: [] }],
+          ["clean"],
+        ],
+        handlers: { image: imageHandler, video: videoHandler },
+      },
+    },
+    theme: "snow",
+  });
+
+  function imageHandler() {
+    var range = this.quill.getSelection();
+    $("#galleryModal").modal("show");
+  }
+
+  function videoHandler() {
+    var range = this.quill.getSelection();
+    $("#galleryModal").modal("show");
+  }
+
+  // const delta = quill.clipboard.convert("<%= oldInput.postContent %>")
+  (function () {
+ 
+    // quill.setContents("<%= oldInput.postContent  %>");
+    quill.setContents({
+    "ops":[
+        {"insert":"this is a test bit of text\n"}
+    ]
+});
+    console.log("<%= oldInput.postContent  %>");
+  })();
+
+  //send post to backend
+  $("form").submit(function (e) {
+    let content = quill.root.innerHTML;
+    console.log(content);
+    const postName = document.getElementById("contentName").value;
+
+    $.ajax({
+      url: "/admin/addPost",
+      async: true,
+      type: "POST",
+      data: { post: content, name: postName },
+      encode: true,
+      success: function (result) {
+        console.log(result);
+        window.location.replace("/admin/posts");
+      },
+      error: function (result) {
+        window.location.replace("/admin/addPost");
+      },
     });
-
-    function imageHandler() {
-        var range = this.quill.getSelection();
-        $('#galleryModal').modal('show')
-    }
-
-    function videoHandler() {
-        var range = this.quill.getSelection();
-        $('#galleryModal').modal('show')
-    }
-
-    (function () {
-        quill
-        console.log("<%= oldInput.postContent  %>")
-    })()
-
-
-    //send post to backend
-    $('form').submit(function (e) {
-        let content = quill.editor.scroll.domNode.innerHTML;
-        const postName = document.getElementById('contentName').value
-        
-        $.ajax(
-            {
-                url: "/admin/addPost",
-                async: true,
-                type: "POST",
-                data: { post: content, name: postName },
-                encode: true,
-                success: function (result) {
-                    console.log(result)
-                    window.location.replace('/admin/posts');
-                },
-                error: function (result) {
-                    window.location.replace('/admin/addPost');
-                }
-            });
-        e.preventDefault()
-    })
-
+    e.preventDefault();
+  });
 </script>

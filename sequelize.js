@@ -7,7 +7,7 @@ const connection = {
     },timezone: '+03:30'
 };
 
-const sequelize = new Sequelize('cms', 'root', '2525', connection
+const sequelize = new Sequelize('cms', 'root', '0015166031', connection
 );
 
 module.exports = { sequelize, Sequelize, DataTypes, Model };

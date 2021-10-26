@@ -64,7 +64,7 @@ router.post('/admin/uploadFile', [multer({
                     var ext = path.extname(file.originalname);
                     if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif'
                         && ext !== '.jpeg' && ext !== '.pdf' && ext !== '.zip'
-                        && ext !== '.rar' && ext !== ".mp4" && ext !== '.mpeg') {
+                        && ext !== '.rar' && ext !== ".mp4" && ext !== '.mpeg'&& ext!=='.Jpeg') {
                         return callback(null, false);
                     }
                     callback(null, true);
