@@ -62,6 +62,7 @@
                         <th data-field="fileName" data-sortable="true">نام</th>
                         <th data-field="ext" data-sortable="true">نوع</th>
                         <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
+                        <th data-field="path" data-sortable="true">آدرس</th>
                         <th data-field="thumb" data-sortable="true" data-formatter="imgFormatter">پیش نمایش</th>
                         <th data-field="state" data-checkbox="true"></th>
                     </tr>
@@ -113,11 +114,11 @@
 
             var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
                 console.log(row.ext)
-                if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg') {
-                    quill.insertEmbed(100, 'image', row.path)
+                if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg' ) {
+                    quill.insertEmbed(10, 'image', row.path)
                 }
                 if (row.ext === '.mp4' || row.ext === ".mkv" || row.ext === '.3gp') {
-                    quill.insertEmbed(100, 'video', row.path)
+                    quill.insertEmbed(10, 'video', row.path)
                 }
             })
             $('#galleryModal').modal('hide')

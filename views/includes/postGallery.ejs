@@ -1,0 +1,96 @@
+<link rel="stylesheet" href="/assets/css/bootstrap-table.min.css">
+<script src="/assets/js/bootstrap-table.min.js"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class=" container-fluid">
+            <link rel="stylesheet" href="/assets/css/bootstrap-table.min.css">
+            <script src="/assets/js/bootstrap-table.min.js"></script>
+
+            <div id="toolbar">
+                <button id='createPost' type="button" class="btn btn-success my-2 my-sm-0"
+                    onclick="window.location.href='/admin/addPost'">ساخت نوشته</button>
+                <button id='deletePost' type="button" class="btn btn-danger my-2 my-sm-0">حذف</button>
+
+            </div>
+            <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
+                data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/postData">
+                <thead>
+                    <tr>
+                        <th data-field="postName" data-sortable="true">نام</th>
+                        <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
+                        <th data-field="path" data-sortable="true">آدرس</th>
+                        <th data-field="path" data-formatter="TableActions">ویراش</th>
+                        <th data-field="state" data-checkbox="true"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+
+    function TableActions(value, row, index) {
+        return [
+            `<button id='editPost' onclick="editPost(this)" type="button" class="btn btn-info my-2 my-sm-0">ویرایش</button>`
+        ].join('');
+    }
+
+    const remove = $('#deletePost')
+    const edit = $('#editPost')
+    const table = $('#table')
+
+    function editPost(e) {
+        const postName = e.parentElement.parentElement.firstChild.innerText
+        console.log(postName)
+        window.location.href=`/admin/updatePost/${postName}`
+    }
+    // edit.click(function (e) { console.log(e) })
+    // select.click(function () {
+
+    //     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
+    //         console.log(row.ext)
+    //         if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg') {
+    //             quill.insertEmbed(100, 'image', row.path)
+    //         }
+    //         if (row.ext === '.mp4' || row.ext === ".mkv" || row.ext === '.3gp') {
+    //             quill.insertEmbed(100, 'video', row.path)
+    //         }
+    //     })
+    //     $('#galleryModal').modal('hide')
+    // })
+
+    $(function () {
+        table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+            remove.prop('disabled', !table.bootstrapTable('getSelections').length)
+        })
+        remove.click(function () {
+
+            var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
+                console.log(row.postName, 'asdadadadas')
+                fetch(`/admin/delete/post/${row.postName}`, {
+                    method: "DELETE",
+                    headers: {
+                    },
+                })
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((result) => {
+                        console.log(result)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+                return row.id
+            })
+            table.bootstrapTable('remove', {
+                field: 'id',
+                values: ids
+            })
+            remove.prop('disabled', true)
+        })
+
+    })
+
+</script>

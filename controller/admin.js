@@ -1,4 +1,4 @@
-const { User, Media } = require('../models/Model');
+const { User, Media, Post } = require('../models/Model');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const path = require('path');
@@ -244,13 +244,12 @@ exports.deleteFile = (req, res, next) => {
                     if (err) return console.log(err);
                 });
             }
+            //delete files drom dataBase
+            file.destroy().then(file => {
+                return res.json({ data: file + " is deleted" });
+            });
         }).catch(err => console.log(err));
-    //delete files drom dataBase
-    Media.destroy({ where: { fileName: fileName } })
-        .then(file => {
-            return res.json({ data: file + " is deleted" });
-        })
-        .catch(err => { console.log(err); });
+
 };
 
 // admin menus
@@ -280,24 +279,73 @@ exports.getSettings = (req, res, next) => {
 };
 
 // admin posts
+exports.PostsApi = (req, res, next) => {
+    const postArray = [];
+    Post.findAll().then(posts => {
+        return posts.forEach(post => {
+            postArray.push(post.dataValues);
+
+        });
+    }).then(data => {
+        res.json(postArray);
+    }).catch(err => { console.log(err); });
+};
 exports.getPosts = (req, res, next) => {
-    res.render("admin/admin", { pageTitle: 'نوشته ها', path: '/post' });
+    res.render("admin/allPosts", { pageTitle: 'نوشته ها', path: '/post' });
 };
 exports.getAddPost = (req, res, next) => {
-    res.render('admin/createPost', { pageTitle: 'نوشته جدید', path: '/post' });
+    res.render('admin/updatePost', { pageTitle: 'نوشته جدید', path: '/post', update: false });
 };
 exports.postAddPost = (req, res, next) => {
-    const newPost = req.body.post;
-    const postFileName = Date.now() + 'post' + ".html";
-    fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'posts', postFileName)
-        , newPost, (err) => { console.log(err); });
-    res.redirect('/admin/posts');
+    const contentName = req.body.name;
+    if (contentName.trim() === '') {
+        res.status(500).send({ error: 'no content name' });
+    } else {
+        const newPost = req.body.post;
+        const postFileName = contentName + ".html";
+        Post.findOne({ where: { postName: postFileName } })
+            .then(post => {
+                if (post) {
+                    return res.status(500).send({ error: 'post already exxict' });
+                }
+                Post.create({ postName: contentName, path: '/uploads/posts/' + postFileName, UserId: 1 })
+                    .then(post => {
+                        fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'posts', postFileName)
+                            , newPost, (err) => { console.log(err); });
+                        res.redirect('/admin/posts');
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        if (err) { }
+                    });
+            });
+    }
+};
+exports.getEditPost = (req, res, next) => {
+    const postName = req.params.postName;
+    Post.findOne({ where: { postName: postName } })
+        .then(post => {
+            const postPath = post.dataValues.path;
+            const postContent = fs.readFileSync(path.join(__dirname, '..', postPath));
+            res.render('admin/updatePost', { pageTitle: 'ویرایش نوشته', path: '/post', update: true, content: postContent });
+        })
+        .catch(err => { console.log(err); });
+};
+exports.postEditPost = (req, res, next) => { };
+exports.deletePost = (req, res, next) => {
+    const postName = req.params.postName;
+    //delete files from storage
+    Post.findOne({ where: { postName: postName } })
+        .then(post => {
+            fs.unlinkSync(path.join(__dirname, '..', post.dataValues.path), function (err) {
+                if (err) return console.log(err);
+            });
+            //delete post from database
+            post.destroy().then(post => { return res.json({ data: post + ' is deleted' }); });
 
+        }).catch(err => console.log(err));
 
 };
-exports.getEditPost = (req, res, next) => { };
-exports.postEditPost = (req, res, next) => { };
-exports.deletePost = (req, res, next) => { };
 
 // admin pages 
 exports.getPages = (req, res, next) => {

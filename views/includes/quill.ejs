@@ -1,0 +1,83 @@
+<script src="/assets/js/highlight.min.js"></script>
+<script src="/assets/js/quill.js"></script>
+<script src="/assets/js/image-resize.min.js"></script>
+<form id='saveData' action="/editor/editorPhoneNumber/addPost" method="post">
+    <input id="contentName" type="text" name="contentName">
+    <label for="contentName">نام پست</label>
+    <div id="toolbar" class=""></div>
+    <div id="editor" class="bg-white mh-100"></div>
+
+    <input class="btn btn-success btn-lg " value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" data-="">
+</form>
+
+<!-- Initialize Quill editor -->
+<script>
+    var quill = new Quill('#editor', {
+        modules: {
+            imageResize: {
+                displaySize: true
+            },
+            'syntax': true,
+            toolbar: {
+                container:
+                    [
+                        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                        ['blockquote', 'code-block'],
+                        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+                        [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+                        [{ 'direction': 'rtl' }],                         // text direction
+                        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        ['link', 'image', 'video', 'formula'],
+                        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                        [{ 'font': [] }],
+                        [{ 'align': [] }],
+                        ['clean']
+                    ], handlers: { image: imageHandler, video: videoHandler }
+            }
+        },
+        theme: 'snow'
+    });
+
+    function imageHandler() {
+        var range = this.quill.getSelection();
+        $('#galleryModal').modal('show')
+    }
+
+    function videoHandler() {
+        var range = this.quill.getSelection();
+        $('#galleryModal').modal('show')
+    }
+
+   ( function retrive() {
+        quill.setContents([
+            { insert: content },
+        ]);
+    })()
+
+    //   //send post to backend
+    //   $('form').submit(function (e) {
+    //     let content = quill.editor.scroll.domNode.innerHTML;
+    //     let postName = document.getElementById('contentName').value;
+    //     // console.log(content)
+    //     $.ajax(
+    //       {
+    //         url: "/admin/addPost",
+    //         async: true,
+    //         type: "POST",
+    //         data: { post: content, name: postName },
+    //         encode: true,
+    //         success: function (result) {
+    //           console.log(result)
+    //           window.location.replace('/admin/posts');
+    //         },
+    //         error: function (result) {
+    //           window.location.replace('/admin/addPost');
+    //         }
+    //       });
+    //     e.preventDefault()
+    //   })
+
+</script>
