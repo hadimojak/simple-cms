@@ -1,7 +1,11 @@
+
 <script src="/assets/js/highlight.min.js"></script>
 <script src="/assets/js/quill.js"></script>
 <script src="/assets/js/image-resize.min.js"></script>
-<form id='saveData' action="/editor/editorPhoneNumber/addPost" method="post">
+<link rel="stylesheet" href="/assets/css/monokai-sublime.min.css">
+<!-- Include stylesheet -->
+<link href="/assets/css/quill.snow.css" rel="stylesheet">
+<form id='saveData' action="/admin/addPost" method="post">
     <input id="contentName" type="text" name="contentName">
     <label for="contentName">نام پست</label>
     <div id="toolbar" class=""></div>
@@ -9,7 +13,6 @@
 
     <input class="btn btn-success btn-lg " value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" data-="">
 </form>
-
 <!-- Initialize Quill editor -->
 <script>
     var quill = new Quill('#editor', {
@@ -51,33 +54,33 @@
         $('#galleryModal').modal('show')
     }
 
-   ( function retrive() {
-        quill.setContents([
-            { insert: content },
-        ]);
-    })()
+    quill.setContents([
+        { insert: '<%= content %>' }
 
-    //   //send post to backend
-    //   $('form').submit(function (e) {
-    //     let content = quill.editor.scroll.domNode.innerHTML;
-    //     let postName = document.getElementById('contentName').value;
-    //     // console.log(content)
-    //     $.ajax(
-    //       {
-    //         url: "/admin/addPost",
-    //         async: true,
-    //         type: "POST",
-    //         data: { post: content, name: postName },
-    //         encode: true,
-    //         success: function (result) {
-    //           console.log(result)
-    //           window.location.replace('/admin/posts');
-    //         },
-    //         error: function (result) {
-    //           window.location.replace('/admin/addPost');
-    //         }
-    //       });
-    //     e.preventDefault()
-    //   })
+    ]);
+
+    //send post to backend
+    $('form').submit(function (e) {
+        console.log()
+        let content = quill.editor.scroll.domNode.innerHTML;
+        let postName = document.getElementById('contentName').value;
+        // console.log(content)
+        $.ajax(
+            {
+                url: "/admin/addPost",
+                async: true,
+                type: "POST",
+                data: { post: content, name: postName },
+                encode: true,
+                success: function (result) {
+                    console.log(result)
+                    window.location.replace('/admin/posts');
+                },
+                error: function (result) {
+                    window.location.replace('/admin/addPost');
+                }
+            });
+        e.preventDefault()
+    })
 
 </script>

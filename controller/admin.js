@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 const imageThumbnail = require('image-thumbnail');
+const { convertHtmlToDelta } = require('node-quill-converter');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
@@ -294,10 +295,11 @@ exports.getPosts = (req, res, next) => {
     res.render("admin/allPosts", { pageTitle: 'نوشته ها', path: '/post' });
 };
 exports.getAddPost = (req, res, next) => {
-    res.render('admin/updatePost', { pageTitle: 'نوشته جدید', path: '/post', update: false });
+    res.render('admin/updatePost', { pageTitle: 'نوشته جدید', path: '/post', update: false,content:'' });
 };
 exports.postAddPost = (req, res, next) => {
     const contentName = req.body.name;
+    console.log(contentName)
     if (contentName.trim() === '') {
         res.status(500).send({ error: 'no content name' });
     } else {
@@ -327,7 +329,9 @@ exports.getEditPost = (req, res, next) => {
         .then(post => {
             const postPath = post.dataValues.path;
             const postContent = fs.readFileSync(path.join(__dirname, '..', postPath));
-            res.render('admin/updatePost', { pageTitle: 'ویرایش نوشته', path: '/post', update: true, content: postContent });
+            let delta = convertHtmlToDelta(postContent);
+            console.log(delta);
+            res.render('admin/updatePost', { pageTitle: 'ویرایش نوشته', path: '/post', update: true, content: JSON.stringify(delta) });
         })
         .catch(err => { console.log(err); });
 };
