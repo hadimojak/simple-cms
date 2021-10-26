@@ -298,7 +298,7 @@ exports.getAddPost = (req, res, next) => {
     res.render('admin/updatePost', { pageTitle: 'نوشته جدید', path: '/post', update: false, oldInput: '' });
 };
 exports.postAddPost = (req, res, next) => {
-    const contentName = req.body.contentName;
+    const contentName = req.body.name;
     if (contentName.trim() === '') {
         res.status(500).send({ error: 'no content name' });
     } else {
@@ -308,9 +308,9 @@ exports.postAddPost = (req, res, next) => {
             .then(post => {
                 if (post) {
                     //flash message
-                    return res.status(500).send({ error: 'post already exxict' });
-                }
-                Post.create({ postName: contentName, path: '/uploads/posts/' + postFileName, UserId: 1 })
+                    return res.status(500).send({ error: 'no content name' });
+                } else {
+                    Post.create({ postName: contentName, path: '/uploads/posts/' + postFileName, UserId: 1 })
                     .then(post => {
                         fs.writeFileSync(path.join(__dirname, '..', 'uploads', 'posts', postFileName)
                             , newPost, (err) => { console.log(err); });
@@ -320,6 +320,8 @@ exports.postAddPost = (req, res, next) => {
                         console.log(err);
                         if (err) { }
                     });
+                }
+
             });
     }
 };
@@ -328,8 +330,8 @@ exports.getEditPost = (req, res, next) => {
     Post.findOne({ where: { postName: postName } })
         .then(post => {
             const postPath = post.dataValues.path;
-            const postContent = fs.readFileSync(path.join(__dirname, '..', postPath)).toString()
-            res.render('admin/updatePost', { pageTitle: 'ویرایش', path: '/post', update: true, oldInput: { title: postName,postContent:JSON.stringify(postContent) } });
+            const postContent = fs.readFileSync(path.join(__dirname, '..', postPath)).toString();
+            res.render('admin/updatePost', { pageTitle: 'ویرایش', path: '/post', update: true, oldInput: { title: postName, postContent: postContent } });
         })
         .catch(err => { console.log(err); });
 };

@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="/assets/css/monokai-sublime.min.css">
 <!-- Include stylesheet -->
 <link href="/assets/css/quill.snow.css" rel="stylesheet">
+
 <form id='saveData' action="/admin/addPost" method="post">
     <input id="contentName" value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="contentName">
     <label for="contentName">نام پست</label>
@@ -54,6 +55,7 @@
     }
 
     (function () {
+        quill
         console.log("<%= oldInput.postContent  %>")
     })()
 
@@ -61,7 +63,8 @@
     //send post to backend
     $('form').submit(function (e) {
         let content = quill.editor.scroll.domNode.innerHTML;
-        // console.log(content)
+        const postName = document.getElementById('contentName').value
+        
         $.ajax(
             {
                 url: "/admin/addPost",
