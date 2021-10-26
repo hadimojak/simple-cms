@@ -1,4 +1,3 @@
-
 <script src="/assets/js/highlight.min.js"></script>
 <script src="/assets/js/quill.js"></script>
 <script src="/assets/js/image-resize.min.js"></script>
@@ -6,7 +5,7 @@
 <!-- Include stylesheet -->
 <link href="/assets/css/quill.snow.css" rel="stylesheet">
 <form id='saveData' action="/admin/addPost" method="post">
-    <input id="contentName" type="text" name="contentName">
+    <input id="contentName" value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="contentName">
     <label for="contentName">نام پست</label>
     <div id="toolbar" class=""></div>
     <div id="editor" class="bg-white mh-100"></div>
@@ -54,16 +53,14 @@
         $('#galleryModal').modal('show')
     }
 
-    quill.setContents([
-        { insert: '<%= content %>' }
+    (function () {
+        console.log("<%= oldInput.postContent  %>")
+    })()
 
-    ]);
 
     //send post to backend
     $('form').submit(function (e) {
-        console.log()
         let content = quill.editor.scroll.domNode.innerHTML;
-        let postName = document.getElementById('contentName').value;
         // console.log(content)
         $.ajax(
             {

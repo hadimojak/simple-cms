@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 const imageThumbnail = require('image-thumbnail');
-const { convertHtmlToDelta } = require('node-quill-converter');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
@@ -246,10 +245,11 @@ exports.deleteFile = (req, res, next) => {
                 });
             }
             //delete files drom dataBase
-            file.destroy().then(file => {
-                return res.json({ data: file + " is deleted" });
-            });
+
         }).catch(err => console.log(err));
+    Media.destroy({ where: { fileName: fileName } }).then(file => {
+        return res.json({ data: file + " is deleted" });
+    });
 
 };
 
@@ -295,19 +295,19 @@ exports.getPosts = (req, res, next) => {
     res.render("admin/allPosts", { pageTitle: 'نوشته ها', path: '/post' });
 };
 exports.getAddPost = (req, res, next) => {
-    res.render('admin/updatePost', { pageTitle: 'نوشته جدید', path: '/post', update: false,content:'' });
+    res.render('admin/updatePost', { pageTitle: 'نوشته جدید', path: '/post', update: false, oldInput: '' });
 };
 exports.postAddPost = (req, res, next) => {
-    const contentName = req.body.name;
-    console.log(contentName)
+    const contentName = req.body.contentName;
     if (contentName.trim() === '') {
         res.status(500).send({ error: 'no content name' });
     } else {
         const newPost = req.body.post;
         const postFileName = contentName + ".html";
-        Post.findOne({ where: { postName: postFileName } })
+        Post.findOne({ where: { postName: contentName } })
             .then(post => {
                 if (post) {
+                    //flash message
                     return res.status(500).send({ error: 'post already exxict' });
                 }
                 Post.create({ postName: contentName, path: '/uploads/posts/' + postFileName, UserId: 1 })
@@ -328,10 +328,8 @@ exports.getEditPost = (req, res, next) => {
     Post.findOne({ where: { postName: postName } })
         .then(post => {
             const postPath = post.dataValues.path;
-            const postContent = fs.readFileSync(path.join(__dirname, '..', postPath));
-            let delta = convertHtmlToDelta(postContent);
-            console.log(delta);
-            res.render('admin/updatePost', { pageTitle: 'ویرایش نوشته', path: '/post', update: true, content: JSON.stringify(delta) });
+            const postContent = fs.readFileSync(path.join(__dirname, '..', postPath)).toString()
+            res.render('admin/updatePost', { pageTitle: 'ویرایش', path: '/post', update: true, oldInput: { title: postName,postContent:JSON.stringify(postContent) } });
         })
         .catch(err => { console.log(err); });
 };
@@ -345,10 +343,9 @@ exports.deletePost = (req, res, next) => {
                 if (err) return console.log(err);
             });
             //delete post from database
-            post.destroy().then(post => { return res.json({ data: post + ' is deleted' }); });
 
         }).catch(err => console.log(err));
-
+    Post.destroy({ where: { postName: postName } }).then(post => { return res.json({ data: post + ' is deleted' }); });
 };
 
 // admin pages 
