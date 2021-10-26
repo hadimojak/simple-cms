@@ -54,10 +54,12 @@ const Media = sequelize.define('Media', {
     }, mimetype: {
         type: DataTypes.STRING,
         allowNull: false,
+    }, ext: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }, size: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        unique: true
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
@@ -135,11 +137,11 @@ const Page = sequelize.define('Page', {
     modelName: "page"
 });
 
-User.hasMany(Media, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
+User.hasMany(Media, { onDelete: 'SET NULL', onUpdate: 'SET NULL' });
 Media.belongsTo(User);
-User.hasMany(Post, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
+User.hasMany(Post, { onDelete: 'SET NULL', onUpdate: 'SET NULL' });
 Post.belongsTo(User);
-User.hasMany(Menu, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
+User.hasMany(Menu, { onDelete: 'SET NULL', onUpdate: 'SET NULL' });
 Menu.belongsTo(User);
 
 module.exports = { User, Media, Menu, Page, Setting, Post };
