@@ -332,7 +332,7 @@ exports.getAddPost = (req, res, next) => {
 };
 exports.postAddPost = (req, res, next) => {
   const title = req.body.title;
-  console.log(req.body)
+  console.log(req.body);
   if (title.trim() === "") {
     //falsg m,essage
     return res.json({ error: "no content name" });
@@ -340,23 +340,26 @@ exports.postAddPost = (req, res, next) => {
     const deltaContent = req.body.deltaContent;
     const htmlContent = req.body.htmlContent;
     const postTitle = title + ".html";
-    const _title = title
-    Post.findOne({ where: { postName: title } }).then((post) => {
+    Post.findOne({ where: {path:req.body.postPath} }).then((post) => {
       if (post && req.body.postPath === '') {
         //flash message
         return res.json({ error: "allready exxict" });
+
+
       } else {
         if (req.body.postPath) {
-          Post.update({ postName: _title, deltaContent: deltaContent,UserId:1 }
+          console.log(post.dataValues)
+          fs.unlinkSync(
+            path.join(__dirname, "..", req.body.postPath),
+            function (err) {
+              if (err) return console.log(err);
+            }
+          );
+          Post.update({
+            postName: title, deltaContent: deltaContent, UserId: 1,path:"/uploads/posts/" + postTitle
+          }
             , { where: { path: req.body.postPath } })
             .then(post => {
-              return fs.unlinkSync(
-                path.join(__dirname, "..", req.body.postPath),
-                function (err) {
-                  if (err) return console.log(err);
-                }
-              );
-            }).then(post => {
               fs.writeFileSync(
                 path.join(__dirname, "..", "uploads", "posts", postTitle),
                 htmlContent,

@@ -11,6 +11,7 @@
                 <button id='createPost' type="button" class="btn btn-success my-2 my-sm-0"
                     onclick="window.location.href='/admin/addPost'">ساخت نوشته</button>
                 <button id='deletePost' type="button" class="btn btn-danger my-2 my-sm-0">حذف</button>
+                <button id='aprovePost' type="button" class="btn btn-info my-2 my-sm-0">تایید</button>
 
             </div>
             <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
@@ -37,7 +38,6 @@
         ].join('');
     }
     function aproveRow(value, row, index) {
-        console.log(value)
         if (value === false) {
             return ` <p class=' m-0 p-1 text-danger font-weight-bold border rounded border-danger
                                     d-inline-flex bg-white'>تایید نشده
