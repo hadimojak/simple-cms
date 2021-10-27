@@ -20,7 +20,8 @@
                         <th data-field="postName" data-sortable="true">نام</th>
                         <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
                         <th data-field="path" data-sortable="true">آدرس</th>
-                        <th data-field="path" data-formatter="TableActions">ویراش</th>
+                        <th data-field="path" data-formatter="editRow">ویراش</th>
+                        <th data-field="aproved" data-formatter="aproveRow">تایید</th>
                         <th data-field="state" data-checkbox="true"></th>
                     </tr>
                 </thead>
@@ -30,10 +31,21 @@
 </div>
 <script>
 
-    function TableActions(value, row, index) {
+    function editRow(value, row, index) {
         return [
-            `<button id='editPost' onclick="editPost(this)" type="button" class="btn btn-info my-2 my-sm-0">ویرایش</button>`
+            `<button id='editPost' onclick="editPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
         ].join('');
+    }
+    function aproveRow(value, row, index) {
+        console.log(value)
+        if (value === false) {
+            return ` <p class=' m-0 p-1 text-danger font-weight-bold border rounded border-danger
+                                    d-inline-flex bg-white'>تایید نشده
+                                    </p>`
+        } else { return ` <p class=' m-0 p-1 text-danger font-weight-bold border rounded border-danger
+                                    d-inline-flex bg-white'>تایید نشده
+                                    </p>`}
+
     }
 
     const remove = $('#deletePost')
@@ -42,22 +54,20 @@
 
     function editPost(e) {
         const postName = e.parentElement.parentElement.firstChild.innerText
-        window.location.href=`/admin/updatePost/${postName}`
+        window.location.href = `/admin/updatePost/${postName}`
     }
-    // edit.click(function (e) { console.log(e) })
-    // select.click(function () {
 
-    //     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
-    //         console.log(row.ext)
-    //         if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg') {
-    //             quill.insertEmbed(100, 'image', row.path)
-    //         }
-    //         if (row.ext === '.mp4' || row.ext === ".mkv" || row.ext === '.3gp') {
-    //             quill.insertEmbed(100, 'video', row.path)
-    //         }
-    //     })
-    //     $('#galleryModal').modal('hide')
-    // })
+    function aprovePost(e) {
+        const postName = e.parentElement.parentElement.firstChild.innerText
+        $.ajax({
+            type: 'POST', url: `/admin/posts/aprovePost/${postName}`
+            , success: function (result) {
+                console.log(result)
+                window.location.replace('/admin/posts')
+            }
+        })
+    }
+
 
     $(function () {
         table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {

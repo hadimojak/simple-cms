@@ -5,26 +5,21 @@
 <!-- Include stylesheet -->
 <link href="/assets/css/quill.snow.css" rel="stylesheet" />
 
-<form id="saveData" action="/admin/addPost" method="post">
-  <input
-    id="contentName"
-    value="<%= oldInput.title  ? oldInput.title : '' %>"
-    type="text"
-    name="contentName"
-  />
-  <label for="contentName">نام پست</label>
+
+<form id="saveData" action="#" method="post">
+  <div class="row container d-flex justify-content-center">
+
+    <input dir="rtl" id="title" value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
+    <label for="title">: عنوان</label>
+  </div>
+
   <div id="toolbar" class=""></div>
   <div id="editor" class="bg-white mh-100"></div>
-
-  <input
-    class="btn btn-success btn-lg"
-    value="<%= update === true ? 'ویرایش' : 'ذخیره' %>"
-    type="submit"
-    data-=""
-  />
+  <input class="btn btn-success btn-lg" value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" data-="" />
 </form>
 <!-- Initialize Quill editor -->
 <script>
+  var Delta = Quill.import('delta');
   var quill = new Quill("#editor", {
     modules: {
       imageResize: {
@@ -54,46 +49,44 @@
     theme: "snow",
   });
 
+  if ('<%= oldInput.postPath %>') {
+    $.ajax({
+      type: 'GET', url: '/admin/postData'
+      , success: function (result) {
+        const title = "<%= oldInput.title %>"
+        let editPost;
+        for (let post of result) { if (post.postName === title) { editPost = post } }
+        const deltaString = JSON.parse(editPost.deltaContent)
+        quill.setContents(deltaString, 'api');
+      }
+    })
+  }
+
   function imageHandler() {
     var range = this.quill.getSelection();
     $("#galleryModal").modal("show");
   }
-
   function videoHandler() {
     var range = this.quill.getSelection();
     $("#galleryModal").modal("show");
   }
 
-  // const delta = quill.clipboard.convert("<%= oldInput.postContent %>")
-  (function () {
- 
-    // quill.setContents("<%= oldInput.postContent  %>");
-    quill.setContents({
-    "ops":[
-        {"insert":"this is a test bit of text\n"}
-    ]
-});
-    console.log("<%= oldInput.postContent  %>");
-  })();
-
   //send post to backend
   $("form").submit(function (e) {
-    let content = quill.root.innerHTML;
-    console.log(content);
-    const postName = document.getElementById("contentName").value;
-
+    const htmlContent = quill.root.innerHTML;
+    const deltaContent = JSON.stringify(quill.getContents());
+    const title = document.getElementById('title').value;
+    console.log(title)
     $.ajax({
-      url: "/admin/addPost",
-      async: true,
       type: "POST",
-      data: { post: content, name: postName },
-      encode: true,
+      url: "/admin/addPost",
+      data: { htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>' },
       success: function (result) {
         console.log(result);
         window.location.replace("/admin/posts");
       },
       error: function (result) {
-        window.location.replace("/admin/addPost");
+        window.location.replace("/admin/updatePost");
       },
     });
     e.preventDefault();

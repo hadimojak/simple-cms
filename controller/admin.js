@@ -1,10 +1,10 @@
 const { User, Media, Post } = require("../models/Model");
-const { validationResult } = require("express-validator");
+const { validationResult, body } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const path = require("path");
 const fs = require("fs");
 const imageThumbnail = require("image-thumbnail");
-const { convertHtmlToDelta } = require("node-quill-converter");
+const { Op } = require('../sequelize');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
@@ -174,7 +174,7 @@ exports.postUpdateUser = (req, res, next) => {
           throw err;
         }
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }
 };
 exports.deleteUser = (req, res, next) => {
@@ -304,7 +304,7 @@ exports.getSettings = (req, res, next) => {
 };
 
 // admin posts
-exports.PostsApi = (req, res, next) => {
+exports.postsApi = (req, res, next) => {
   const postArray = [];
   Post.findAll()
     .then((posts) => {
@@ -331,64 +331,89 @@ exports.getAddPost = (req, res, next) => {
   });
 };
 exports.postAddPost = (req, res, next) => {
-  const contentName = req.body.name;
-  if (contentName.trim() === "") {
-    res.status(500).send({ error: "no content name" });
+  const title = req.body.title;
+  console.log(req.body)
+  if (title.trim() === "") {
+    //falsg m,essage
+    return res.json({ error: "no content name" });
   } else {
-    const newPost = req.body.post;
-    console.log(newPost);
-    const postFileName = contentName + ".html";
-    Post.findOne({ where: { postName: contentName } }).then((post) => {
-      if (post) {
+    const deltaContent = req.body.deltaContent;
+    const htmlContent = req.body.htmlContent;
+    const postTitle = title + ".html";
+    const _title = title
+    Post.findOne({ where: { postName: title } }).then((post) => {
+      if (post && req.body.postPath === '') {
         //flash message
-        return res.status(500).send({ error: "no content name" });
+        return res.json({ error: "allready exxict" });
       } else {
-        Post.create({
-          postName: contentName,
-          path: "/uploads/posts/" + postFileName,
-          UserId: 1,
-        })
-          .then((post) => {
-            fs.writeFileSync(
-              path.join(__dirname, "..", "uploads", "posts", postFileName),
-              newPost,
-              (err) => {
-                console.log(err);
-              }
-            );
-            res.redirect("/admin/posts");
+        if (req.body.postPath) {
+          Post.update({ postName: _title, deltaContent: deltaContent,UserId:1 }
+            , { where: { path: req.body.postPath } })
+            .then(post => {
+              return fs.unlinkSync(
+                path.join(__dirname, "..", req.body.postPath),
+                function (err) {
+                  if (err) return console.log(err);
+                }
+              );
+            }).then(post => {
+              fs.writeFileSync(
+                path.join(__dirname, "..", "uploads", "posts", postTitle),
+                htmlContent,
+                (err) => {
+                  console.log(err);
+                }
+              );
+              res.redirect("/admin/posts");
+            });
+
+        } else {
+          Post.create({
+            postName: title, deltaContent: deltaContent,
+            path: "/uploads/posts/" + postTitle,
+            UserId: 1,
           })
-          .catch((err) => {
-            console.log(err);
-            if (err) {
-            }
-          });
+            .then((post) => {
+              fs.writeFileSync(
+                path.join(__dirname, "..", "uploads", "posts", postTitle),
+                htmlContent,
+                (err) => {
+                  console.log(err);
+                }
+              );
+              res.redirect("/admin/posts");
+            })
+            .catch((err) => {
+              console.log(err);
+              if (err) {
+              }
+            });
+        }
+
       }
     });
   }
 };
+
 exports.getEditPost = (req, res, next) => {
   const postName = req.params.postName;
   Post.findOne({ where: { postName: postName } })
     .then((post) => {
       const postPath = post.dataValues.path;
-      const postContent = fs
-        .readFileSync(path.join(__dirname, "..", postPath))
-        .toString();
-      console.log(postContent);
-      const delta = convertHtmlToDelta(postContent)
       res.render("admin/updatePost", {
         pageTitle: "ویرایش",
         path: "/post",
         update: true,
-        oldInput: { title: postName, postContent: JSON.stringify(delta) },
+        oldInput: {
+          title: postName, postPath: postPath
+        },
       });
     })
     .catch((err) => {
       console.log(err);
     });
 };
-exports.postEditPost = (req, res, next) => {};
+exports.postEditPost = (req, res, next) => { };
 
 exports.deletePost = (req, res, next) => {
   const postName = req.params.postName;

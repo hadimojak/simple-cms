@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
+const { Sequelize, DataTypes, Model,Op } = require('sequelize');
 const connection = {
     host: 'localhost', dialect: 'mysql', dialectOptions: {
         supportBigNumbers: true,
@@ -10,7 +10,7 @@ const connection = {
 const sequelize = new Sequelize('cms', 'root', '2525', connection
 );
 
-module.exports = { sequelize, Sequelize, DataTypes, Model };
+module.exports = { sequelize, Sequelize, DataTypes, Model ,Op};
 
 
 
