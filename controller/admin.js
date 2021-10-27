@@ -280,7 +280,10 @@ exports.deleteFile = (req, res, next) => {
 
 // admin menus
 exports.getMenus = (req, res, next) => {
-  res.render("admin/admin", { pageTitle: "منو ها", path: "/menu" });
+  res.render("admin/allMenu", { pageTitle: "منو ها", path: "/menu" });
+};
+exports.menuApi = (req, res, next) => {
+  res.json({ data: 'menuApi' });
 };
 exports.getAddMenu = (req, res, next) => {
   res.json({ data: "post edit menu" });
@@ -431,11 +434,11 @@ exports.deletePost = (req, res, next) => {
 };
 exports.aprovePost = (req, res, next) => {
   const postName = req.params.postName;
-  Post.update({ aproved: true }, { where: { postName: postName } }).then(post => {res.redirect("/admin/posts"); });
+  Post.update({ aproved: true }, { where: { postName: postName } }).then(post => { res.redirect("/admin/posts"); });
 };
- exports.deAprovePost = (req, res, next) => {
+exports.deAprovePost = (req, res, next) => {
   const postName = req.params.postName;
-  Post.update({ aproved: false }, { where: { postName: postName } }).then(post => {res.redirect("/admin/posts");});
+  Post.update({ aproved: false }, { where: { postName: postName } }).then(post => { res.redirect("/admin/posts"); });
 };
 
 // admin pages

@@ -1,0 +1,44 @@
+<%- include('../includes/head&side.ejs') %>
+
+
+    <section class="vh-100 gradient-custom p-4 ">
+
+        <link rel="stylesheet" href="/assets/css/bootstrap-table.min.css">
+        <script src="/assets/js/bootstrap-table.min.js"></script>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class=" container-fluid">
+                    <link rel="stylesheet" href="/assets/css/bootstrap-table.min.css">
+                    <script src="/assets/js/bootstrap-table.min.js"></script>
+                    <div id="galleryToolbar">
+                        <button id='deletePost' type="button" class="btn btn-danger mx-1 ">حذف</button>
+                        <button id='deAprovePost' type="button" class="btn btn-warning mx-1 ">مشاهده</button><button
+                            id='createPost' type="button" class="btn btn-success mx-1 "
+                            onclick="window.location.href='/admin/addPost'">ساخت فهرست</button>
+                    </div>
+                    <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
+                        data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/menuData">
+                        <thead>
+                            <tr>
+                                <th data-field="title" data-sortable="true">نام</th>
+                                <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
+                                <th data-field="content" data-formatter="pick">محتوا</th>
+                                <th data-field="state" data-checkbox="true"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script >
+            function pick(value, row, index) {
+                return [
+                    `<button id='editPost' onclick="pickPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
+                ].join('');
+            }
+        </script>
+
+    </section>
+
+    <%- include('../includes/footer.ejs') %>

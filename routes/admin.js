@@ -81,7 +81,8 @@ router.get('/admin/storage/fileData', adminController.filesApi);
 router.delete("/admin/delete/storage/:fileName", adminController.deleteFile);
 
 //if(user is super User show her menus )
-router.get('/admin/Menus', adminController.getMenus);
+router.get('/admin/menus', adminController.getMenus);
+router.get('/admin/menuData', adminController.menuApi);
 router.get('/admin/addMenu', adminController.getAddMenu);
 router.post('/admin/addMenu', adminController.postAddMenu);
 router.get('/admin/updateMenu/:menuId', adminController.getEditMenu);
