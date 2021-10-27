@@ -42,6 +42,7 @@ const Media = sequelize.define('Media', {
     fileName: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true
     }, originalName: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -72,6 +73,7 @@ const Post = sequelize.define('Post', {
     postName: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true
     }, path: {
         type: DataTypes.STRING,
         allowNull: false,

@@ -1,2 +1,0 @@
-const arr = ['editor.email'];
-
