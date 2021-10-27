@@ -94,11 +94,11 @@ router.get('/admin/settings', adminController.getSettings);
 // if(user is normal user show het only her posts)
 router.get('/admin/posts', adminController.getPosts);
 router.get('/admin/postData', adminController.postsApi);
-// router.post('/admin/posts/aprovePost/:postId', adminController.getPosts);
+router.post('/admin/posts/aprovePost/:postName', adminController.aprovePost);
+router.post('/admin/posts/deAprovePost/:postName', adminController.deAprovePost);
 router.get('/admin/addPost', adminController.getAddPost);
 router.post('/admin/addPost', adminController.postAddPost);
 router.get('/admin/updatePost/:postName', adminController.getEditPost);
-// router.post('/admin/updatePost', adminController.postEditPost);
 router.delete('/admin/delete/post/:postName', adminController.deletePost);
 
 

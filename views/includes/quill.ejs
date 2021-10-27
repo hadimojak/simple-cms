@@ -76,7 +76,6 @@
     const htmlContent = quill.root.innerHTML;
     const deltaContent = JSON.stringify(quill.getContents());
     const title = document.getElementById('title').value;
-    console.log(title)
     $.ajax({
       type: "POST",
       url: "/admin/addPost",

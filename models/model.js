@@ -74,9 +74,16 @@ const Post = sequelize.define('Post', {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
+    }, deltaContent: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }, path: {
         type: DataTypes.STRING,
         allowNull: false,
+    }, aproved: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE

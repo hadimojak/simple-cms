@@ -332,7 +332,6 @@ exports.getAddPost = (req, res, next) => {
 };
 exports.postAddPost = (req, res, next) => {
   const title = req.body.title;
-  console.log(req.body);
   if (title.trim() === "") {
     //falsg m,essage
     return res.json({ error: "no content name" });
@@ -340,15 +339,12 @@ exports.postAddPost = (req, res, next) => {
     const deltaContent = req.body.deltaContent;
     const htmlContent = req.body.htmlContent;
     const postTitle = title + ".html";
-    Post.findOne({ where: {path:req.body.postPath} }).then((post) => {
+    Post.findOne({ where: { path: req.body.postPath } }).then((post) => {
       if (post && req.body.postPath === '') {
         //flash message
         return res.json({ error: "allready exxict" });
-
-
       } else {
         if (req.body.postPath) {
-          console.log(post.dataValues)
           fs.unlinkSync(
             path.join(__dirname, "..", req.body.postPath),
             function (err) {
@@ -356,7 +352,7 @@ exports.postAddPost = (req, res, next) => {
             }
           );
           Post.update({
-            postName: title, deltaContent: deltaContent, UserId: 1,path:"/uploads/posts/" + postTitle
+            postName: title, deltaContent: deltaContent, UserId: 1, path: "/uploads/posts/" + postTitle
           }
             , { where: { path: req.body.postPath } })
             .then(post => {
@@ -397,7 +393,6 @@ exports.postAddPost = (req, res, next) => {
     });
   }
 };
-
 exports.getEditPost = (req, res, next) => {
   const postName = req.params.postName;
   Post.findOne({ where: { postName: postName } })
@@ -416,8 +411,6 @@ exports.getEditPost = (req, res, next) => {
       console.log(err);
     });
 };
-exports.postEditPost = (req, res, next) => { };
-
 exports.deletePost = (req, res, next) => {
   const postName = req.params.postName;
   //delete files from storage
@@ -435,6 +428,14 @@ exports.deletePost = (req, res, next) => {
   Post.destroy({ where: { postName: postName } }).then((post) => {
     return res.json({ data: post + " is deleted" });
   });
+};
+exports.aprovePost = (req, res, next) => {
+  const postName = req.params.postName;
+  Post.update({ aproved: true }, { where: { postName: postName } }).then(post => {res.redirect("/admin/posts"); });
+};
+ exports.deAprovePost = (req, res, next) => {
+  const postName = req.params.postName;
+  Post.update({ aproved: false }, { where: { postName: postName } }).then(post => {res.redirect("/admin/posts");});
 };
 
 // admin pages
