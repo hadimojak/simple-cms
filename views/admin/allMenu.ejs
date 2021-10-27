@@ -13,7 +13,7 @@
                     <script src="/assets/js/bootstrap-table.min.js"></script>
                     <div id="galleryToolbar">
                         <button id='deletePost' type="button" class="btn btn-danger mx-1 ">حذف</button>
-                        <button id='deAprovePost' type="button" class="btn btn-warning mx-1 ">مشاهده</button><button
+                        <button
                             id='createPost' type="button" class="btn btn-success mx-1 "
                             onclick="window.location.href='/admin/addPost'">ساخت فهرست</button>
                     </div>
@@ -23,7 +23,7 @@
                             <tr>
                                 <th data-field="title" data-sortable="true">نام</th>
                                 <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
-                                <th data-field="content" data-formatter="pick">محتوا</th>
+                                <th data-field="content" data-formatter="pick">انتخاب</th>
                                 <th data-field="state" data-checkbox="true"></th>
                             </tr>
                         </thead>
@@ -34,7 +34,7 @@
         <script >
             function pick(value, row, index) {
                 return [
-                    `<button id='editPost' onclick="pickPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
+                    `<button id='editPost' onclick="pickPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش/مشاهده</button>`
                 ].join('');
             }
         </script>
