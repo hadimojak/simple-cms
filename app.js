@@ -16,6 +16,7 @@ process.setMaxListeners(50);
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+app.use(express.json({type:'*/*'}))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 

@@ -285,10 +285,12 @@ exports.getMenus = (req, res, next) => {
 exports.menuApi = (req, res, next) => {
   res.json({ data: 'menuApi' });
 };
-exports.getAddMenu = (req, res, next) => {
-  res.json({ data: "post edit menu" });
-};
+
 exports.postAddMenu = (req, res, next) => {
+  console.log(req.body);
+  // const navStringData = req.body.navData;
+  // console.log(navStringData[0].children, navStringData);
+
   res.json({ data: "post edit menu" });
 };
 exports.getEditMenu = (req, res, next) => {
@@ -443,7 +445,7 @@ exports.deAprovePost = (req, res, next) => {
 
 // admin pages
 exports.getPages = (req, res, next) => {
-  res.render("admin/admin", { pageTitle: "صفحه ها", path: "/page" });
+  res.render("admin/nav", { pageTitle: "صفحه ها", path: "/page" });
 };
 exports.getSinglePage = (req, res, next) => {
   res.status(200).json({ data: "get single pages" });

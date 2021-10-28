@@ -163,14 +163,33 @@
 
                                                 $('#btnOutput').on('click', function () {
                                                     var str = editor.getString();
-                                                    var str1 = editor.getString();
-                                                    console.log(str)
                                                     if (str === '[]') { return }
                                                     $("#out").text(str);
                                                 });
 
                                                 $('#btnSave').on('click', function (e) {
-                                                    console.log(e)
+                                                    var str = editor.getString();
+                                                    const navArray = JSON.parse(str)
+                                                    fetch("/admin/addMenu", {
+                                                        method: 'POST', headers: {
+                                                            'Content-Type': 'application/json',
+                                                        }, body:str
+                                                    })
+                                                        .then(response => { return response.json() })
+                                                        .then(result => { console.log(result) })
+                                                        .catch(err => console.log(err))
+                                                    // $.ajax({
+                                                    //     type: 'POST',
+                                                    //     url: '/admin/addMenu',
+                                                    //     data: { navData: navArray },
+                                                    //     success: function (result) {
+                                                    //         console.log(result)
+                                                    //         window.location.replace('/admin/menus')
+                                                    //     }
+                                                    //     , error: function (result) {
+                                                    //         window.localStorage.replace('/admin/menus')
+                                                    //     }
+                                                    // })
                                                 });
 
 
