@@ -93,13 +93,10 @@ const Post = sequelize.define('Post', {
 });
 
 const Menu = sequelize.define('Menu', {
-    menuId: {
+    title: {
         type: DataTypes.INTEGER,
         allowNull: false,
-    }, menuName: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    }, path: {
+    }, content: {
         type: DataTypes.STRING,
         allowNull: false,
     },
