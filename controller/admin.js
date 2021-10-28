@@ -287,7 +287,9 @@ exports.menuApi = (req, res, next) => {
 };
 
 exports.postAddMenu = (req, res, next) => {
-  console.log(req.body);
+  const nav = req.body
+  console.log(nav)
+  console.log(JSON.stringify(nav))
   // const navStringData = req.body.navData;
   // console.log(navStringData[0].children, navStringData);
 
