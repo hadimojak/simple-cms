@@ -293,7 +293,7 @@ exports.postAddMenu = (req, res, next) => {
   // const navStringData = req.body.navData;
   // console.log(navStringData[0].children, navStringData);
 
-  res.json({ data: "post edit menu" });
+  res.json({ data: nav});
 };
 exports.getEditMenu = (req, res, next) => {
   res.json({ data: "post edit menu" });
