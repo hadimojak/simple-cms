@@ -1,37 +1,41 @@
-<link rel="stylesheet" href="/bootstrap-rtl/css/bootstrap.min.css">
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          Dropdown link
-        </a>
-        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>renderizeMenu by Davicotico - w/Bootstrap 3 & Smartmenus </title>
+        <link href="/menuBuilder/menuGenerator/smartmenus/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/menuBuilder/menuGenerator/smartmenus/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/menuBuilder/menuGenerator/smartmenus/addons/bootstrap/jquery.smartmenus.bootstrap.css" rel="stylesheet">
+        
+    </head>
+    <body>
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-collapse collapse">
+                    <ul id="menu1"></ul>
+                </div>
+            </div>
         </div>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-<script src="/bootstrap-rtl/js/jquery-3.2.1.slim.min.js"></script>
-<script src="/bootstrap-rtl/js/popper.min.js"></script>
-<script src="/bootstrap-rtl/js/bootstrap.min.js"></script>
+  
+        <script src="/menuBuilder/menuGenerator/smartmenus/jquery-1.10.2.js"></script>
+        <script src="/menuBuilder/menuGenerator/smartmenus/bootstrap.min.js"></script>
+        <script src="/menuBuilder/menuGenerator/renderMenu.js"></script>
+        <script type="text/javascript" src="/menuBuilder/menuGenerator/smartmenus/jquery.smartmenus.min.js"></script>
+        <script type="text/javascript" src="/menuBuilder/menuGenerator/smartmenus/addons/bootstrap/jquery.smartmenus.bootstrap.js"></script>
+        <script>
+            $(document).ready(function () {
+                var items = [ { "href": "#", "text": "Products", "icon": "fa fa-book", "children": [ { "href": "//github.com", "text": "Books", target: "_blank", "children": [ { "href": "#", "text": "Jquery" }, { "href": "http://codeigniterturoriales.com", "text": "Codeigniter" }, { "href": "#", "text": "Wordpress" } ] }, { "href": "#", "text": "Software" } ] }, { "href": "#", "text": "Sites", "children": [ { "href": "//codeignitertutoriales.com", "text": "My Blog" }, { "href": "#", "text": "GitHub" } ] } ];
+                $('#menu1').renderizeMenu(items, {
+                    active: 'http://codeigniterturoriales.com', 
+                    rootClass: "nav navbar-nav", 
+                    menuClass: "dropdown-menu",
+                    submenuClass: "dropdown-menu",
+                    dropdownIcon: '<span class="caret"></span>'
+                });
+                jQuery.SmartMenus.Bootstrap.init();
+            });
+        </script>
+    </body>
+</html>

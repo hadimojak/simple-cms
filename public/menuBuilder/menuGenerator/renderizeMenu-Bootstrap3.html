@@ -1,0 +1,28 @@
+
+        <link href="smartmenus/css/bootstrap.min.css" rel="stylesheet">
+        <link href="smartmenus/addons/bootstrap/jquery.smartmenus.bootstrap.css" rel="stylesheet">
+
+            <div class="container">
+                <div class="navbar-collapse collapse">
+                    <ul id="menu1"></ul>
+                </div>
+            </div>
+  
+        <script src="smartmenus/jquery-1.10.2.js"></script>
+        <script src="smartmenus/bootstrap.min.js"></script>
+        <script src="renderMenu.js"></script>
+        <script type="text/javascript" src="smartmenus/jquery.smartmenus.min.js"></script>
+        <script type="text/javascript" src="smartmenus/addons/bootstrap/jquery.smartmenus.bootstrap.js"></script>
+        <script>
+            $(document).ready(function () {
+                var items = [ { "href": "#", "text": "Products", "icon": "fa fa-book", "children": [ { "href": "//github.com", "text": "Books", target: "_blank", "children": [ { "href": "#", "text": "Jquery" }, { "href": "http://codeigniterturoriales.com", "text": "Codeigniter" }, { "href": "#", "text": "Wordpress" } ] }, { "href": "#", "text": "Software" } ] }, { "href": "#", "text": "Sites", "children": [ { "href": "//codeignitertutoriales.com", "text": "My Blog" }, { "href": "#", "text": "GitHub" } ] } ];
+                $('#menu1').renderizeMenu(items, {
+                    active: 'http://codeigniterturoriales.com', 
+                    rootClass: "nav navbar-nav", 
+                    menuClass: "dropdown-menu",
+                    submenuClass: "dropdown-menu",
+                    dropdownIcon: '<span class="caret"></span>'
+                });
+                jQuery.SmartMenus.Bootstrap.init();
+            });
+        </script>

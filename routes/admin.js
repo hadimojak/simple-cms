@@ -64,7 +64,7 @@ router.post('/admin/uploadFile', [multer({
                     var ext = path.extname(file.originalname);
                     if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif'
                         && ext !== '.jpeg' && ext !== '.pdf' && ext !== '.zip'
-                        && ext !== '.rar' && ext !== ".mp4" && ext !== '.mpeg'&& ext!=='.Jpeg') {
+                        && ext !== '.rar' && ext !== ".mp4" && ext !== '.mpeg' && ext !== '.Jpeg') {
                         return callback(null, false);
                     }
                     callback(null, true);
@@ -83,7 +83,7 @@ router.delete("/admin/delete/storage/:fileName", adminController.deleteFile);
 //if(user is super User show her menus )
 router.get('/admin/menus', adminController.getMenus);
 router.get('/admin/menuData', adminController.menuApi);
-router.post('/admin/addMenu', adminController.postAddMenu);
+router.post('/admin/addMenu', express.json({ type: '*/*' }), adminController.postAddMenu);
 router.get('/admin/updateMenu/:menuId', adminController.getEditMenu);
 router.post('/admin/updateMenu', adminController.postEditMenu);
 router.delete('/admin/delete/page/:menuId', adminController.deleteMenu);
