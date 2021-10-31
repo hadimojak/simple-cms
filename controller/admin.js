@@ -461,7 +461,7 @@ exports.deAprovePost = (req, res, next) => {
 
 // admin pages
 exports.getPages = (req, res, next) => {
-  res.render("admin/nav", { pageTitle: "صفحه ها", path: "/page" });
+  res.render("admin/pages", { pageTitle: "صفحه ها", path: "/page" });
 };
 exports.getSinglePage = (req, res, next) => {
   res.status(200).json({ data: "get single pages" });

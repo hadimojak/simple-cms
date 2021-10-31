@@ -20,6 +20,8 @@ const storage = multer.diskStorage({
     }
 });
 
+
+
 // if(user is superUser show her the users routes)
 router.get('/admin', adminController.getAdminHomePage);
 router.get('/admin/users', adminController.getUsers);

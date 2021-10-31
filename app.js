@@ -9,7 +9,7 @@ const { sequelize, DataTypes, Sequelize, Model } = require('./sequelize');
 
 const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
-const endUserRoutes = require('./routes/endUser');
+const homeRoutes = require('./routes/home');
 const installRoutes = require('./routes/installer');
 
 process.setMaxListeners(50);
@@ -24,7 +24,7 @@ app.use('/uploads', express.static('uploads'));
 // app.use(installRoutes);
 app.use(authRoutes);
 app.use(adminRoutes);
-// app.use(endUserRoutes);
+app.use(homeRoutes);
 
 
 

@@ -5,6 +5,7 @@
                 <div class=" container-fluid">
                     <link rel="stylesheet" href="/assets/css/bootstrap-table.min.css">
                     <script src="/assets/js/bootstrap-table.min.js"></script>
+                    
                     <div id="galleryToolbar">
                         <button id='deletePost' type="button" class="btn btn-danger mx-1 ">حذف</button>
                         <button id='createPost' type="button" class="btn btn-success mx-1 " data-toggle="modal"
@@ -174,7 +175,7 @@
                                                     if ($('#href').val() === '') { $('#href').val('#') }
                                                     editor.add();
                                                 });
-                                             
+
                                                 $('#btnSave').on('click', function (e) {
                                                     const title = document.getElementById('menuTitle').value
                                                     var str = editor.getString();
@@ -206,8 +207,9 @@
                                                     const data = navMenu.parentElement.innerHTML
                                                     console.log(data)
                                                     $.ajax({
-                                                        type: "POST", url: "/admin/addMenu", data: {navArray:strArr,
-                                                             title: title
+                                                        type: "POST", url: "/admin/addMenu", data: {
+                                                            navArray: strArr,
+                                                            title: title
                                                         }, success: function (result) { window.location.replace("/admin/menus") }
                                                     })
 
@@ -222,8 +224,8 @@
                     <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
                         data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/menuData">
                         <thead>
-                            <tr>                          
-                                      <th data-field="id" data-sortable="true">id</th>
+                            <tr>
+                                <th data-field="id" data-sortable="true">id</th>
                                 <th data-field="title" data-sortable="true">نام</th>
                                 <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
                                 <th data-field="content" data-formatter="pick">انتخاب</th>
@@ -356,12 +358,13 @@
 
 
         <script>
+
+
             function pick(value, row, index) {
                 return [
                     `<button id='editPost' onclick="pickPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش/مشاهده</button>`
                 ].join('');
             }
-
 
             function pickPost(e) {
                 const menuId = e.parentElement.parentElement.firstChild.innerText
@@ -369,6 +372,43 @@
                 window.location.href = `/admin/updateMenu/${menuId}`
             }
 
+            // const remove = $('#deletePost')
+
+
+
+
+            // $(function () {
+            //     table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+            //         remove.prop('disabled', !table.bootstrapTable('getSelections').length)
+            //     })
+
+            //     remove.click(function () {
+            //         var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
+            //             console.log(row, 'asdadadadas')
+            //             // fetch(`/admin/delete/page/${}`, {
+            //             //     method: "DELETE",
+            //             //     headers: {
+            //             //     },
+            //             // })
+            //             //     .then((response) => {
+            //             //         return response.json();
+            //             //     })
+            //             //     .then((result) => {
+            //             //         console.log(result)
+            //             //     })
+            //             //     .catch((err) => {
+            //             //         console.log(err);
+            //             //     });
+            //             // return row.id
+            //         })
+            //         // table.bootstrapTable('remove', {
+            //         //     field: 'id',
+            //         //     values: ids
+            //         // })
+            //         // remove.prop('disabled', true)
+            //     })
+
+            // })
         </script>
 
     </section>
