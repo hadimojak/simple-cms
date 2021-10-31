@@ -9,12 +9,7 @@ const { sequelize } = require('../sequelize');
 
 
 exports.getLogin = (req, res, next) => {
-    let message = req.flash("error");
-    if (message.length > 0) {
-        message = message[0];
-    } else {
-        message = null;
-    }
+  
     res.render('auth/login', { pageTitle: 'ورود', path: '/login', validationErrors: [], errorMessage: '', oldInput: '' });
 };
 
@@ -36,9 +31,8 @@ exports.postLogin = (req, res, next) => {
     }
     User.findOne({ where: { phoneNumber: phoneNumber } })
         .then(editor => {
-            console.log(editor.dataValues)
-            if (editor.length === 0) {
-                return res.render('auth/login', {
+            if (!editor) {
+                 res.render('auth/login', {
                     pageTitle: 'ورود',
                     path: '/login',
                     errorMessage: 'some errors',
@@ -49,13 +43,17 @@ exports.postLogin = (req, res, next) => {
                     validationErrors: ['number', 'password'],
                 });
 
-            }
-            bcrypt.compare(password, editor.dataValues.password)
+            } else {
+                bcrypt.compare(password, editor.dataValues.password)
                 .then(doMatch => {
                     if (doMatch) {
+                        console.log('match');
                         req.session.isLoggedIn = true;
-                        // req.session.user = editor;
-                        return res.redirect(`/admin`);
+                        // req.session.user = editor.dataValues;
+                        return req.session.save((err) => {
+                            console.log("post login", err ? err : "");
+                            res.redirect(`/admin`);
+                          });
                     }
                     return res.render('auth/login', {
                         pageTitle: 'ورود',
@@ -68,6 +66,8 @@ exports.postLogin = (req, res, next) => {
                         validationErrors: ['number', 'password'],
                     });
                 });
+            }
+
         })
         .catch(err => {
             console.log(err);
