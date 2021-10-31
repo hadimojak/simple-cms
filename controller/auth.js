@@ -9,6 +9,12 @@ const { sequelize } = require('../sequelize');
 
 
 exports.getLogin = (req, res, next) => {
+    let message = req.flash("error");
+    if (message.length > 0) {
+        message = message[0];
+    } else {
+        message = null;
+    }
     res.render('auth/login', { pageTitle: 'ورود', path: '/login', validationErrors: [], errorMessage: '', oldInput: '' });
 };
 
@@ -28,8 +34,9 @@ exports.postLogin = (req, res, next) => {
             validationErrors: errors.array(),
         });
     }
-    User.findAll({ where: { phoneNumber: phoneNumber } })
+    User.findOne({ where: { phoneNumber: phoneNumber } })
         .then(editor => {
+            console.log(editor.dataValues)
             if (editor.length === 0) {
                 return res.render('auth/login', {
                     pageTitle: 'ورود',
@@ -43,12 +50,14 @@ exports.postLogin = (req, res, next) => {
                 });
 
             }
-            bcrypt.compare(password, editor[0].dataValues.password)
+            bcrypt.compare(password, editor.dataValues.password)
                 .then(doMatch => {
                     if (doMatch) {
+                        req.session.isLoggedIn = true;
+                        // req.session.user = editor;
                         return res.redirect(`/admin`);
                     }
-                    return res.render('login', {
+                    return res.render('auth/login', {
                         pageTitle: 'ورود',
                         path: '/login',
                         errorMessage: 'some errors',

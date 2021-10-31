@@ -179,13 +179,22 @@ exports.postUpdateUser = (req, res, next) => {
 };
 exports.deleteUser = (req, res, next) => {
   const phoneNumber = req.params.userPhoneNumber;
-  User.destroy({ where: { phoneNumber: phoneNumber } })
-    .then((user) => {
-      res.json({ data: user + " user deleted succesfully" });
-    })
-    .catch((err) => {
+  User.findOne({ where: { phoneNumber: phoneNumber } })
+    .then(user => {
+      if (user.dataValues.isAdmin === true) {
+        // req.flash("error", "you nact delete admin acount");
+        return res.redirect('/admin/users')
+      } else {
+        User.destroy({ where: { phoneNumber: phoneNumber } })
+          .then((user) => {
+            res.json({ data: user + " user deleted succesfully" });
+          });
+      }
+    }
+    ).catch((err) => {
       console.log(err);
     });
+
 };
 
 // admin files
@@ -309,9 +318,9 @@ exports.getEditMenu = (req, res, next) => {
 exports.postEditMenu = (req, res, next) => {
   const id = req.body.id;
   const title = req.body.title;
-  console.log(title)
+  console.log(title);
   const navArray = JSON.stringify(req.body.navArray);
-  Menu.update({ navItemArray: navArray,title:title }, { where: { id: id } }).then(data => {
+  Menu.update({ navItemArray: navArray, title: title }, { where: { id: id } }).then(data => {
     res.json({ data: 'done' });
   });
 };

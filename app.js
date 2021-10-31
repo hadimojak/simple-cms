@@ -3,7 +3,9 @@ const app = express();
 const path = require('path');
 const { sequelize, DataTypes, Sequelize, Model } = require('./sequelize');
 // const hook = require('./hooks');
-
+const flash = require("connect-flash");
+const session = require("express-session");
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 
 
@@ -18,8 +20,18 @@ app.set("views", "views");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
-
 app.use('/uploads', express.static('uploads'));
+
+const sessionStore = new SequelizeStore({
+    db: sequelize,
+    checkExpirationInterval: 15 * 60 * 1000,
+    expiration: 24 * 60 * 60 * 1000
+});
+app.use(session({ secret: 'my secret', store: sessionStore, resave: false }));
+sessionStore.sync();
+app.use(flash());
+
+
 
 // app.use(installRoutes);
 app.use(authRoutes);
