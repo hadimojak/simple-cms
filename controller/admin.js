@@ -1,4 +1,4 @@
-const { User, Media, Post } = require("../models/Model");
+const { User, Media, Post, Menu } = require("../models/Model");
 const { validationResult, body } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const path = require("path");
@@ -87,7 +87,7 @@ exports.postAddUser = (req, res, next) => {
     })
     .catch((err) => {
       const unique = err.errors[0].path.split(".")[1];
-      res.render("signup", {
+      res.render("admin/signup", {
         pageTitle: "ثبت نام",
         path: "/signup",
         errorMessage:
@@ -283,23 +283,37 @@ exports.getMenus = (req, res, next) => {
   res.render("admin/allMenu", { pageTitle: "منو ها", path: "/menu" });
 };
 exports.menuApi = (req, res, next) => {
-  res.json({ data: 'menuApi' });
+  const menuArray = [];
+  Menu.findAll({}).then(menus => {
+    return menus.forEach(menu => {
+      menuArray.push(menu.dataValues);
+    });
+  }).then(data => { res.json(menuArray); }).catch(err => { console.log(err); });
 };
 
 exports.postAddMenu = (req, res, next) => {
-  const nav = req.body
-  console.log(nav)
-  console.log(JSON.stringify(nav))
-  // const navStringData = req.body.navData;
-  // console.log(navStringData[0].children, navStringData);
+  const title = req.body.title;
+  const navArray = JSON.stringify(req.body.navArray);
+  Menu.create({ title: title, navItemArray: navArray, UserId: 1 }).then(data => {
+    res.json({ data: 'done' });
+  });
 
-  res.json({ data: nav});
+
 };
 exports.getEditMenu = (req, res, next) => {
-  res.json({ data: "post edit menu" });
+  const menuId = req.params.menuId;
+  Menu.findOne({ where: { id: menuId } }).then(data => {
+    res.render('admin/updateMenu', { pageTitle: "منو ها", path: "/menu", menuId: menuId, menu: data.dataValues });
+  });
 };
 exports.postEditMenu = (req, res, next) => {
-  res.json({ data: "post edit menu" });
+  const id = req.body.id;
+  const title = req.body.title;
+  console.log(title)
+  const navArray = JSON.stringify(req.body.navArray);
+  Menu.update({ navItemArray: navArray,title:title }, { where: { id: id } }).then(data => {
+    res.json({ data: 'done' });
+  });
 };
 exports.deleteMenu = (req, res, next) => {
   res.json({ data: "post edit menu" });

@@ -93,12 +93,14 @@ const Post = sequelize.define('Post', {
 });
 
 const Menu = sequelize.define('Menu', {
+    
     title: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    }, content: {
         type: DataTypes.STRING,
         allowNull: false,
+    }, 
+    navItemArray: {
+        type: DataTypes.TEXT('long'),
+        allowNull: false
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE

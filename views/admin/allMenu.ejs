@@ -81,6 +81,9 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="card border-primary mb-3">
+                                                        <div class="card-header bg-primary text-white">عنوان فرست</div>
+                                                        <input type="text" class="form-control item-menu"
+                                                            name="menuTitle" id="menuTitle" placeholder="Text">
                                                         <div class="card-header bg-primary text-white">ویرایش</div>
                                                         <div class="card-body">
                                                             <form id="frmEdit" class="form-horizontal">
@@ -137,6 +140,7 @@
 
 
 
+
                                         <script>
                                             jQuery(document).ready(function () {
                                                 /* =============== DEMO =============== */
@@ -159,137 +163,6 @@
                                                     $("#out").text(str);
                                                 });
 
-                                                $('#btnSave').on('click', function (e) {
-                                                    var str = editor.getString();
-                                                    if (str === '[]') { return }
-                                                    let strArr = JSON.parse(str)
-                                                    strArr.forEach(element => {
-                                                        const _menu = `<div class="container-fluid" style="width:100%;margin:0;padding:0">
-   <div class="navbar navbar-default" role="navigation">
-      <div class="container">
-         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">NavBar</a>
-         </div>
-         <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-               <li><a href="https://github.com/fontenele/bootstrap-navbar-dropdowns" target="_blank">GitHub Project</a></li>
-            </ul>
-            <ul class="nav navbar-nav">
-               <li class="active"><a href="#">Home</a></li>
-               <li>
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu 1 <b class="caret"></b></a>
-                  <ul class="dropdown-menu multi-level">
-                     <li><a href="#">Action</a></li>
-                     <li><a href="#">Another action</a></li>
-                     <li><a href="#">Something else here</a></li>
-                     <li class="divider"></li>
-                     <li><a href="#">Separated link</a></li>
-                     <li class="divider"></li>
-                     <li><a href="#">One more separated link</a></li>
-                     <li class="dropdown-submenu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                        <ul class="dropdown-menu">
-                           <li><a href="#">Action</a></li>
-                           <li class="dropdown-submenu">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                              <ul class="dropdown-menu">
-                                 <li class="dropdown-submenu">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                                    <ul class="dropdown-menu">
-                                       <li><a href="#">Action</a></li>
-                                       <li><a href="#">Another action</a></li>
-                                       <li><a href="#">Something else here</a></li>
-                                       <li class="divider"></li>
-                                       <li><a href="#">Separated link</a></li>
-                                       <li class="divider"></li>
-                                       <li><a href="#">One more separated link</a></li>
-                                    </ul>
-                                 </li>
-                              </ul>
-                           </li>
-                        </ul>
-                     </li>
-                  </ul>
-               </li>
-               <li>
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu 2 <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                     <li><a href="#">Action</a></li>
-                     <li><a href="#">Another action</a></li>
-                     <li><a href="#">Something else here</a></li>
-                     <li class="divider"></li>
-                     <li><a href="#">Separated link</a></li>
-                     <li class="divider"></li>
-                     <li><a href="#">One more separated link</a></li>
-                     <li class="dropdown-submenu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                        <ul class="dropdown-menu">
-                           <li><a href="#">Action</a></li>
-                           <li><a href="#">Another action</a></li>
-                           <li><a href="#">Something else here</a></li>
-                           <li class="divider"></li>
-                           <li><a href="#">Separated link</a></li>
-                           <li class="divider"></li>
-                           <li class="dropdown-submenu">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                              <ul class="dropdown-menu">
-                                 <li class="dropdown-submenu">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                                    <ul class="dropdown-menu">
-                                       <li><a href="#">Action</a></li>
-                                       <li><a href="#">Another action</a></li>
-                                       <li><a href="#">Something else here</a></li>
-                                       <li class="divider"></li>
-                                       <li><a href="#">Separated link</a></li>
-                                       <li class="divider"></li>
-                                       <li><a href="#">One more separated link</a></li>
-                                    </ul>
-                                 </li>
-                              </ul>
-                           </li>
-                        </ul>
-                     </li>
-                  </ul>
-               </li>
-            </ul>
-         </div>
-         <!--/.nav-collapse -->
-      </div>
-      <!-- /END container -->	     
-   </div>
-   <!-- /END navbar -->	 
-</div>
-<!-- /END container-fluid -->
-`
-                                                    });
-
-
-
-
-
-
-
-
-
-
-
-
-                                                    fetch("/admin/addMenu", {
-                                                        method: 'POST', headers: {
-                                                            'Content-Type': 'application/json',
-                                                        }, body: str
-                                                    }).then(response => { return response.json() }).then(arr => {
-                                                    })
-                                                        .catch(err => console.log(err))
-
-                                                });
-
 
                                                 $("#btnUpdate").click(function () {
                                                     if ($("#text").val() === '') { return }
@@ -301,15 +174,46 @@
                                                     if ($('#href').val() === '') { $('#href').val('#') }
                                                     editor.add();
                                                 });
+                                             
+                                                $('#btnSave').on('click', function (e) {
+                                                    const title = document.getElementById('menuTitle').value
+                                                    var str = editor.getString();
+                                                    if (str === '[]' || title.trim() === '') { return }
+                                                    let strArr = JSON.parse(str)
+                                                    // console.log(strArr)
+                                                    const navMenu = document.getElementById('navMenu')
+                                                    strArr.forEach(p => {
+                                                        if (!('children' in p)) {
+                                                            const item = document.createElement('li')
+                                                            item.className = 'nav-item'
+                                                            item.innerHTML = `<a target=${p.target} class="nav-link" href=${p.href}>${p.text}</a>`
+                                                            navMenu.append(item)
+                                                        }
+                                                        if ('children' in p) {
+                                                            const item = document.createElement('li')
+                                                            item.className = 'nav-item dropdown'
+                                                            item.innerHTML = `<a target=${p.target} class="nav-link dropdown-toggle" href=${p.href} data-bs-toggle="dropdown">${p.text}</a>`
+                                                            const firstDropMenu = document.createElement('ul')
+                                                            firstDropMenu.className = 'dropdown-menu dropleft'
+                                                            p['children'].forEach(q => {
+                                                                firstDropMenu.innerHTML += `<li><a target=${q.target} class="dropdown-item" href=${q.href}>${q.text}</a></li>`
+                                                            })
+                                                            item.append(firstDropMenu)
+                                                            navMenu.append(item)
+                                                        }
+                                                    });
+
+                                                    const data = navMenu.parentElement.innerHTML
+                                                    console.log(data)
+                                                    $.ajax({
+                                                        type: "POST", url: "/admin/addMenu", data: {navArray:strArr,
+                                                             title: title
+                                                        }, success: function (result) { window.location.replace("/admin/menus") }
+                                                    })
+
+                                                });
                                             });
-
-
-
                                         </script>
-
-
-                                        <!-- Preview-->
-                                        <div id='preview'></div>
                                     </div>
                                 </div>
                             </div>
@@ -318,7 +222,8 @@
                     <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
                         data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/menuData">
                         <thead>
-                            <tr>
+                            <tr>                          
+                                      <th data-field="id" data-sortable="true">id</th>
                                 <th data-field="title" data-sortable="true">نام</th>
                                 <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
                                 <th data-field="content" data-formatter="pick">انتخاب</th>
@@ -326,9 +231,121 @@
                             </tr>
                         </thead>
                     </table>
+                    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+                    <style type="text/css">
+                        /* ============ desktop view ============ */
+                        @media all and (min-width: 992px) {
+
+                            .dropdown-menu li {
+                                position: relative;
+                            }
+
+                            .dropdown-menu .submenu {
+                                display: none;
+                                position: absolute;
+                                left: 100%;
+                                top: -7px;
+                            }
+
+                            .dropdown-menu .submenu-left {
+                                right: 100%;
+                                left: auto;
+                            }
+
+                            .dropdown-menu>li:hover {
+                                background-color: #f1f1f1
+                            }
+
+                            .dropdown-menu>li:hover>.submenu {
+                                display: block;
+                            }
+                        }
+
+                        /* ============ desktop view .end// ============ */
+
+                        /* ============ small devices ============ */
+                        @media (max-width: 991px) {
+
+                            .dropdown-menu .dropdown-menu {
+                                margin-left: 0.7rem;
+                                margin-right: 0.7rem;
+                                margin-bottom: .5rem;
+                            }
+
+                        }
+
+                        /* ============ small devices .end// ============ */
+                    </style>
+                    <script type="text/javascript">
+                        //	window.addEventListener("resize", function() {
+                        //		"use strict"; window.location.reload(); 
+                        //	});
+
+
+                        document.addEventListener("DOMContentLoaded", function () {
+
+
+                            /////// Prevent closing from click inside dropdown
+                            document.querySelectorAll('.dropdown-menu').forEach(function (element) {
+                                element.addEventListener('click', function (e) {
+                                    e.stopPropagation();
+                                });
+                            })
 
 
 
+                            // make it as accordion for smaller screens
+                            if (window.innerWidth < 992) {
+
+                                // close all inner dropdowns when parent is closed
+                                document.querySelectorAll('.navbar .dropdown').forEach(function (everydropdown) {
+                                    everydropdown.addEventListener('hidden.bs.dropdown', function () {
+                                        // after dropdown is hidden, then find all submenus
+                                        this.querySelectorAll('.submenu').forEach(function (everysubmenu) {
+                                            // hide every submenu as well
+                                            everysubmenu.style.display = 'none';
+                                        });
+                                    })
+                                });
+
+                                document.querySelectorAll('.dropdown-menu a').forEach(function (element) {
+                                    element.addEventListener('click', function (e) {
+
+                                        let nextEl = this.nextElementSibling;
+                                        if (nextEl && nextEl.classList.contains('submenu')) {
+                                            // prevent opening link if link needs to open dropdown
+                                            e.preventDefault();
+                                            console.log(nextEl);
+                                            if (nextEl.style.display == 'block') {
+                                                nextEl.style.display = 'none';
+                                            } else {
+                                                nextEl.style.display = 'block';
+                                            }
+
+                                        }
+                                    });
+                                })
+                            }
+                            // end if innerWidth
+
+                        });
+                            // DOMContentLoaded  end
+                    </script>
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="direction: rtl;">
+                        <div class="container-fluid">
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#main_nav" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="main_nav">
+                                <ul class="navbar-nav" id='navMenu'>
+
+                                </ul>
+
+
+                            </div> <!-- navbar-collapse.// -->
+                        </div> <!-- container-fluid.// -->
+                    </nav>
 
                 </div>
 
@@ -344,6 +361,14 @@
                     `<button id='editPost' onclick="pickPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش/مشاهده</button>`
                 ].join('');
             }
+
+
+            function pickPost(e) {
+                const menuId = e.parentElement.parentElement.firstChild.innerText
+                console.log(menuId)
+                window.location.href = `/admin/updateMenu/${menuId}`
+            }
+
         </script>
 
     </section>

@@ -83,7 +83,7 @@ router.delete("/admin/delete/storage/:fileName", adminController.deleteFile);
 //if(user is super User show her menus )
 router.get('/admin/menus', adminController.getMenus);
 router.get('/admin/menuData', adminController.menuApi);
-router.post('/admin/addMenu', express.json({ type: '*/*' }), adminController.postAddMenu);
+router.post('/admin/addMenu', adminController.postAddMenu);
 router.get('/admin/updateMenu/:menuId', adminController.getEditMenu);
 router.post('/admin/updateMenu', adminController.postEditMenu);
 router.delete('/admin/delete/page/:menuId', adminController.deleteMenu);
