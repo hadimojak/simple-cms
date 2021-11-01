@@ -45,12 +45,8 @@ router.post('/admin/updateUser', [body('firstName', '.نام باید فقط ش�
 body('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
     .withMessage('.نام خانوادگی باید بدون فاصله  باشد').toLowerCase(),
 body('phoneNumber', '.شماره موبایل معتبر وارد کنید').isNumeric().notEmpty().matches(/^(\+98|0098|98|0)?9\d{9}$/).escape().trim(),
-body('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail(),
-body('password', '.پسورد باید شامل حروف و عدد باشد و حداقل به طول 8 کاراکتر باشد').isAlphanumeric().isLength({ min: 8 }).notEmpty().escape().trim(),
-body('passwordConfirmed', ".تکرار پسورد برابر نیست").trim().notEmpty().escape().custom((value, { req }) => {
-    if (value !== req.body.password) { throw new Error(); }
-    return true;
-})], adminController.postUpdateUser);
+body('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail()
+], adminController.postUpdateUser);
 router.delete('/admin/delete/user/:userPhoneNumber', adminController.deleteUser);
 
 // if(user is normalUser show her only her files)

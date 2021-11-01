@@ -3,6 +3,8 @@ const { User } = require("../models/Model");
 const bcrypt = require("bcryptjs");
 const { ValidationError, Op } = require("sequelize");
 const { sequelize } = require("../sequelize");
+const _ = require('lodash');
+
 
 exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
@@ -47,14 +49,16 @@ exports.postLogin = (req, res, next) => {
       } else {
         bcrypt.compare(password, editor.dataValues.password).then((doMatch) => {
           if (doMatch) {
-            console.log("match");
-
-            res.cookie('isLoggedIn',true, { maxAge: 900000 ,httpOnly: true });
-            // req.session.user = editor.dataValues;
-            // return req.session.save((err) => {
-            //     console.log("post login", err ? err : "");
-            //   });
-            res.redirect(`/admin`);
+            console.log('adadadasd')
+            const allowed = ['id','email','phoneNumber',"isAdmin","state"];
+            const filteredUser = _.pick(editor.dataValues, allowed)
+            req.session.isLoggedIn = true;
+            req.session.user = filteredUser;
+            //saving session in to the db
+            return req.session.save((err) => {
+              
+              res.redirect(`/admin`);
+            });
           } else {
             res.render("auth/login", {
               pageTitle: "ورود",
@@ -71,8 +75,9 @@ exports.postLogin = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log(err);
-      res.redirect("/login");
+      if(err){console.log(err);
+      res.redirect("/login");}
+      
     });
 };
 exports.getReset = (req, res, next) => {
@@ -82,5 +87,9 @@ exports.postReset = (req, res, next) => {
   res.json({ data: "password reset" });
 };
 exports.logout = (req, res, next) => {
-  res.json({ data: "user logout" });
+  req.session.destroy((err) => {
+    console.log(err);
+    res.redirect('/admin');
+
+  });
 };

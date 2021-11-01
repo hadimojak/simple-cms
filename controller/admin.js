@@ -8,8 +8,10 @@ const { Op } = require('../sequelize');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
+  console.log(req.session)
+  if(!req.session.isLoggedIn){return res.redirect('/login')}
+  console.log(req.session.isLoggedIn);
   
-  console.log(req,'aaaa');
   res.render("admin/admin", { pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.isLoggedIn });
 };
 
@@ -117,7 +119,6 @@ exports.getUpdateUser = (req, res, next) => {
         errorMessage: "",
         oldInput: {
           email: data[0].dataValues.email,
-          password: data[0].dataValues.password,
           firstName: data[0].dataValues.firstName,
           lastName: data[0].dataValues.lastName,
           phoneNumber: phoneNumber,
@@ -137,7 +138,6 @@ exports.postUpdateUser = (req, res, next) => {
   const lastName = req.body.lastName;
   const email = req.body.email;
   const phoneNumber = req.body.phoneNumber;
-  const password = req.body.password;
   const state = req.body.state === "on" ? 1 : 0;
   if (!errors.isEmpty()) {
     return res.render("admin/signup", {
@@ -146,7 +146,6 @@ exports.postUpdateUser = (req, res, next) => {
       errorMessage: errors.array()[0].msg,
       oldInput: {
         email: email,
-        password: password,
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
@@ -156,27 +155,19 @@ exports.postUpdateUser = (req, res, next) => {
       update: true, isAuhtenticated: req.isLoggedIn
     });
   } else {
-    bcrypt
-      .hash(password, 12)
-      .then(async (hashedPassword) => {
-        try {
-          await User.update(
-            {
-              firstName: firstName,
-              lastName: lastName,
-              email: email,
-              password: hashedPassword,
-              phoneNumber: phoneNumber,
-              state: state,
-            },
-            { where: { phoneNumber: phoneNumber } }
-          );
-          res.redirect("/admin/users");
-        } catch (err) {
-          throw err;
-        }
-      })
-      .catch((err) => { });
+
+    User.update(
+      {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        state: state,
+      },
+      { where: { phoneNumber: phoneNumber } }
+    ).then(data => {
+      res.redirect("/admin/users");
+    });
+
   }
 };
 exports.deleteUser = (req, res, next) => {

@@ -20,9 +20,8 @@
 
 
 
-                                    <form
-                                        action="<%= update  ? `/admin/updateUser` : '/admin/addUser' %>"
-                                        method="post" novalidate>
+                                    <form action="<%= update  ? `/admin/updateUser` : '/admin/addUser' %>" method="post"
+                                        novalidate>
 
                                         <div class="row d-flex flex-row-reverse">
                                             <div class="col-md-6 mb-4">
@@ -80,7 +79,7 @@
                                         <div class="row d-flex flex-row-reverse">
                                             <div class="col-md-6 mb-4 pb-2">
 
-                                                
+
                                                 <% if(update){ %>
                                                     <div class="form-outline d-flex justify-content-around pt-2">
                                                         <input type="checkbox" checked data-toggle="toggle" name="state"
@@ -92,26 +91,28 @@
                                                     </div>
                                                     <% } %>
                                             </div>
-                                            <div class="col-md-6 mb-4 pb-2">
-                                                <div class="form-outline">
-                                                    <input type="password" id="password" name="password"
-                                                        value="<%= oldInput.password %>"
-                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>" />
-                                                    <label class="form-label d-flex flex-row-reverse"
-                                                        for="password">کلمه عبور</label>
-                                                </div>
-                                                <div class="form-outline">
-                                                    <input type="password" id="passwordConfirmed"
-                                                        value="<%= oldInput.passwordConfirmed %>"
-                                                        name="passwordConfirmed"
-                                                        class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'passwordConfirmed') ? 'invalid' : '' %>" />
-                                                    <label class="form-label d-flex flex-row-reverse"
-                                                        for="passwordConfirmed"> تکرار کلمه عبور
-                                                    </label>
-                                                </div>
+                                            <% if(!update){ %>
 
-                                            </div>
+                                                <div class="col-md-6 mb-4 pb-2">
+                                                    <div class="form-outline">
+                                                        <input type="password" id="password" name="password"
+                                                            value="<%= oldInput.password %>"
+                                                            class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>" />
+                                                        <label class="form-label d-flex flex-row-reverse"
+                                                            for="password">کلمه عبور</label>
+                                                    </div>
+                                                    <div class="form-outline">
+                                                        <input type="password" id="passwordConfirmed"
+                                                            value="<%= oldInput.passwordConfirmed %>"
+                                                            name="passwordConfirmed"
+                                                            class="form-control form-control-lg <%= validationErrors.find(e => e.param === 'passwordConfirmed') ? 'invalid' : '' %>" />
+                                                        <label class="form-label d-flex flex-row-reverse"
+                                                            for="passwordConfirmed"> تکرار کلمه عبور
+                                                        </label>
+                                                    </div>
 
+                                                </div>
+                                                <% } %>
 
 
 
