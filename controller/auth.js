@@ -11,6 +11,7 @@ exports.getLogin = (req, res, next) => {
     validationErrors: [],
     errorMessage: "",
     oldInput: "",
+    isAuhtenticated: req.isLoggedIn
   });
 };
 
@@ -27,7 +28,7 @@ exports.postLogin = (req, res, next) => {
         password: password,
         phoneNumber: phoneNumber,
       },
-      validationErrors: errors.array(),
+      validationErrors: errors.array(), isAuhtenticated: req.isLoggedIn
     });
   }
   User.findOne({ where: { phoneNumber: phoneNumber } })
@@ -41,18 +42,14 @@ exports.postLogin = (req, res, next) => {
             password: password,
             phoneNumber: phoneNumber,
           },
-          validationErrors: ["number", "password"],
+          validationErrors: ["number", "password"], isAuhtenticated: req.isLoggedIn
         });
       } else {
         bcrypt.compare(password, editor.dataValues.password).then((doMatch) => {
           if (doMatch) {
             console.log("match");
-            res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
-            res.setHeader(
-              "Access-Control-Allow-Headers",
-              "Origin, X-Requested-With, Content-Type, Accept"
-            );
-            res.cookie("loggedIn", "true");
+
+            res.cookie('isLoggedIn',true, { maxAge: 900000 ,httpOnly: true });
             // req.session.user = editor.dataValues;
             // return req.session.save((err) => {
             //     console.log("post login", err ? err : "");
@@ -67,7 +64,7 @@ exports.postLogin = (req, res, next) => {
                 password: password,
                 phoneNumber: phoneNumber,
               },
-              validationErrors: ["number", "password"],
+              validationErrors: ["number", "password"], isAuhtenticated: req.isLoggedIn
             });
           }
         });

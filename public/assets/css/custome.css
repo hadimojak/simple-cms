@@ -1,113 +1,115 @@
 .logo-border {
-    border: 5px solid #ffc107!important;
+  border: 5px solid #ffc107 !important;
 }
-
 
 body {
-    padding-top: 90px
+  padding-top: 90px;
 }
 
-@media (min-width:768px) {
-    body {
-        padding-top: 0
-    }
+@media (min-width: 768px) {
+  body {
+    padding-top: 0;
+  }
 }
 
-@media (min-width:768px) {
-    body {
-        margin-right: 150px
-    }
+@media (min-width: 768px) {
+  body {
+    margin-right: 150px;
+  }
 }
 
 .navbar.fixed-right {
-    position: fixed;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+}
+
+@media (min-width: 823px) {
+  .navbar.fixed-right {
+    bottom: 0;
+    width: 130px;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+  }
+  .navbar.fixed-right .navbar-collapse {
+    flex-grow: 0;
+    flex-direction: column;
+    width: 100%;
+  }
+  .navbar.fixed-right .navbar-collapse .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+  .navbar.fixed-right .navbar-collapse .navbar-nav .nav-item {
+    width: 100%;
+  }
+  .navbar.fixed-right .navbar-collapse .navbar-nav .nav-item .dropdown-menu {
     top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1030
+  }
 }
 
-@media (min-width:768px) {
-    .navbar.fixed-right {
-        bottom: 0;
-        width: 150px;
-        flex-flow: column nowrap;
-        align-items: flex-start
-    }
-    .navbar.fixed-right .navbar-collapse {
-        flex-grow: 0;
-        flex-direction: column;
-        width: 100%
-    }
-    .navbar.fixed-right .navbar-collapse .navbar-nav {
-        flex-direction: column;
-        width: 100%
-    }
-    .navbar.fixed-right .navbar-collapse .navbar-nav .nav-item {
-        width: 100%
-    }
-    .navbar.fixed-right .navbar-collapse .navbar-nav .nav-item .dropdown-menu {
-        top: 0
-    }
+@media (min-width: 823px) {
+  .navbar.fixed-right {
+    left: auto;
+  }
+  .navbar.fixed-right .navbar-nav .nav-item .dropdown-toggle:after {
+    border-top: 0.3em solid transparent;
+    border-left: none;
+    border-bottom: 0.3em solid transparent;
+    border-right: 0.3em solid;
+    vertical-align: baseline;
+  }
+  .navbar.fixed-right .navbar-nav .nav-item .dropdown-menu {
+    left: auto;
+    right: 100%;
+  }
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: hsl(197, 70%, 40%);
+  max-width: 150px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
-@media (min-width:768px) {
-    .navbar.fixed-right {
-        left: auto
-    }
-    .navbar.fixed-right .navbar-nav .nav-item .dropdown-toggle:after {
-        border-top: .3em solid transparent;
-        border-left: none;
-        border-bottom: .3em solid transparent;
-        border-right: .3em solid;
-        vertical-align: baseline
-    }
-    .navbar.fixed-right .navbar-nav .nav-item .dropdown-menu {
-        left: auto;
-        right: 100%
-    }
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: hsl(197, 70%, 40%);
-    max-width: 150px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-  
-  .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
-  
-  .dropdown-content a:hover {background-color: #ddd;}
-  
-  .dropdown:hover .dropdown-content {display: block;}
-  
-  .dropdown:hover .dropbtn {background-color: #3e8e41;}
 
-  .gradient-custom {
-    /* fallback for old browsers */
-    background: rgb(223, 166, 209)
-  
-  
-  }
-  
-  
-
-  .invalid
-   {
-    border-color: rgb(255, 140, 140);
-  }
-
-  table{
-    text-align: center; 
-    direction: rtl;
-  }
-
-th{
-    padding: 0;
+.dropdown-content a:hover {
+  background-color: #ddd;
 }
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+
+.gradient-custom {
+  /* fallback for old browsers */
+  background: rgb(223, 166, 209);
+}
+
+.invalid {
+  border-color: rgb(255, 140, 140);
+}
+
+table {
+  text-align: center;
+  direction: rtl;
+}
+
+th {
+  padding: 0;
+}
+
+
