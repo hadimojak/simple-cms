@@ -20,6 +20,7 @@ exports.getUsers = (req, res, next) => {
       const userArray = [];
       for (let p of data) {
         userArray.push(p.dataValues);
+        console.log(p.dataValues)
       }
       return userArray;
     })

@@ -28,7 +28,6 @@
                     class="navbar-toggler-icon" style="direction: rtl;"></span>
             </button>
 
-            <script>console.log("<%= isAuhtenticated %>")</script>
 
             <div class="collapse navbar-collapse " id='sideMenu'>
                 <a class="navbar-brand mx-2" href="/admin">cobcms</a>
@@ -37,7 +36,13 @@
                         width="80" height="80"></a>
 
                 <ul class="navbar-nav ">
-                    
+                    <li class="nav-item">
+                        <div >
+                            <a class="nav-link h7 my-0  <%= path === '/storage' ? 'active' : '' %>"
+                                href="/" type="button">مشاهده سایت</a>
+                        </div>
+                        <hr class="my-0">
+                    </li>
                     <% if(isAuhtenticated){ %>
                         <li class="nav-item ">
                             <div class="dropdown">

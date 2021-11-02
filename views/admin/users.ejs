@@ -11,6 +11,7 @@
                         <th scope="col ">نام و نام خاوادگی</th>
                         <th scope="col  ">شماره همراه</th>
                         <th scope="col ">ایمیل</th>
+                        <th scope="col ">نقش</th>
                         <th scope="col ">وضعیت</th>
                         <th scope="col ">انتخاب</th>
                         <th scope="col ">حذف</th>
@@ -31,6 +32,10 @@
                             <td>
                                 <%= userArray[i].email %>
                             </td>
+                            <td><% if(userArray[i].isAdmin){ %> admin
+                            <% }else{ %>
+                                user
+                            <% } %></td>
                             <td>
                                 <% if (userArray[i].state===true) {%>
                                     <p class=' m-0 p-1 text-success font-weight-bold border rounded border-success
