@@ -8,11 +8,9 @@ const { Op } = require('../sequelize');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
-  console.log(req.session)
-  if(!req.session.isLoggedIn){return res.redirect('/login')}
   console.log(req.session.isLoggedIn);
-  
-  res.render("admin/admin", { pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.isLoggedIn });
+
+  res.render("admin/admin", { pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.session.isLoggedIn });
 };
 
 // admin users
@@ -29,7 +27,7 @@ exports.getUsers = (req, res, next) => {
       res.render("admin/users", {
         pageTitle: "کاربر ها",
         path: "/users",
-        userArray: userArray, isAuhtenticated: req.isLoggedIn
+        userArray: userArray, isAuhtenticated: req.session.isLoggedIn
       });
     })
     .catch((err) => {
@@ -37,6 +35,7 @@ exports.getUsers = (req, res, next) => {
     });
 };
 exports.getAddUser = (req, res, next) => {
+  console.log(req.session);
   res.render("admin/signup", {
     pageTitle: "ثبت نام",
     path: "/signup",
@@ -44,7 +43,7 @@ exports.getAddUser = (req, res, next) => {
     errorMessage: "",
     oldInput: "",
     selection: "ثبت نام",
-    update: false, isAuhtenticated: req.isLoggedIn
+    update: false, isAuhtenticated: req.session.isLoggedIn
   });
 };
 exports.postAddUser = (req, res, next) => {
@@ -69,7 +68,7 @@ exports.postAddUser = (req, res, next) => {
 
       validationErrors: errors.array(),
       selection: "ثبت نام",
-      update: false, isAuhtenticated: req.isLoggedIn
+      update: false, isAuhtenticated: req.session.isLoggedIn
     });
   }
 
@@ -105,27 +104,28 @@ exports.postAddUser = (req, res, next) => {
         },
         validationErrors: [unique],
         selection: "ثبت نام",
-        update: false, isAuhtenticated: req.isLoggedIn
+        update: false, isAuhtenticated: req.session.isLoggedIn
       });
     });
 };
 exports.getUpdateUser = (req, res, next) => {
-  const phoneNumber = req.params.userPhoneNumber;
-  User.findAll({ where: { phoneNumber: phoneNumber } })
+  const id = req.params.userId;
+  User.findOne({ where: { id: id } })
     .then((data) => {
       res.render("admin/signup", {
         pageTitle: "به روز رسانی کاربر",
         path: "/users",
         errorMessage: "",
+        id: id,
         oldInput: {
-          email: data[0].dataValues.email,
-          firstName: data[0].dataValues.firstName,
-          lastName: data[0].dataValues.lastName,
-          phoneNumber: phoneNumber,
+          email: data.dataValues.email,
+          firstName: data.dataValues.firstName,
+          lastName: data.dataValues.lastName,
+          phoneNumber: data.dataValues.phoneNumber,
         },
         validationErrors: [],
         selection: "به روز رسانی",
-        update: true, isAuhtenticated: req.isLoggedIn
+        update: true, isAuhtenticated: req.session.isLoggedIn
       });
     })
     .catch((err) => {
@@ -138,6 +138,7 @@ exports.postUpdateUser = (req, res, next) => {
   const lastName = req.body.lastName;
   const email = req.body.email;
   const phoneNumber = req.body.phoneNumber;
+  const id = req.body.userId;
   const state = req.body.state === "on" ? 1 : 0;
   if (!errors.isEmpty()) {
     return res.render("admin/signup", {
@@ -152,18 +153,18 @@ exports.postUpdateUser = (req, res, next) => {
       },
       validationErrors: errors.array(),
       selection: "به روز رسانی",
-      update: true, isAuhtenticated: req.isLoggedIn
+      update: true, isAuhtenticated: req.session.isLoggedIn
     });
   } else {
-
     User.update(
       {
         firstName: firstName,
         lastName: lastName,
         email: email,
         state: state,
+        phoneNumber: phoneNumber
       },
-      { where: { phoneNumber: phoneNumber } }
+      { where: { id: id } }
     ).then(data => {
       res.redirect("/admin/users");
     });
@@ -171,14 +172,16 @@ exports.postUpdateUser = (req, res, next) => {
   }
 };
 exports.deleteUser = (req, res, next) => {
-  const phoneNumber = req.params.userPhoneNumber;
-  User.findOne({ where: { phoneNumber: phoneNumber } })
+  const id = req.params.id;
+
+  User.findOne({ where: { id: id } })
     .then(user => {
+      console.log(user.dataValues);
       if (user.dataValues.isAdmin === true) {
         // req.flash("error", "you nact delete admin acount");
         return res.redirect('/admin/users');
       } else {
-        User.destroy({ where: { phoneNumber: phoneNumber } })
+        User.destroy({ where: { id: id } })
           .then((user) => {
             res.json({ data: user + " user deleted succesfully" });
           });
@@ -207,9 +210,10 @@ exports.filesApi = (req, res, next) => {
     });
 };
 exports.getAllFiles = (req, res, next) => {
-  res.render("admin/allFiles", { pageTitle: "فایل ها", path: "/storage", isAuhtenticated: req.isLoggedIn });
+  res.render("admin/allFiles", { pageTitle: "فایل ها", path: "/storage", isAuhtenticated: req.session.isLoggedIn });
 };
 exports.postUploadFile = (req, res, next) => {
+  const userId = req.session.user.id;
   const ext = path.extname(req.file.originalname);
   const options = { width: 128, height: 128 };
   let thumbLoc;
@@ -243,7 +247,7 @@ exports.postUploadFile = (req, res, next) => {
     mimetype: req.file.mimetype,
     ext: ext,
     size: req.file.size / 1000,
-    UserId: 1,
+    UserId: userId,
   }).then((file) => {
     res.redirect("/admin/storage");
   });
@@ -282,7 +286,7 @@ exports.deleteFile = (req, res, next) => {
 
 // admin menus
 exports.getMenus = (req, res, next) => {
-  res.render("admin/allMenu", { pageTitle: "منو ها", path: "/menu", isAuhtenticated: req.isLoggedIn });
+  res.render("admin/allMenu", { pageTitle: "منو ها", path: "/menu", isAuhtenticated: req.session.isLoggedIn });
 };
 exports.menuApi = (req, res, next) => {
   const menuArray = [];
@@ -294,9 +298,10 @@ exports.menuApi = (req, res, next) => {
 };
 
 exports.postAddMenu = (req, res, next) => {
+  const userId = req.session.user.id;
   const title = req.body.title;
   const navArray = JSON.stringify(req.body.navArray);
-  Menu.create({ title: title, navItemArray: navArray, UserId: 1 }).then(data => {
+  Menu.create({ title: title, navItemArray: navArray, UserId: userId }).then(data => {
     res.json({ data: 'done' });
   });
 
@@ -305,7 +310,7 @@ exports.postAddMenu = (req, res, next) => {
 exports.getEditMenu = (req, res, next) => {
   const menuId = req.params.menuId;
   Menu.findOne({ where: { id: menuId } }).then(data => {
-    res.render('admin/updateMenu', { pageTitle: "منو ها", path: "/menu", menuId: menuId, menu: data.dataValues, isAuhtenticated: req.isLoggedIn });
+    res.render('admin/updateMenu', { pageTitle: "منو ها", path: "/menu", menuId: menuId, menu: data.dataValues, isAuhtenticated: req.session.isLoggedIn });
   });
 };
 exports.postEditMenu = (req, res, next) => {
@@ -318,12 +323,14 @@ exports.postEditMenu = (req, res, next) => {
   });
 };
 exports.deleteMenu = (req, res, next) => {
+
+  //not functional
   res.json({ data: "post edit menu" });
 };
 
 //get admin settings
 exports.getSettings = (req, res, next) => {
-  res.render("admin/admin", { pageTitle: "تنظیمات", path: "/setting", isAuhtenticated: req.isLoggedIn });
+  res.render("admin/admin", { pageTitle: "تنظیمات", path: "/setting", isAuhtenticated: req.session.isLoggedIn });
 };
 
 // admin posts
@@ -343,17 +350,18 @@ exports.postsApi = (req, res, next) => {
     });
 };
 exports.getPosts = (req, res, next) => {
-  res.render("admin/allPosts", { pageTitle: "نوشته ها", path: "/post", isAuhtenticated: req.isLoggedIn });
+  res.render("admin/allPosts", { pageTitle: "نوشته ها", path: "/post", isAuhtenticated: req.session.isLoggedIn });
 };
 exports.getAddPost = (req, res, next) => {
   res.render("admin/updatePost", {
     pageTitle: "نوشته جدید",
     path: "/post",
     update: false,
-    oldInput: "", isAuhtenticated: req.isLoggedIn
+    oldInput: "", isAuhtenticated: req.session.isLoggedIn
   });
 };
 exports.postAddPost = (req, res, next) => {
+  const userId = req.session.user.id;
   const title = req.body.title;
   if (title.trim() === "") {
     //falsg m,essage
@@ -375,7 +383,7 @@ exports.postAddPost = (req, res, next) => {
             }
           );
           Post.update({
-            postName: title, deltaContent: deltaContent, UserId: 1, path: "/uploads/posts/" + postTitle
+            postName: title, deltaContent: deltaContent, UserId: userId, path: "/uploads/posts/" + postTitle
           }
             , { where: { path: req.body.postPath } })
             .then(post => {
@@ -388,12 +396,11 @@ exports.postAddPost = (req, res, next) => {
               );
               res.redirect("/admin/posts");
             });
-
         } else {
           Post.create({
             postName: title, deltaContent: deltaContent,
             path: "/uploads/posts/" + postTitle,
-            UserId: 1,
+            UserId: userId,
           })
             .then((post) => {
               fs.writeFileSync(
@@ -411,7 +418,6 @@ exports.postAddPost = (req, res, next) => {
               }
             });
         }
-
       }
     });
   }
@@ -427,7 +433,7 @@ exports.getEditPost = (req, res, next) => {
         update: true,
         oldInput: {
           title: postName, postPath: postPath
-        }, isAuhtenticated: req.isLoggedIn
+        }, isAuhtenticated: req.session.isLoggedIn
       });
     })
     .catch((err) => {
@@ -463,7 +469,7 @@ exports.deAprovePost = (req, res, next) => {
 
 // admin pages
 exports.getPages = (req, res, next) => {
-  res.render("admin/pages", { pageTitle: "صفحه ها", path: "/page", isAuhtenticated: req.isLoggedIn });
+  res.render("admin/pages", { pageTitle: "صفحه ها", path: "/page", isAuhtenticated: req.session.isLoggedIn });
 };
 exports.getSinglePage = (req, res, next) => {
   res.status(200).json({ data: "get single pages" });

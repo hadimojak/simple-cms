@@ -7,13 +7,14 @@ const _ = require('lodash');
 
 
 exports.getLogin = (req, res, next) => {
+
   res.render("auth/login", {
     pageTitle: "ورود",
     path: "/login",
     validationErrors: [],
     errorMessage: "",
     oldInput: "",
-    isAuhtenticated: req.isLoggedIn
+    isAuhtenticated: req.session.isLoggedIn
   });
 };
 
@@ -30,7 +31,7 @@ exports.postLogin = (req, res, next) => {
         password: password,
         phoneNumber: phoneNumber,
       },
-      validationErrors: errors.array(), isAuhtenticated: req.isLoggedIn
+      validationErrors: errors.array(), isAuhtenticated: req.session.isLoggedIn
     });
   }
   User.findOne({ where: { phoneNumber: phoneNumber } })
@@ -44,7 +45,7 @@ exports.postLogin = (req, res, next) => {
             password: password,
             phoneNumber: phoneNumber,
           },
-          validationErrors: ["number", "password"], isAuhtenticated: req.isLoggedIn
+          validationErrors: ["number", "password"], isAuhtenticated: req.session.isLoggedIn
         });
       } else {
         bcrypt.compare(password, editor.dataValues.password).then((doMatch) => {
@@ -68,7 +69,7 @@ exports.postLogin = (req, res, next) => {
                 password: password,
                 phoneNumber: phoneNumber,
               },
-              validationErrors: ["number", "password"], isAuhtenticated: req.isLoggedIn
+              validationErrors: ["number", "password"], isAuhtenticated: req.session.isLoggedIn
             });
           }
         });

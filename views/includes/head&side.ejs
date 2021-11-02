@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/menuBuilder/bootstrap-iconpicker/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/bootstrap4-toggle.min.css">
     <link rel="stylesheet" href="/assets/css/custome.css">
-    <script  src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
 
     <title>
         <%= pageTitle %>
@@ -28,74 +28,82 @@
                     class="navbar-toggler-icon" style="direction: rtl;"></span>
             </button>
 
+            <script>console.log("<%= isAuhtenticated %>")</script>
 
             <div class="collapse navbar-collapse " id='sideMenu'>
-                <a class="navbar-brand mx-2" href="/admin">cobex cms</a>
+                <a class="navbar-brand mx-2" href="/admin">cobcms</a>
                 <a class="navbar-brand mx-2 " style="width: 5rem" href="/admin"><img
                         class="logo-border border border-thickness rounded" src="/pictures/indian.png" alt="کوبکس"
                         width="80" height="80"></a>
+
                 <ul class="navbar-nav ">
-
-                    <li class="nav-item ">
-                        <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/users' ? 'active' : '' %>"
-                                type="button" data-toggle="dropdown">کاربر ها</a>
-                            <div class="dropdown-content">
-                                <a href="/admin/users">کاربر ها </a>
-                                <a href="/editor/userProfile">مشخصات کاربر</a>
+                    
+                    <% if(isAuhtenticated){ %>
+                        <li class="nav-item ">
+                            <div class="dropdown">
+                                <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/users' ? 'active' : '' %>"
+                                    type="button" data-toggle="dropdown">کاربر ها</a>
+                                <div class="dropdown-content">
+                                    <a href="/admin/users">کاربر ها </a>
+                                    <a href="/editor/userProfile">مشخصات کاربر</a>
+                                </div>
                             </div>
-                        </div>
-                        <hr class="my-0">
-                    </li>
+                            <hr class="my-0">
+                        </li>
 
-                    <li class="nav-item">
-                        <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/storage' ? 'active' : '' %>"
-                                href="/admin/storage" type="button">فایل ها</a>
-                        </div>
-                        <hr class="my-0">
-                    </li>
-                    <li class=" nav-item">
-                        <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/menu' ? 'active' : '' %>"
-                                href="/admin/menus" type="button">فهرست ها</a>
-                        </div>
-
-                        <hr class="my-0">
-                    </li>
-                    <li class=" nav-item">
-                        <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/setting' ? 'active' : '' %>"
-                                href="/admin/settings" type="button">تنظیمات</a>
-                        </div>
-                        <hr class="my-0">
-                    </li>
-                    <li class=" nav-item">
-                        <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/page' ? 'active' : '' %>"
-                                href="/admin/pages" type="button">صفحه ها</a>
-                        </div>
-                        <hr class="my-0">
-                    </li>
-                    <li class=" nav-item ">
-
-                        <div class="dropdown">
-                            <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/post' ? 'active' : '' %>" href="#"
-                                type="button" data-toggle="dropdown">نوشته ها</a>
-                            <div class="dropdown-content">
-                                <a href="/admin/posts">نوشته ها </a>
-                                <a href="/admin/addPost">نوشته جدید</a>
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/storage' ? 'active' : '' %>"
+                                    href="/admin/storage" type="button">فایل ها</a>
                             </div>
-                        </div>
-                    </li>
+                            <hr class="my-0">
+                        </li>
+                        <li class=" nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/menu' ? 'active' : '' %>"
+                                    href="/admin/menus" type="button">فهرست ها</a>
+                            </div>
+
+                            <hr class="my-0">
+                        </li>
+                        <li class=" nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/setting' ? 'active' : '' %>"
+                                    href="/admin/settings" type="button">تنظیمات</a>
+                            </div>
+                            <hr class="my-0">
+                        </li>
+                        <li class=" nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/page' ? 'active' : '' %>"
+                                    href="/admin/pages" type="button">صفحه ها</a>
+                            </div>
+                            <hr class="my-0">
+                        </li>
+                        <li class=" nav-item ">
+
+                            <div class="dropdown">
+                                <a class="nav-link h7 my-0 dropdown-toggle <%= path === '/post' ? 'active' : '' %>"
+                                    href="#" type="button" data-toggle="dropdown">نوشته ها</a>
+                                <div class="dropdown-content">
+                                    <a href="/admin/posts">نوشته ها </a>
+                                    <a href="/admin/addPost">نوشته جدید</a>
+                                </div>
+                            </div>
+                        </li>
+                        <% } %>
                 </ul>
+
                 <div id="enterance">
-                    <form method="post" action="/logout">
-                        <input type="hidden" name="name" value="value" />
-                        <a id='logout' class=" navbar-brand mx-2 h6 text-warning my-0"
-                            onclick="this.parentNode.submit();" href="#">خروج</a>
-                    </form>
-                    <a id='login' class=" navbar-brand mx-2 h6 text-warning my-0" href="/login">ورود</a>
+                    <% if(isAuhtenticated){ %>
+                        <form method="post" action="/logout">
+                            <input type="hidden" name="name" value="value" />
+                            <a id='logout' class=" navbar-brand mx-2 h6 text-warning my-0"
+                                onclick="this.parentNode.submit();" href="#">خروج</a>
+                        </form>
+                        <% }else { %>
+                            <a id='login' class=" navbar-brand mx-2 h6 text-warning my-0" href="/login">ورود</a>
+                            <% } %>
                 </div>
 
             </div>

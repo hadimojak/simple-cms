@@ -22,9 +22,13 @@
 
                                     <form action="<%= update  ? `/admin/updateUser` : '/admin/addUser' %>" method="post"
                                         novalidate>
+                                        <% if(update){ %>
+
+                                        <input type="hidden" name="userId" value="<%= id %>">
+                                        <% } %>
 
                                         <div class="row d-flex flex-row-reverse">
-                                            <div class="col-md-6 mb-4">
+                                            <div class="col-md-6 mb-4 d-flex align-items-center">
 
                                                 <div class="form-outline">
                                                     <input type="text" id="firstName" dir="rtl" name="firstName"
@@ -35,7 +39,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col-md-6 mb-4">
+                                            <div class="col-md-6 mb-4 d-flex align-items-center">
 
                                                 <div class="form-outline">
                                                     <input type="text" id="lastName" dir="rtl" name="lastName"
@@ -48,7 +52,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="row">
+                                        <div class="row d-flex flex-row-reverse">
                                             <div class="col-md-6 mb-4 d-flex align-items-center ">
 
                                                 <div class="form-outline datepicker w-100">
@@ -71,9 +75,7 @@
                                                     <label class="form-label d-flex flex-row-reverse"
                                                         for="email">Email-ایمیل</label>
                                                 </div>
-
                                             </div>
-
                                         </div>
 
                                         <div class="row d-flex flex-row-reverse">

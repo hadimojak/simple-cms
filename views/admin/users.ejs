@@ -20,7 +20,7 @@
                     <% for (var i=0; i < userArray.length; i++) { %>
                         <tr>
                             <th scope="row">
-                                <%= i+1 %>
+                                <%= userArray[i].id %>
                             </th>
                             <td>
                                 <%= userArray[i].firstName +' '+ userArray[i].lastName %>
@@ -45,18 +45,19 @@
                             </td>
                             <td>
                                 <a class="m-0 p-1 text-success font-weight-bold rounded border border-success d-inline-flex bg-white"
-                                    href="/admin/updateUser/<%= userArray[i].phoneNumber %>">انتخاب</a>
+                                    href="/admin/updateUser/<%= userArray[i].id %>">انتخاب</a>
                             </td>
                             <td>
-                                <input value='<%= userArray[i].phoneNumber %>' type="hidden"></input>
+                                <input value='<%= userArray[i].id %>' type="hidden"></input>
                                 <input onclick="deleteRow(this)"
                                     class="m-0 p-1 text-danger font-weight-bold rounded border border-danger d-inline-flex bg-white"
                                     type="button" value="حذف"></input>
                                 <script>
                                     function deleteRow(p) {
                                         const row = p.parentNode.parentNode
-                                        const phoneNumber = p.previousElementSibling.value
-                                        fetch(`/admin/delete/user/${phoneNumber}`, {
+                                        const id = p.previousElementSibling.value
+                                        console.log(id)
+                                        fetch(`/admin/delete/user/${id}`, {
                                             method: "DELETE",
                                             headers: {
                                             },
