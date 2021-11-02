@@ -113,12 +113,12 @@
         select.click(function () {
 
             var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
-                console.log(row.ext)
-                if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg' ||row.ext===".Jpeg") {
-                    quill.insertEmbed(10, 'image', row.path)
+                const length = quill.getLength();
+                if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg' || row.ext === ".Jpeg") {
+                    quill.insertEmbed(length, 'image', row.path)
                 }
                 if (row.ext === '.mp4' || row.ext === ".mkv" || row.ext === '.3gp') {
-                    quill.insertEmbed(10, 'video', row.path)
+                    quill.insertEmbed(length, 'video', row.path)
                 }
             })
             $('#galleryModal').modal('hide')

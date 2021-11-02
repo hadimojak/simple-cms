@@ -112,4 +112,8 @@ th {
   padding: 0;
 }
 
-
+.ql-editor .ql-video {
+  display: block;
+  width: 80%;
+  height:300px;
+}
