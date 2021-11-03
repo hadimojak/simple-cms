@@ -66,7 +66,6 @@ exports.getUserProfile = (req, res, next) => {
 
 exports.getPassReset = (req, res, next) => {
   const userId = req.params.userId;
-  console.log(userId, req.params);
   res.render('admin/passwordReset', {
     pageTitle: 'تغییر پسورد',
     path: '/passReset', validationErrors: [],
@@ -78,7 +77,6 @@ exports.getPassReset = (req, res, next) => {
 };
 
 exports.postPassReset = (req, res, next) => {
-  console.log(req.session);
   const userId = req.session.user.id;
   const errors = validationResult(req);
   const password = req.body.password;
@@ -104,7 +102,7 @@ exports.postPassReset = (req, res, next) => {
       } catch (err) {
         throw err;
       }
-      res.redirect("/logout");
+      res.redirect(307,'/logout');
     })
     .catch((err) => {
       const unique = err.errors[0].path.split(".")[1];
@@ -123,7 +121,6 @@ exports.postPassReset = (req, res, next) => {
 };
 
 exports.getAddUser = (req, res, next) => {
-  console.log(req.session);
   res.render("admin/signup", {
     pageTitle: "ثبت نام",
     path: "/signup",
@@ -265,7 +262,6 @@ exports.deleteUser = (req, res, next) => {
 
   User.findOne({ where: { id: id } })
     .then(user => {
-      console.log(user.dataValues);
       if (user.dataValues.isAdmin === true) {
         // req.flash("error", "you nact delete admin acount");
         return res.redirect('/admin/users');
@@ -408,7 +404,6 @@ exports.getEditMenu = (req, res, next) => {
 exports.postEditMenu = (req, res, next) => {
   const id = req.body.id;
   const title = req.body.title;
-  console.log(title);
   const navArray = JSON.stringify(req.body.navArray);
   Menu.update({ navItemArray: navArray, title: title }, { where: { id: id } }).then(data => {
     res.json({ data: 'done' });

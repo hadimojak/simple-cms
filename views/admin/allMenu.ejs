@@ -162,7 +162,6 @@
                                                     var str = editor.getString();
                                                     if (str === '[]' || title.trim() === '') { return }
                                                     let strArr = JSON.parse(str)
-                                                    // console.log(strArr)
                                                     const navMenu = document.getElementById('navMenu')
                                                     strArr.forEach(p => {
                                                         if (!('children' in p)) {
@@ -186,7 +185,6 @@
                                                     });
 
                                                     const data = navMenu.parentElement.innerHTML
-                                                    console.log(data)
                                                     $.ajax({
                                                         type: "POST", url: "/admin/addMenu", data: {
                                                             navArray: strArr,
@@ -247,7 +245,6 @@
 
             function pickPost(e) {
                 const menuId = e.parentElement.parentElement.firstChild.innerText
-                console.log(menuId)
                 window.location.href = `/admin/updateMenu/${menuId}`
             }
 

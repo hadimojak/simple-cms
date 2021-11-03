@@ -97,7 +97,6 @@
                 })
                 remove.click(function () {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
-                        console.log(row.postName, 'asdadadadas')
                         fetch(`/admin/delete/post/${row.postName}`, {
                             method: "DELETE",
                             headers: {

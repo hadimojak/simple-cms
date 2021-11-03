@@ -59,7 +59,7 @@ exports.postLogin = (req, res, next) => {
           validationErrors: ["number", "password"], isAuhtenticated: req.session.isLoggedIn
         });
       }
-   
+
       bcrypt.compare(password, editor.dataValues.password).then((doMatch) => {
         if (doMatch) {
           const allowed = ['id', 'email', 'phoneNumber', "isAdmin", "state"];
@@ -72,16 +72,21 @@ exports.postLogin = (req, res, next) => {
             res.redirect(`/admin`);
           });
         } else {
-          res.render("auth/login", {
-            pageTitle: "ورود",
-            path: "/login",
-            errorMessage: "some errors",
-            oldInput: {
-              password: password,
-              phoneNumber: phoneNumber,
-            },
-            validationErrors: ["number", "password"], isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id
-          });
+          if (!('user' in req.session)) {
+            const isAdmin = false;
+            const isAuhtenticated = false;
+            res.render("auth/login", {
+              pageTitle: "ورود",
+              path: "/login",
+              errorMessage: "some errors",
+              oldInput: {
+                password: password,
+                phoneNumber: phoneNumber,
+              },
+              validationErrors: ["number", "password"], isAuhtenticated: isAuhtenticated, isAdmin: isAdmin, 
+            });
+          }
+
         }
       });
 
