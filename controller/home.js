@@ -1,3 +1,3 @@
 exports.getHome = (req, res, next) => {
-    res.render("home/index", { pageTitle: "مدیریت", path: "/admin",isAuhtenticated: req.isLoggedIn });
+    res.render("home/index", { pageTitle: "مدیریت", path: "/admin"});
   };

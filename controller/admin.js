@@ -8,9 +8,11 @@ const { Op } = require('../sequelize');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
-  console.log(req.session.isLoggedIn);
 
-  res.render("admin/admin", { pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.session.isLoggedIn });
+  res.render("admin/admin", {
+    pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id,
+    isAdmin: req.session.user.isAdmin
+  });
 };
 
 // admin users
@@ -20,7 +22,6 @@ exports.getUsers = (req, res, next) => {
       const userArray = [];
       for (let p of data) {
         userArray.push(p.dataValues);
-        console.log(p.dataValues)
       }
       return userArray;
     })
@@ -28,13 +29,99 @@ exports.getUsers = (req, res, next) => {
       res.render("admin/users", {
         pageTitle: "کاربر ها",
         path: "/users",
-        userArray: userArray, isAuhtenticated: req.session.isLoggedIn
+        userArray: userArray, isAuhtenticated: req.session.isLoggedIn, currrentUser: req.session.user.phoneNumber, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+        , userId: req.session.user.id
       });
     })
     .catch((err) => {
       console.log(err);
     });
 };
+exports.getUserProfile = (req, res, next) => {
+  const userId = req.params.userId;
+  User.findOne({ where: { id: userId } })
+    .then((data) => {
+      res.render("admin/signup", {
+        pageTitle: "به روز رسانی کاربر",
+        path: "/users",
+        errorMessage: "",
+        id: userId,
+        oldInput: {
+          email: data.dataValues.email,
+          firstName: data.dataValues.firstName,
+          lastName: data.dataValues.lastName,
+          phoneNumber: data.dataValues.phoneNumber,
+        },
+        validationErrors: [],
+        selection: "به روز رسانی",
+        update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+
+
+exports.getPassReset = (req, res, next) => {
+  const userId = req.params.userId;
+  console.log(userId, req.params);
+  res.render('admin/passwordReset', {
+    pageTitle: 'تغییر پسورد',
+    path: '/passReset', validationErrors: [],
+    errorMessage: '', oldInput: '',
+    isAuhtenticated: req.session.isLoggedIn,
+    userId: req.session.user.id,
+    isAdmin: req.session.user.isAdmin
+  });
+};
+
+exports.postPassReset = (req, res, next) => {
+  console.log(req.session);
+  const userId = req.session.user.id;
+  const errors = validationResult(req);
+  const password = req.body.password;
+
+  if (!errors.isEmpty()) {
+    return res.render("admin/passwordReset", {
+      pageTitle: "تغییر پسورد",
+      path: "/passReset",
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+      },
+      validationErrors: errors.array(),
+       isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+    });
+  }
+  bcrypt
+    .hash(password, 12)
+    .then(async (hashedPassword) => {
+      try {
+        await User.update({
+          password: hashedPassword,
+        },{where:{id:userId}});
+      } catch (err) {
+        throw err;
+      }
+      res.redirect("/logout");
+    })
+    .catch((err) => {
+      const unique = err.errors[0].path.split(".")[1];
+      res.render("admin/passwordReset", {
+        pageTitle: "تغییر پسورد",
+        path: "/passReset",
+        errorMessage:errors.array()[0].msg,
+          
+        oldInput: {
+          
+        },
+        validationErrors: errors.array(),
+         isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+      });
+    });
+};
+
 exports.getAddUser = (req, res, next) => {
   console.log(req.session);
   res.render("admin/signup", {
@@ -44,7 +131,7 @@ exports.getAddUser = (req, res, next) => {
     errorMessage: "",
     oldInput: "",
     selection: "ثبت نام",
-    update: false, isAuhtenticated: req.session.isLoggedIn
+    update: false, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
   });
 };
 exports.postAddUser = (req, res, next) => {
@@ -66,10 +153,9 @@ exports.postAddUser = (req, res, next) => {
         lastName: lastName,
         phoneNumber: phoneNumber,
       },
-
       validationErrors: errors.array(),
       selection: "ثبت نام",
-      update: false, isAuhtenticated: req.session.isLoggedIn
+      update: false, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
     });
   }
 
@@ -87,7 +173,7 @@ exports.postAddUser = (req, res, next) => {
       } catch (err) {
         throw err;
       }
-      res.redirect("/login");
+      res.redirect("/admin/users");
     })
     .catch((err) => {
       const unique = err.errors[0].path.split(".")[1];
@@ -105,7 +191,7 @@ exports.postAddUser = (req, res, next) => {
         },
         validationErrors: [unique],
         selection: "ثبت نام",
-        update: false, isAuhtenticated: req.session.isLoggedIn
+        update: false, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
       });
     });
 };
@@ -126,7 +212,7 @@ exports.getUpdateUser = (req, res, next) => {
         },
         validationErrors: [],
         selection: "به روز رسانی",
-        update: true, isAuhtenticated: req.session.isLoggedIn
+        update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id,
       });
     })
     .catch((err) => {
@@ -154,7 +240,7 @@ exports.postUpdateUser = (req, res, next) => {
       },
       validationErrors: errors.array(),
       selection: "به روز رسانی",
-      update: true, isAuhtenticated: req.session.isLoggedIn
+      update: true, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
     });
   } else {
     User.update(
@@ -167,7 +253,9 @@ exports.postUpdateUser = (req, res, next) => {
       },
       { where: { id: id } }
     ).then(data => {
-      res.redirect("/admin/users");
+      if (req.session.user.isAdmin) {
+        res.redirect("/admin/users");
+      } else { res.redirect('/admin'); }
     });
 
   }
@@ -211,7 +299,7 @@ exports.filesApi = (req, res, next) => {
     });
 };
 exports.getAllFiles = (req, res, next) => {
-  res.render("admin/allFiles", { pageTitle: "فایل ها", path: "/storage", isAuhtenticated: req.session.isLoggedIn });
+  res.render("admin/allFiles", { pageTitle: "فایل ها", path: "/storage", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
 };
 exports.postUploadFile = (req, res, next) => {
   const userId = req.session.user.id;
@@ -287,7 +375,7 @@ exports.deleteFile = (req, res, next) => {
 
 // admin menus
 exports.getMenus = (req, res, next) => {
-  res.render("admin/allMenu", { pageTitle: "منو ها", path: "/menu", isAuhtenticated: req.session.isLoggedIn });
+  res.render("admin/allMenu", { pageTitle: "منو ها", path: "/menu", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
 };
 exports.menuApi = (req, res, next) => {
   const menuArray = [];
@@ -311,7 +399,10 @@ exports.postAddMenu = (req, res, next) => {
 exports.getEditMenu = (req, res, next) => {
   const menuId = req.params.menuId;
   Menu.findOne({ where: { id: menuId } }).then(data => {
-    res.render('admin/updateMenu', { pageTitle: "منو ها", path: "/menu", menuId: menuId, menu: data.dataValues, isAuhtenticated: req.session.isLoggedIn });
+    res.render('admin/updateMenu', {
+      pageTitle: "منو ها", path: "/menu", menuId: menuId, menu: data.dataValues, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id,
+      isAdmin: req.session.user.isAdmin
+    });
   });
 };
 exports.postEditMenu = (req, res, next) => {
@@ -331,7 +422,7 @@ exports.deleteMenu = (req, res, next) => {
 
 //get admin settings
 exports.getSettings = (req, res, next) => {
-  res.render("admin/admin", { pageTitle: "تنظیمات", path: "/setting", isAuhtenticated: req.session.isLoggedIn });
+  res.render("admin/admin", { pageTitle: "تنظیمات", path: "/setting", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
 };
 
 // admin posts
@@ -351,14 +442,14 @@ exports.postsApi = (req, res, next) => {
     });
 };
 exports.getPosts = (req, res, next) => {
-  res.render("admin/allPosts", { pageTitle: "نوشته ها", path: "/post", isAuhtenticated: req.session.isLoggedIn });
+  res.render("admin/allPosts", { pageTitle: "نوشته ها", path: "/post", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
 };
 exports.getAddPost = (req, res, next) => {
   res.render("admin/updatePost", {
     pageTitle: "نوشته جدید",
     path: "/post",
     update: false,
-    oldInput: "", isAuhtenticated: req.session.isLoggedIn
+    oldInput: "", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
   });
 };
 exports.postAddPost = (req, res, next) => {
@@ -434,7 +525,7 @@ exports.getEditPost = (req, res, next) => {
         update: true,
         oldInput: {
           title: postName, postPath: postPath
-        }, isAuhtenticated: req.session.isLoggedIn
+        }, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
       });
     })
     .catch((err) => {
@@ -470,7 +561,7 @@ exports.deAprovePost = (req, res, next) => {
 
 // admin pages
 exports.getPages = (req, res, next) => {
-  res.render("admin/pages", { pageTitle: "صفحه ها", path: "/page", isAuhtenticated: req.session.isLoggedIn });
+  res.render("admin/pages", { pageTitle: "صفحه ها", path: "/page", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
 };
 exports.getSinglePage = (req, res, next) => {
   res.status(200).json({ data: "get single pages" });

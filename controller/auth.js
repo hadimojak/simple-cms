@@ -7,37 +7,48 @@ const _ = require('lodash');
 
 
 exports.getLogin = (req, res, next) => {
+  if (!('user' in req.session)) {
+    const isAdmin = false;
+    const isAuhtenticated = false;
+    res.render("auth/login", {
+      pageTitle: "ورود",
+      path: "/login",
+      validationErrors: [],
+      errorMessage: "",
+      oldInput: "",
+      isAuhtenticated: isAuhtenticated,
+      isAdmin: isAdmin,
+    });
+  }
 
-  res.render("auth/login", {
-    pageTitle: "ورود",
-    path: "/login",
-    validationErrors: [],
-    errorMessage: "",
-    oldInput: "",
-    isAuhtenticated: req.session.isLoggedIn
-  });
 };
 
 exports.postLogin = (req, res, next) => {
+
   const phoneNumber = req.body.phoneNumber;
   const password = req.body.password;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.render("auth/login", {
-      pageTitle: "ورود",
-      path: "/login",
-      errorMessage: errors.array()[0].msg,
-      oldInput: {
-        password: password,
-        phoneNumber: phoneNumber,
-      },
-      validationErrors: errors.array(), isAuhtenticated: req.session.isLoggedIn
-    });
+    if (!('user' in req.session)) {
+      const isAdmin = false;
+      const isAuhtenticated = false;
+      return res.render("auth/login", {
+        pageTitle: "ورود",
+        path: "/login",
+        errorMessage: errors.array()[0].msg,
+        oldInput: {
+          password: password,
+          phoneNumber: phoneNumber,
+        },
+        validationErrors: errors.array(), isAuhtenticated: isAuhtenticated, isAdmin: isAdmin,
+      });
+    }
+
   }
   User.findOne({ where: { phoneNumber: phoneNumber } })
     .then((editor) => {
-      if (!editor) {
-        res.render("auth/login", {
+      if (!editor || !editor.dataValues.state) {
+        return res.render("auth/login", {
           pageTitle: "ورود",
           path: "/login",
           errorMessage: "some errors",
@@ -47,38 +58,40 @@ exports.postLogin = (req, res, next) => {
           },
           validationErrors: ["number", "password"], isAuhtenticated: req.session.isLoggedIn
         });
-      } else {
-        bcrypt.compare(password, editor.dataValues.password).then((doMatch) => {
-          if (doMatch) {
-            console.log('adadadasd')
-            const allowed = ['id','email','phoneNumber',"isAdmin","state"];
-            const filteredUser = _.pick(editor.dataValues, allowed)
-            req.session.isLoggedIn = true;
-            req.session.user = filteredUser;
-            //saving session in to the db
-            return req.session.save((err) => {
-              
-              res.redirect(`/admin`);
-            });
-          } else {
-            res.render("auth/login", {
-              pageTitle: "ورود",
-              path: "/login",
-              errorMessage: "some errors",
-              oldInput: {
-                password: password,
-                phoneNumber: phoneNumber,
-              },
-              validationErrors: ["number", "password"], isAuhtenticated: req.session.isLoggedIn
-            });
-          }
-        });
       }
+   
+      bcrypt.compare(password, editor.dataValues.password).then((doMatch) => {
+        if (doMatch) {
+          const allowed = ['id', 'email', 'phoneNumber', "isAdmin", "state"];
+          const filteredUser = _.pick(editor.dataValues, allowed);
+          req.session.isLoggedIn = true;
+          req.session.user = filteredUser;
+          //saving session in to the db
+          return req.session.save((err) => {
+
+            res.redirect(`/admin`);
+          });
+        } else {
+          res.render("auth/login", {
+            pageTitle: "ورود",
+            path: "/login",
+            errorMessage: "some errors",
+            oldInput: {
+              password: password,
+              phoneNumber: phoneNumber,
+            },
+            validationErrors: ["number", "password"], isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id
+          });
+        }
+      });
+
     })
     .catch((err) => {
-      if(err){console.log(err);
-      res.redirect("/login");}
-      
+      if (err) {
+        console.log(err);
+        res.redirect("/login");
+      }
+
     });
 };
 exports.getReset = (req, res, next) => {

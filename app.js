@@ -1,12 +1,12 @@
 const express = require('express');
 const app = express();
-const path = require('path');
 const { sequelize, DataTypes, Sequelize, Model } = require('./sequelize');
+const { User } = require('./models/Model');
 // const hook = require('./hooks');
 // const flash = require("connect-flash");
 const session = require("express-session");
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-
+const bcrypt = require("bcryptjs");
 
 
 const adminRoutes = require('./routes/admin');
@@ -43,12 +43,38 @@ app.use(homeRoutes);
 
 
 sequelize.sync({ alter: false }).then(async data => {
+
     await app.listen(3000, () => {
         console.log('Listening on port: ', 3000);
     }).on('error', (e) => {
         throw new Error(e.message);
     });
-}).then(data => { console.log('db connected'); })
+}).then(async data => {
+    console.log('db connected');
+    await User.findAll({ where: { isAdmin: true } })
+        .then(async user => {
+            if (user.length > 0) {
+                return console.log('admin user is already exict');
+            }
+            bcrypt.hash('123456789', 12)
+                .then(async (hasshedPass) => {
+                    try {
+                        User.create({
+                            firstName: 'هادی',
+                            lastName: 'اربابی',
+                            email: 'arbabi@yahoo.com',
+                            password: hasshedPass,
+                            phoneNumber: 09121112233,
+                            isAdmin: 1
+                        });
+
+                    } catch (error) {
+
+                    }
+                });
+
+        });
+})
     .catch(err => { console.log(err); });
 
 

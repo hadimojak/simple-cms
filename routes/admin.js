@@ -6,6 +6,7 @@ const path = require('path');
 const multer = require('multer');
 const { Media } = require('../models/Model');
 const isAuth = require('../middleware/is-auth');
+const isAdmin = require('../middleware/is-admin');
 const isIp = require('../middleware/is-ip');
 
 const storage = multer.diskStorage({
@@ -26,7 +27,15 @@ const storage = multer.diskStorage({
 
 // users
 router.get('/admin', isAuth, adminController.getAdminHomePage);
-router.get('/admin/users', isAuth, adminController.getUsers);
+router.get('/admin/userProfile/:userId', isAuth, adminController.getUserProfile);
+router.get('/admin/resetPassword/:userId', isAuth, adminController.getPassReset);
+router.post('/admin/resetPassword',
+    [body('password', '.پسورد باید شامل حروف و عدد باشد و حداقل به طول 8 کاراکتر باشد').isAlphanumeric().isLength({ min: 8 }).notEmpty().escape().trim(),
+    body('passwordConfirmed', ".تکرار پسورد برابر نیست").trim().notEmpty().escape().custom((value, { req }) => {
+        if (value !== req.body.password) { throw new Error(); }
+        return true;
+    })], isAuth, adminController.postPassReset);
+router.get('/admin/users', isAdmin, isAuth, adminController.getUsers);
 router.get('/admin/addUser', isAuth, adminController.getAddUser);
 router.post('/admin/addUser',
     [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
@@ -47,7 +56,7 @@ router.post('/admin/updateUser', [body('firstName', '.نام باید فقط ش�
 body('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
     .withMessage('.نام خانوادگی باید بدون فاصله  باشد').toLowerCase(),
 body('phoneNumber', '.شماره موبایل معتبر وارد کنید').isNumeric().notEmpty().matches(/^(\+98|0098|98|0)?9\d{9}$/).escape().trim(),
-body('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail()
+body('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail(),
 ], isAuth, adminController.postUpdateUser);
 router.delete('/admin/delete/user/:id', isAuth, adminController.deleteUser);
 

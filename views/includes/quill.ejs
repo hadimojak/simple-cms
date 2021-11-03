@@ -12,8 +12,8 @@
     <input dir="rtl" id="title" value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
     <label for="title">: عنوان</label>
   </div>
-
-  <div id="toolbar" class=""></div>
+  <div id="toolbar" class="">
+  </div>
   <div id="editor" class="bg-white mh-100"></div>
   <input class="btn btn-success btn-lg" value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" data-="" />
 </form>
@@ -22,7 +22,6 @@
 
   var quill = new Quill("#editor", {
     modules: {
-    
       imageResize: {
         displaySize: true,
       },

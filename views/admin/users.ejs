@@ -18,8 +18,9 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     <% for (var i=0; i < userArray.length; i++) { %>
-                        <tr>
+                        <tr style="<%= userArray[i].phoneNumber === currrentUser ? 'background-color: snow;' : '' %>">
                             <th scope="row">
                                 <%= i+1 %>
                             </th>
@@ -62,21 +63,21 @@
                                         const row = p.parentNode.parentNode
                                         const id = p.previousElementSibling.value
                                         console.log(id)
-                                        // fetch(`/admin/delete/user/${id}`, {
-                                        //     method: "DELETE",
-                                        //     headers: {
-                                        //     },
-                                        // })
-                                        //     .then((response) => {
-                                        //         return response.json();
-                                        //     })
-                                        //     .then((result) => {
-                                        //         console.log(result)
-                                        //         row.parentNode.removeChild(row);
-                                        //     })
-                                        //     .catch((err) => {
-                                        //         console.log(err);
-                                        //     });
+                                        fetch(`/admin/delete/user/${id}`, {
+                                            method: "DELETE",
+                                            headers: {
+                                            },
+                                        })
+                                            .then((response) => {
+                                                return response.json();
+                                            })
+                                            .then((result) => {
+                                                console.log(result)
+                                                row.parentNode.removeChild(row);
+                                            })
+                                            .catch((err) => {
+                                                console.log(err);
+                                            });
                                     }
                                 </script>
                             </td>
