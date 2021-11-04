@@ -26,6 +26,9 @@ const User = sequelize.define('User', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    }, avatar: {
+        type: DataTypes.STRING,
+        allowNull: true,
     }, state: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -93,11 +96,11 @@ const Post = sequelize.define('Post', {
 });
 
 const Menu = sequelize.define('Menu', {
-    
+
     title: {
         type: DataTypes.STRING,
         allowNull: false,
-    }, 
+    },
     navItemArray: {
         type: DataTypes.TEXT('long'),
         allowNull: false
@@ -145,11 +148,22 @@ const Page = sequelize.define('Page', {
     modelName: "page"
 });
 
-User.hasMany(Media, { onDelete: 'SET NULL', onUpdate: 'SET NULL' });
+const Tag = sequelize.define('Tag', {
+    title: {
+        type: DataTypes.STRING,
+         allowNull: false,
+          unique: true
+    }
+}, {
+    sequelize: sequelize, freezeTableName: true,
+    modelName: "tag"
+});
+
+User.hasMany(Media, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
 Media.belongsTo(User);
-User.hasMany(Post, { onDelete: 'SET NULL', onUpdate: 'SET NULL' });
+User.hasMany(Post, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
 Post.belongsTo(User);
-User.hasMany(Menu, { onDelete: 'SET NULL', onUpdate: 'SET NULL' });
+User.hasMany(Menu, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
 Menu.belongsTo(User);
 
-module.exports = { User, Media, Menu, Page, Setting, Post };
+module.exports = { User, Media, Menu, Page, Setting, Post,Tag };

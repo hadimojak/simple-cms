@@ -61,9 +61,6 @@ exports.getUserProfile = (req, res, next) => {
       console.log(err);
     });
 };
-
-
-
 exports.getPassReset = (req, res, next) => {
   const userId = req.params.userId;
   res.render('admin/passwordReset', {
@@ -75,7 +72,6 @@ exports.getPassReset = (req, res, next) => {
     isAdmin: req.session.user.isAdmin
   });
 };
-
 exports.postPassReset = (req, res, next) => {
   const userId = req.session.user.id;
   const errors = validationResult(req);
@@ -89,7 +85,7 @@ exports.postPassReset = (req, res, next) => {
       oldInput: {
       },
       validationErrors: errors.array(),
-       isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+      isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
     });
   }
   bcrypt
@@ -98,28 +94,27 @@ exports.postPassReset = (req, res, next) => {
       try {
         await User.update({
           password: hashedPassword,
-        },{where:{id:userId}});
+        }, { where: { id: userId } });
       } catch (err) {
         throw err;
       }
-      res.redirect(307,'/logout');
+      res.redirect(307, '/logout');
     })
     .catch((err) => {
       const unique = err.errors[0].path.split(".")[1];
       res.render("admin/passwordReset", {
         pageTitle: "تغییر پسورد",
         path: "/passReset",
-        errorMessage:errors.array()[0].msg,
-          
+        errorMessage: errors.array()[0].msg,
+
         oldInput: {
-          
+
         },
         validationErrors: errors.array(),
-         isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+        isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
       });
     });
 };
-
 exports.getAddUser = (req, res, next) => {
   res.render("admin/signup", {
     pageTitle: "ثبت نام",
@@ -218,6 +213,8 @@ exports.getUpdateUser = (req, res, next) => {
 };
 exports.postUpdateUser = (req, res, next) => {
   const errors = validationResult(req);
+  const avatar = req.body.avatar;
+  console.log(avatar);
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const email = req.body.email;
@@ -381,7 +378,6 @@ exports.menuApi = (req, res, next) => {
     });
   }).then(data => { res.json(menuArray); }).catch(err => { console.log(err); });
 };
-
 exports.postAddMenu = (req, res, next) => {
   const userId = req.session.user.id;
   const title = req.body.title;
