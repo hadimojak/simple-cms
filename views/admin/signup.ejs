@@ -20,10 +20,8 @@
 
 
 
-                                    <form novalidate>
+                                    <form  novalidate>
                                         <% if(update){ %>
-                                            <script> console.log('<%= id %>')</script>
-                                            <input type="hidden" name="userId" value="<%= id %>">
                                             <% } %>
 
                                                 <div class="row d-flex flex-row-reverse">
@@ -117,9 +115,9 @@
                                                                 <div class="col-md-6 mb-4">
             
                                                                     <div class="form-outline d-flex justify-content-center">
-                                                                        <input type="file" accept="image/*"  name='avatar'
-                                                                            onchange="loadFile(event)">
-                                                                        <img class="rounded-circle" id="output" src="/pictures/avatar.png" alt=""
+                                                                        <input type="file"   name='avatar'
+                                                                            onchange="loadFile(event)" class='form-control'>
+                                                                        <img class="rounded-circle" id="output" src="/pictures/avatar.png" alt="" 
                                                                             style="width: 70px;height: 70px;">
                                                                         <script>
                                                                             var loadFile = function (event) {

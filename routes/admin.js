@@ -57,7 +57,39 @@ body('lastName', '.نام خانوادگی باید فقط شامل حروف ب�
     .withMessage('.نام خانوادگی باید بدون فاصله  باشد').toLowerCase(),
 body('phoneNumber', '.شماره موبایل معتبر وارد کنید').isNumeric().notEmpty().matches(/^(\+98|0098|98|0)?9\d{9}$/).escape().trim(),
 body('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail(),
-], isAuth, adminController.postUpdateUser);
+body('avatar').notEmpty().withMessage('عکسی انتخاب نکرده اید')
+// .custom((value, {req}) => {
+//     if(req.files.mimetype === 'application/pdf'){
+//         return '.pdf'; // return "non-falsy" value to indicate valid data"
+//     }else{
+//         return false; // return "falsy" value to indicate invalid data
+//     }
+// })
+// .withMessage('Please only submit pdf documents.')
+,],multer({
+    storage: storage,
+    fileFilter: function (req, file, callback) {
+        Media.findOne({ where: { fileName: req.body.fileName } })
+            .then(data => {
+                if (data) {
+                    return callback(null, false);
+                } else {
+                    var ext = path.extname(file.originalname);
+                    if (ext !== '.png' && ext !== '.jpg' 
+                        && ext !== '.jpeg' && 
+                         ext !== '.Jpeg') {
+                        return callback(null, false);
+                    }
+                    callback(null, true);
+                }
+            })
+            .catch(err => { console.log(err); });
+    }, preservePath: true
+}).single('file'), function (req, res, callback) {
+    if (!req.file) {
+        res.redirect(`/admin/updateUser/${req.session.user.id}`);
+    } else { callback(null, true); }
+}, isAuth, adminController.postUpdateUser);
 router.delete('/admin/delete/user/:id', isAuth, adminController.deleteUser);
 
 // if(user is normalUser show her only her files)
