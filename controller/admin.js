@@ -5,24 +5,10 @@ const path = require("path");
 const fs = require("fs");
 const imageThumbnail = require("image-thumbnail");
 const { Op } = require('../sequelize');
-const multer = require('multer');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    console.log(file.originalname)
-    console.log(req.body.fileName)
-    cb(null, './uploads/avatar');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-const upload = multer({ storage: storage,preservePath: true }).single('file');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
-  console.log(req.session);
   res.render("admin/admin", {
     pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id,
     isAdmin: req.session.user.isAdmin
@@ -255,9 +241,7 @@ exports.getUpdateAvatar = (req, res, next) => {
   });
 };
 exports.postUpdateAvatar = (req, res, next) => {
-  upload(req, res, function (err) {
-    if (err) { return res.end('error while upload'); }
-  });
+  
   res.send('admin');
 
 };
