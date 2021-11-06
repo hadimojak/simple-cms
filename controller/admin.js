@@ -5,10 +5,24 @@ const path = require("path");
 const fs = require("fs");
 const imageThumbnail = require("image-thumbnail");
 const { Op } = require('../sequelize');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    console.log(file.originalname)
+    console.log(req.body.fileName)
+    cb(null, './uploads/avatar');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage,preservePath: true }).single('file');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
-
+  console.log(req.session);
   res.render("admin/admin", {
     pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id,
     isAdmin: req.session.user.isAdmin
@@ -37,30 +51,7 @@ exports.getUsers = (req, res, next) => {
       console.log(err);
     });
 };
-exports.getUserProfile = (req, res, next) => {
-  const userId = req.params.userId;
-  User.findOne({ where: { id: userId } })
-    .then((data) => {
-      res.render("admin/signup", {
-        pageTitle: "به روز رسانی کاربر",
-        path: "/users",
-        errorMessage: "",
-        id: userId,
-        oldInput: {
-          email: data.dataValues.email,
-          firstName: data.dataValues.firstName,
-          lastName: data.dataValues.lastName,
-          phoneNumber: data.dataValues.phoneNumber,
-        },
-        validationErrors: [],
-        selection: "به روز رسانی",
-        update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+
 exports.getPassReset = (req, res, next) => {
   const userId = req.params.userId;
   res.render('admin/passwordReset', {
@@ -187,15 +178,15 @@ exports.postAddUser = (req, res, next) => {
       });
     });
 };
-exports.getUpdateUser = (req, res, next) => {
-  const id = req.params.userId;
-  User.findOne({ where: { id: id } })
+exports.getUserProfile = (req, res, next) => {
+  const userId = req.params.userId;
+  console.log(userId);
+  User.findOne({ where: { id: userId } })
     .then((data) => {
       res.render("admin/signup", {
         pageTitle: "به روز رسانی کاربر",
         path: "/users",
         errorMessage: "",
-        id: id,
         oldInput: {
           email: data.dataValues.email,
           firstName: data.dataValues.firstName,
@@ -204,7 +195,7 @@ exports.getUpdateUser = (req, res, next) => {
         },
         validationErrors: [],
         selection: "به روز رسانی",
-        update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id,
+        update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id
       });
     })
     .catch((err) => {
@@ -213,8 +204,6 @@ exports.getUpdateUser = (req, res, next) => {
 };
 exports.postUpdateUser = (req, res, next) => {
   const errors = validationResult(req);
-  const avatar = req.body.avatar;
-  console.log(avatar);
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const email = req.body.email;
@@ -249,10 +238,28 @@ exports.postUpdateUser = (req, res, next) => {
     ).then(data => {
       if (req.session.user.isAdmin) {
         res.redirect("/admin/users");
-      } else { res.redirect('/admin'); }
+      } else { res.redirect(`/admin/userProfile/${req.session.user.id}`); }
     });
 
   }
+};
+
+exports.getUpdateAvatar = (req, res, next) => {
+  res.render('admin/updateAvatar', {
+    pageTitle: "به روز رسانی کاربر",
+    path: "",
+    errorMessage: "",
+    validationErrors: [],
+    selection: "به روز رسانی",
+    update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id
+  });
+};
+exports.postUpdateAvatar = (req, res, next) => {
+  upload(req, res, function (err) {
+    if (err) { return res.end('error while upload'); }
+  });
+  res.send('admin');
+
 };
 exports.deleteUser = (req, res, next) => {
   const id = req.params.id;

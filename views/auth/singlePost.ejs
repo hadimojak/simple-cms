@@ -1,0 +1,38 @@
+<input id="avatar" type="file" name='avatar'
+onchange="loadFile(event)" class='form-control'>
+<img class="rounded-circle" id="output"
+src="/pictures/avatar.png" alt=""
+style="width: 70px;height: 70px;">
+<script>
+var loadFile = function (event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function () {
+        URL.revokeObjectURL(output.src) // free memory
+    }
+};
+// $("#output").click(function (e) {
+//     e.preventDefault();
+//     var file_data = $('#avatar')[0].files[0];
+//     var form_data = new FormData();
+//     form_data.append('file', file_data);
+//     form_data.append('action', 'ajax_image_upload');
+
+//     $.ajax({
+//         url: '/admin/updateUser',
+//         type: 'post',
+//         contentType: false,
+//         processData: false,
+//         data: form_data,
+//         success: function (response) {
+//             console.log(response);
+
+//         },
+//         error: function (response) {
+//             console.error(response.responseText);
+//         }
+
+//     });
+// });
+
+</script>

@@ -42,7 +42,7 @@ app.use(homeRoutes);
 
 
 
-sequelize.sync({ alter: false }).then(async data => {
+sequelize.sync({ force: true }).then(async data => {
 
     await app.listen(3000, () => {
         console.log('Listening on port: ', 3000);

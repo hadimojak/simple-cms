@@ -20,10 +20,9 @@
 
 
 
-                                    <form  novalidate>
+                                    <form>
                                         <% if(update){ %>
                                             <% } %>
-
                                                 <div class="row d-flex flex-row-reverse">
                                                     <div class="col-md-6 mb-4 d-flex align-items-center">
 
@@ -112,26 +111,15 @@
 
                                                         </div>
                                                         <% }else{ %>
-                                                                <div class="col-md-6 mb-4">
-            
-                                                                    <div class="form-outline d-flex justify-content-center">
-                                                                        <input type="file"   name='avatar'
-                                                                            onchange="loadFile(event)" class='form-control'>
-                                                                        <img class="rounded-circle" id="output" src="/pictures/avatar.png" alt="" 
-                                                                            style="width: 70px;height: 70px;">
-                                                                        <script>
-                                                                            var loadFile = function (event) {
-                                                                                var output = document.getElementById('output');
-                                                                                output.src = URL.createObjectURL(event.target.files[0]);
-                                                                                output.onload = function () {
-                                                                                    URL.revokeObjectURL(output.src) // free memory
-                                                                                }
-                                                                            };
-                                                                        </script>
-                                                                    </div>
-                                                                    <label class="form-label d-flex flex-row-reverse"
-                                                                        for="email">تصویر کاربر</label>
+                                                            <div class="col-md-6 mb-4">
+
+                                                                <div class="form-outline d-flex justify-content-center">
+                                                                    <input class="btn btn-info btn-lg " type="submit"
+                                                                        value="تغییر تصویر کاربر" formmethod="get"
+                                                                        formaction="/admin/updateAvatar/<%= userId %>" />
                                                                 </div>
+
+                                                            </div>
                                                             <% } %>
 
 
@@ -145,12 +133,15 @@
                                                                 formmethod="get" value='تغییر رمز ورود' />
                                                         </div>
                                                         <% } %>
-                                                    
-                                                    <div class="mt-4 pt-2 d-flex justify-content-center">
-                                                        <input class="btn btn-primary btn-lg " type="submit"
-                                                            formaction="<%= update  ? `/admin/updateUser` : '/admin/addUser' %>"
-                                                            value="<%= selection %>" formmethod="post" />
-                                                    </div>
+
+                                                            <div class="mt-4 pt-2 d-flex justify-content-center">
+                                                                <input type="number" name="userId" value="<%= userId %>"
+                                                                    hidden>
+
+                                                                <input class="btn btn-primary btn-lg " type="submit"
+                                                                    formaction="<%= update  ? `/admin/updateUser` : '/admin/addUser' %>"
+                                                                    value="<%= selection %>" formmethod="post" />
+                                                            </div>
                                                 </div>
 
 

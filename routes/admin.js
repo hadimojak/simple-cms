@@ -27,7 +27,6 @@ const storage = multer.diskStorage({
 
 // users
 router.get('/admin', isAuth, adminController.getAdminHomePage);
-router.get('/admin/userProfile/:userId', isAuth, adminController.getUserProfile);
 router.get('/admin/resetPassword/:userId', isAuth, adminController.getPassReset);
 router.post('/admin/resetPassword',
     [body('password', '.پسورد باید شامل حروف و عدد باشد و حداقل به طول 8 کاراکتر باشد').isAlphanumeric().isLength({ min: 8 }).notEmpty().escape().trim(),
@@ -50,46 +49,17 @@ router.post('/admin/addUser',
         return true;
     })], isAuth,
     adminController.postAddUser);
-router.get('/admin/updateUser/:userId', isAuth, adminController.getUpdateUser);
+router.get('/admin/userProfile/:userId', isAuth, adminController.getUserProfile);
 router.post('/admin/updateUser', [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
     .withMessage('.نام باید بدون فاصله  باشد').toLowerCase(),
 body('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
     .withMessage('.نام خانوادگی باید بدون فاصله  باشد').toLowerCase(),
 body('phoneNumber', '.شماره موبایل معتبر وارد کنید').isNumeric().notEmpty().matches(/^(\+98|0098|98|0)?9\d{9}$/).escape().trim(),
 body('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail(),
-body('avatar').notEmpty().withMessage('عکسی انتخاب نکرده اید')
-// .custom((value, {req}) => {
-//     if(req.files.mimetype === 'application/pdf'){
-//         return '.pdf'; // return "non-falsy" value to indicate valid data"
-//     }else{
-//         return false; // return "falsy" value to indicate invalid data
-//     }
-// })
-// .withMessage('Please only submit pdf documents.')
-,],multer({
-    storage: storage,
-    fileFilter: function (req, file, callback) {
-        Media.findOne({ where: { fileName: req.body.fileName } })
-            .then(data => {
-                if (data) {
-                    return callback(null, false);
-                } else {
-                    var ext = path.extname(file.originalname);
-                    if (ext !== '.png' && ext !== '.jpg' 
-                        && ext !== '.jpeg' && 
-                         ext !== '.Jpeg') {
-                        return callback(null, false);
-                    }
-                    callback(null, true);
-                }
-            })
-            .catch(err => { console.log(err); });
-    }, preservePath: true
-}).single('file'), function (req, res, callback) {
-    if (!req.file) {
-        res.redirect(`/admin/updateUser/${req.session.user.id}`);
-    } else { callback(null, true); }
-}, isAuth, adminController.postUpdateUser);
+]
+    , isAuth, adminController.postUpdateUser);
+router.get('/admin/updateAvatar/:userId', isAuth, adminController.getUpdateAvatar);
+router.post('/admin/updateAvatar', isAuth, adminController.postUpdateAvatar);
 router.delete('/admin/delete/user/:id', isAuth, adminController.deleteUser);
 
 // if(user is normalUser show her only her files)
