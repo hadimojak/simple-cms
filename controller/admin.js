@@ -9,6 +9,7 @@ const { Op } = require('../sequelize');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
+  
   res.render("admin/admin", {
     pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id,
     isAdmin: req.session.user.isAdmin
@@ -241,8 +242,11 @@ exports.getUpdateAvatar = (req, res, next) => {
   });
 };
 exports.postUpdateAvatar = (req, res, next) => {
-  
-  res.send('admin');
+  const userId = req.body.userId;
+  const avatarBaseCode = req.body.imageBase;
+  User.update({ avatar: avatarBaseCode }, { where: { id: userId } })
+    .then(user => { res.redirect('/admin'); });
+
 
 };
 exports.deleteUser = (req, res, next) => {
