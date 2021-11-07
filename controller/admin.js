@@ -9,100 +9,141 @@ const { Op } = require('../sequelize');
 
 // admin home page
 exports.getAdminHomePage = (req, res, next) => {
-  
-  res.render("admin/admin", {
-    pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id,
-    isAdmin: req.session.user.isAdmin
+  const userId = req.session.user.id;
+  User.findByPk(userId).then(user => {
+    res.render("admin/admin", {
+      pageTitle: "مدیریت", path: "/admin", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id,
+      isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+    });
   });
+
 };
 
 // admin users
 exports.getUsers = (req, res, next) => {
-  User.findAll({ paranoid: false })
-    .then((data) => {
-      const userArray = [];
-      for (let p of data) {
-        userArray.push(p.dataValues);
-      }
-      return userArray;
-    })
-    .then((userArray) => {
-      res.render("admin/users", {
-        pageTitle: "کاربر ها",
-        path: "/users",
-        userArray: userArray, isAuhtenticated: req.session.isLoggedIn, currrentUser: req.session.user.phoneNumber, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
-        , userId: req.session.user.id
+  const userId = req.session.user.id;
+  User.findByPk(userId).then(user => {
+    User.findAll()
+      .then((data) => {
+        const userArray = [];
+        for (let p of data) {
+          userArray.push(p.dataValues);
+        }
+        return userArray;
+      })
+      .then((userArray) => {
+        res.render("admin/users", {
+          pageTitle: "کاربر ها",
+          path: "/users",
+          userArray: userArray, isAuhtenticated: req.session.isLoggedIn, currrentUser: req.session.user.phoneNumber, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+          , userId: req.session.user.id, avatar: user.dataValues.avatar
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  });
+
 };
 
 exports.getPassReset = (req, res, next) => {
   const userId = req.params.userId;
-  res.render('admin/passwordReset', {
-    pageTitle: 'تغییر پسورد',
-    path: '/passReset', validationErrors: [],
-    errorMessage: '', oldInput: '',
-    isAuhtenticated: req.session.isLoggedIn,
-    userId: req.session.user.id,
-    isAdmin: req.session.user.isAdmin
+  User.findByPk(userId).then(user => {
+    res.render('admin/passwordReset', {
+      pageTitle: 'تغییر پسورد',
+      path: '/passReset', validationErrors: [],
+      errorMessage: '', oldInput: '',
+      isAuhtenticated: req.session.isLoggedIn,
+      userId: req.session.user.id,
+      isAdmin: req.session.user.isAdmin,
+      avatar: user.dataValues.avatar
+    });
   });
+
 };
 exports.postPassReset = (req, res, next) => {
   const userId = req.session.user.id;
   const errors = validationResult(req);
+  const currentPassword = req.body.currentPassword;
   const password = req.body.password;
-
-  if (!errors.isEmpty()) {
-    return res.render("admin/passwordReset", {
-      pageTitle: "تغییر پسورد",
-      path: "/passReset",
-      errorMessage: errors.array()[0].msg,
-      oldInput: {
-      },
-      validationErrors: errors.array(),
-      isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
-    });
-  }
-  bcrypt
-    .hash(password, 12)
-    .then(async (hashedPassword) => {
-      try {
-        await User.update({
-          password: hashedPassword,
-        }, { where: { id: userId } });
-      } catch (err) {
-        throw err;
+  let avatar;
+  User.findByPk(req.session.user.id).then(user => {
+    avatar = user.dataValues.avatar;
+    return user;
+  }).then(user => {
+    bcrypt.compare(currentPassword, user.dataValues.password).then(doMatch => {
+      console.log(doMatch);
+      if (!doMatch) {
+        console.log(doMatch);
+        //some flash message
+        return res.render("admin/passwordReset", {
+          pageTitle: "تغییر پسورد",
+          path: "/passReset",
+          errorMessage: 'پس ورد فعلی درست ورا دنکرده اید',
+          oldInput: {
+          },
+          validationErrors: ['password'],
+          isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+        });
+      } else {
+        if (!errors.isEmpty()) {
+          return res.render("admin/passwordReset", {
+            pageTitle: "تغییر پسورد",
+            path: "/passReset",
+            errorMessage: errors.array()[0].msg,
+            oldInput: {
+            },
+            validationErrors: errors.array(),
+            isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+          });
+        } else {
+          bcrypt
+            .hash(password, 12)
+            .then(async (hashedPassword) => {
+              console.log('heeerrrreeee');
+              try {
+                await User.update({
+                  password: hashedPassword,
+                }, { where: { id: userId } }).then();
+              } catch (err) {
+                throw err;
+              }
+              res.redirect(307, '/logout');
+            })
+            .catch((err) => {
+              res.render("admin/passwordReset", {
+                pageTitle: "تغییر پسورد",
+                path: "/passReset",
+                errorMessage: '',
+                oldInput: {
+                },
+                validationErrors: [],
+                isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: avatar
+              });
+            });
+        }
       }
-      res.redirect(307, '/logout');
-    })
-    .catch((err) => {
-      const unique = err.errors[0].path.split(".")[1];
-      res.render("admin/passwordReset", {
-        pageTitle: "تغییر پسورد",
-        path: "/passReset",
-        errorMessage: errors.array()[0].msg,
-
-        oldInput: {
-
-        },
-        validationErrors: errors.array(),
-        isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
-      });
     });
+  });
+
+
+
+
 };
 exports.getAddUser = (req, res, next) => {
-  res.render("admin/signup", {
-    pageTitle: "ثبت نام",
-    path: "/signup",
-    validationErrors: [],
-    errorMessage: "",
-    oldInput: "",
-    selection: "ثبت نام",
-    update: false, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+  User.findByPk(req.session.user.id).then(user => {
+    res.render("admin/signup", {
+      pageTitle: "ثبت نام",
+      path: "/signup",
+      validationErrors: [],
+      errorMessage: "",
+      oldInput: "",
+      selection: "ثبت نام",
+      update: false, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+    });
+
   });
+
 };
 exports.postAddUser = (req, res, next) => {
   const firstName = req.body.firstName;
@@ -111,47 +152,12 @@ exports.postAddUser = (req, res, next) => {
   const phoneNumber = req.body.phoneNumber;
   const password = req.body.password;
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.render("admin/signup", {
-      pageTitle: "ثبت نام",
-      path: "/signup",
-      errorMessage: errors.array()[0].msg,
-      oldInput: {
-        email: email,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-      },
-      validationErrors: errors.array(),
-      selection: "ثبت نام",
-      update: false, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
-    });
-  }
-
-  bcrypt
-    .hash(password, 12)
-    .then(async (hashedPassword) => {
-      try {
-        await User.create({
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: hashedPassword,
-          phoneNumber: phoneNumber,
-        });
-      } catch (err) {
-        throw err;
-      }
-      res.redirect("/admin/users");
-    })
-    .catch((err) => {
-      const unique = err.errors[0].path.split(".")[1];
-      res.render("admin/signup", {
+  User.findByPk(req.session.user.id).then(user => {
+    if (!errors.isEmpty()) {
+      return res.render("admin/signup", {
         pageTitle: "ثبت نام",
         path: "/signup",
-        errorMessage:
-          unique === "email" ? "ایمیل" : "شماره موبایل" + " تکراری می باشد",
+        errorMessage: errors.array()[0].msg,
         oldInput: {
           email: email,
           password: password,
@@ -159,15 +165,52 @@ exports.postAddUser = (req, res, next) => {
           lastName: lastName,
           phoneNumber: phoneNumber,
         },
-        validationErrors: [unique],
+        validationErrors: errors.array(),
         selection: "ثبت نام",
-        update: false, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+        update: false, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
       });
-    });
+    }
+    bcrypt
+      .hash(password, 12)
+      .then(async (hashedPassword) => {
+        try {
+          await User.create({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: hashedPassword,
+            phoneNumber: phoneNumber,
+          });
+        } catch (err) {
+          throw err;
+        }
+        res.redirect("/admin/users");
+      })
+      .catch((err) => {
+        const unique = err.errors[0].path.split(".")[1];
+        res.render("admin/signup", {
+          pageTitle: "ثبت نام",
+          path: "/signup",
+          errorMessage:
+            unique === "email" ? "ایمیل" : "شماره موبایل" + " تکراری می باشد",
+          oldInput: {
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+          },
+          validationErrors: [unique],
+          selection: "ثبت نام",
+          update: false, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+        });
+      });
+
+  });
+
 };
 exports.getUserProfile = (req, res, next) => {
   const userId = req.params.userId;
-  console.log(userId);
   User.findOne({ where: { id: userId } })
     .then((data) => {
       res.render("admin/signup", {
@@ -182,7 +225,7 @@ exports.getUserProfile = (req, res, next) => {
         },
         validationErrors: [],
         selection: "به روز رسانی",
-        update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id
+        update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id, avatar: data.dataValues.avatar
       });
     })
     .catch((err) => {
@@ -197,49 +240,54 @@ exports.postUpdateUser = (req, res, next) => {
   const phoneNumber = req.body.phoneNumber;
   const id = req.body.userId;
   const state = req.body.state === "on" ? 1 : 0;
-  if (!errors.isEmpty()) {
-    return res.render("admin/signup", {
-      pageTitle: "به روز رسانی کاربر",
-      path: "/users",
-      errorMessage: errors.array()[0].msg,
-      oldInput: {
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-      },
-      validationErrors: errors.array(),
-      selection: "به روز رسانی",
-      update: true, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
-    });
-  } else {
-    User.update(
-      {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        state: state,
-        phoneNumber: phoneNumber
-      },
-      { where: { id: id } }
-    ).then(data => {
-      if (req.session.user.isAdmin) {
-        res.redirect("/admin/users");
-      } else { res.redirect(`/admin/userProfile/${req.session.user.id}`); }
-    });
-
-  }
+  User.findByPk(id).then(user => {
+    if (!errors.isEmpty()) {
+      return res.render("admin/signup", {
+        pageTitle: "به روز رسانی کاربر",
+        path: "/users",
+        errorMessage: errors.array()[0].msg,
+        oldInput: {
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber,
+        },
+        validationErrors: errors.array(),
+        selection: "به روز رسانی",
+        update: true, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+      });
+    } else {
+      User.update(
+        {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          state: state,
+          phoneNumber: phoneNumber
+        },
+        { where: { id: id } }
+      ).then(data => {
+        if (req.session.user.isAdmin) {
+          res.redirect("/admin/users");
+        } else { res.redirect(`/admin/userProfile/${req.session.user.id}`); }
+      });
+    }
+  });
 };
 
 exports.getUpdateAvatar = (req, res, next) => {
-  res.render('admin/updateAvatar', {
-    pageTitle: "به روز رسانی کاربر",
-    path: "",
-    errorMessage: "",
-    validationErrors: [],
-    selection: "به روز رسانی",
-    update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id
+  User.findByPk(req.session.user.id).then(user => {
+    res.render('admin/updateAvatar', {
+      pageTitle: "به روز رسانی کاربر",
+      path: "",
+      errorMessage: "",
+      validationErrors: [],
+      selection: "به روز رسانی",
+      update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id, avatar: user.dataValues.avatar
+    });
+
   });
+
 };
 exports.postUpdateAvatar = (req, res, next) => {
   const userId = req.body.userId;
@@ -287,7 +335,14 @@ exports.filesApi = (req, res, next) => {
     });
 };
 exports.getAllFiles = (req, res, next) => {
-  res.render("admin/allFiles", { pageTitle: "فایل ها", path: "/storage", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
+  User.findByPk(req.session.user.id).then(user => {
+    res.render("admin/allFiles", {
+      pageTitle: "فایل ها", path: "/storage", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
+      avatar: user.dataValues.avatar
+    });
+
+
+  });
 };
 exports.postUploadFile = (req, res, next) => {
   const userId = req.session.user.id;
@@ -363,7 +418,14 @@ exports.deleteFile = (req, res, next) => {
 
 // admin menus
 exports.getMenus = (req, res, next) => {
-  res.render("admin/allMenu", { pageTitle: "منو ها", path: "/menu", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
+  User.findByPk(req.session.user.id).then(user => {
+
+    res.render("admin/allMenu", {
+      pageTitle: "منو ها", path: "/menu", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
+      avatar: user.dataValues.avatar
+    });
+
+  });
 };
 exports.menuApi = (req, res, next) => {
   const menuArray = [];
@@ -384,13 +446,17 @@ exports.postAddMenu = (req, res, next) => {
 
 };
 exports.getEditMenu = (req, res, next) => {
-  const menuId = req.params.menuId;
-  Menu.findOne({ where: { id: menuId } }).then(data => {
-    res.render('admin/updateMenu', {
-      pageTitle: "منو ها", path: "/menu", menuId: menuId, menu: data.dataValues, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id,
-      isAdmin: req.session.user.isAdmin
+  User.findByPk(req.session.user.id).then(user => {
+    const menuId = req.params.menuId;
+    Menu.findOne({ where: { id: menuId } }).then(data => {
+      res.render('admin/updateMenu', {
+        pageTitle: "منو ها", path: "/menu", menuId: menuId, menu: data.dataValues, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id,
+        isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+      });
     });
+
   });
+
 };
 exports.postEditMenu = (req, res, next) => {
   const id = req.body.id;
@@ -408,7 +474,14 @@ exports.deleteMenu = (req, res, next) => {
 
 //get admin settings
 exports.getSettings = (req, res, next) => {
-  res.render("admin/admin", { pageTitle: "تنظیمات", path: "/setting", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
+  User.findByPk(req.session.user.id).then(user => {
+
+    res.render("admin/admin", {
+      pageTitle: "تنظیمات", path: "/setting", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
+      avatar: user.dataValues.avatar
+    });
+
+  });
 };
 
 // admin posts
@@ -428,15 +501,26 @@ exports.postsApi = (req, res, next) => {
     });
 };
 exports.getPosts = (req, res, next) => {
-  res.render("admin/allPosts", { pageTitle: "نوشته ها", path: "/post", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
+  User.findByPk(req.session.user.id).then(user => {
+
+    res.render("admin/allPosts", {
+      pageTitle: "نوشته ها", path: "/post", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
+      avatar: user.dataValues.avatar
+    });
+
+  });
 };
 exports.getAddPost = (req, res, next) => {
-  res.render("admin/updatePost", {
-    pageTitle: "نوشته جدید",
-    path: "/post",
-    update: false,
-    oldInput: "", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+  User.findByPk(req.session.user.id).then(user => {
+    res.render("admin/updatePost", {
+      pageTitle: "نوشته جدید",
+      path: "/post",
+      update: false,
+      oldInput: "", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+    });
+
   });
+
 };
 exports.postAddPost = (req, res, next) => {
   const userId = req.session.user.id;
@@ -501,22 +585,26 @@ exports.postAddPost = (req, res, next) => {
   }
 };
 exports.getEditPost = (req, res, next) => {
-  const postName = req.params.postName;
-  Post.findOne({ where: { postName: postName } })
-    .then((post) => {
-      const postPath = post.dataValues.path;
-      res.render("admin/updatePost", {
-        pageTitle: "ویرایش",
-        path: "/post",
-        update: true,
-        oldInput: {
-          title: postName, postPath: postPath
-        }, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin
+  User.findByPk(req.session.user.id).then(user => {
+
+    const postName = req.params.postName;
+    Post.findOne({ where: { postName: postName } })
+      .then((post) => {
+        const postPath = post.dataValues.path;
+        res.render("admin/updatePost", {
+          pageTitle: "ویرایش",
+          path: "/post",
+          update: true,
+          oldInput: {
+            title: postName, postPath: postPath
+          }, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  });
+
 };
 exports.deletePost = (req, res, next) => {
   const postName = req.params.postName;
@@ -547,7 +635,14 @@ exports.deAprovePost = (req, res, next) => {
 
 // admin pages
 exports.getPages = (req, res, next) => {
-  res.render("admin/pages", { pageTitle: "صفحه ها", path: "/page", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin });
+  User.findByPk(req.session.user.id).then(user => {
+
+    res.render("admin/pages", {
+      pageTitle: "صفحه ها", path: "/page", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
+      avatar: user.dataValues.avatar
+    });
+
+  });
 };
 exports.getSinglePage = (req, res, next) => {
   res.status(200).json({ data: "get single pages" });

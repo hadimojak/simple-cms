@@ -29,34 +29,36 @@ const storage = multer.diskStorage({
 router.get('/admin', isAuth, adminController.getAdminHomePage);
 router.get('/admin/resetPassword/:userId', isAuth, adminController.getPassReset);
 router.post('/admin/resetPassword',
-    [body('password', '.پسورد باید شامل حروف و عدد باشد و حداقل به طول 8 کاراکتر باشد').isAlphanumeric().isLength({ min: 8 }).notEmpty().escape().trim(),
-    body('passwordConfirmed', ".تکرار پسورد برابر نیست").trim().notEmpty().escape().custom((value, { req }) => {
+    [check('password', '.پسورد باید شامل حروف و عدد باشد و حداقل به طول 8 کاراکتر باشد').isAlphanumeric().isLength({ min: 8 }).notEmpty().escape().trim(),
+    check('passwordConfirmed', ".تکرار پسورد برابر نیست").trim().notEmpty().escape().custom((value, { req }) => {
         if (value !== req.body.password) { throw new Error(); }
         return true;
-    })], isAuth, adminController.postPassReset);
+    })],
+     isAuth, adminController.postPassReset);
 router.get('/admin/users', isAdmin, isAuth, adminController.getUsers);
 router.get('/admin/addUser', isAuth, adminController.getAddUser);
 router.post('/admin/addUser',
-    [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
+    [check('firstName', '.نام باید فقط شامل حروف باشد').isAlpha('fa-IR', { ignore: '\s' }).isLength({ min: 2 }).notEmpty().escape().trim()
         .withMessage('.نام باید بدون فاصله  باشد').toLowerCase(),
-    body('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
+    check('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isAlpha('fa-IR', { ignore: '\s' }).isLength({ min: 2 }).notEmpty().escape().trim()
         .withMessage('.نام خانوادگی باید بدون فاصله  باشد').toLowerCase(),
-    body('phoneNumber', '.شماره موبایل معتبر وارد کنید').isNumeric().notEmpty().matches(/^(\+98|0098|98|0)?9\d{9}$/).escape().trim(),
-    body('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail(),
-    body('password', '.پسورد باید شامل حروف و عدد باشد و حداقل به طول 8 کاراکتر باشد').isAlphanumeric().isLength({ min: 8 }).notEmpty().escape().trim(),
-    body('passwordConfirmed', ".تکرار پسورد برابر نیست").trim().notEmpty().escape().custom((value, { req }) => {
+    check('phoneNumber', '.شماره موبایل معتبر وارد کنید').isNumeric().notEmpty().matches(/^(\+98|0098|98|0)?9\d{9}$/).escape().trim(),
+    check('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail(),
+    check('password', '.پسورد باید شامل حروف و عدد باشد و حداقل به طول 8 کاراکتر باشد').isAlphanumeric().isLength({ min: 8 }).notEmpty().escape().trim(),
+    check('passwordConfirmed', ".تکرار پسورد برابر نیست").trim().notEmpty().escape().custom((value, { req }) => {
         if (value !== req.body.password) { throw new Error(); }
         return true;
     })], isAuth,
     adminController.postAddUser);
 router.get('/admin/userProfile/:userId', isAuth, adminController.getUserProfile);
-router.post('/admin/updateUser', [body('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
-    .withMessage('.نام باید بدون فاصله  باشد').toLowerCase(),
-body('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
-    .withMessage('.نام خانوادگی باید بدون فاصله  باشد').toLowerCase(),
-body('phoneNumber', '.شماره موبایل معتبر وارد کنید').isNumeric().notEmpty().matches(/^(\+98|0098|98|0)?9\d{9}$/).escape().trim(),
-body('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail(),
-]
+router.post('/admin/updateUser',
+    [check('firstName', '.نام باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
+        .withMessage('.نام باید بدون فاصله  باشد').toLowerCase(),
+    check('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isString().isLength({ min: 2 }).notEmpty().escape().trim().custom(value => !/\s/.test(value))
+        .withMessage('.نام خانوادگی باید بدون فاصله  باشد').toLowerCase(),
+    check('phoneNumber', '.شماره موبایل معتبر وارد کنید').isNumeric().notEmpty().matches(/^(\+98|0098|98|0)?9\d{9}$/).escape().trim(),
+    check('email', '.ایمیل معتبر وارد کنید').isEmail().notEmpty().trim().escape().normalizeEmail(),
+    ]
     , isAuth, adminController.postUpdateUser);
 router.get('/admin/updateAvatar/:userId', isAuth, adminController.getUpdateAvatar);
 router.post('/admin/updateAvatar', isAuth, adminController.postUpdateAvatar);

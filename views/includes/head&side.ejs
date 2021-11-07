@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="/assets/css/bootstrap4-toggle.min.css">
     <link rel="stylesheet" href="/assets/css/custome.css">
     <script src="/assets/js/bootstrap.min.js"></script>
-
     <title>
         <%= pageTitle %>
     </title>
@@ -31,10 +30,15 @@
 
             <div class="collapse navbar-collapse " id='sideMenu'>
                 <a class="navbar-brand mx-2" href="/admin">cobcms</a>
-                <a class="navbar-brand mx-2 " style="width: 5rem" href="/admin"><img
-                        class="logo-border border border-thickness rounded"
-                        src="./pictures/avatar.png"
-                        alt="کوبکس" width="80" height="80"></a>
+                <a class="navbar-brand mx-2 " style="width: 5rem" href="/admin">
+                    <% if(!isAuhtenticated){ %><img class="logo-border border border-thickness rounded"
+                            src="/pictures/avatar.png" alt="کوبکس" width="80" height="80">
+                        <% }else { %> <img class="logo-border border border-thickness rounded" src="<%= avatar %>"
+                                alt="کوبکس" width="80" height="80">
+                            <% } %>
+
+
+                </a>
 
                 <ul class="navbar-nav ">
                     <li class="nav-item">

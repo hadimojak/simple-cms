@@ -40,7 +40,8 @@ exports.postLogin = (req, res, next) => {
           password: password,
           phoneNumber: phoneNumber,
         },
-        validationErrors: errors.array(), isAuhtenticated: isAuhtenticated, isAdmin: isAdmin,
+        validationErrors: ['phoneNumber','password'],
+        isAuhtenticated: isAuhtenticated, isAdmin: isAdmin,
       });
     }
 
@@ -83,7 +84,7 @@ exports.postLogin = (req, res, next) => {
                 password: password,
                 phoneNumber: phoneNumber,
               },
-              validationErrors: ["number", "password"], isAuhtenticated: isAuhtenticated, isAdmin: isAdmin, 
+              validationErrors: ["number", "password"], isAuhtenticated: isAuhtenticated, isAdmin: isAdmin,
             });
           }
 
