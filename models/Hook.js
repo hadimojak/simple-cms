@@ -35,7 +35,7 @@ models.forEach(async p => {
         sequelize: sequelize, timestamps: false, freezeTableName: true,
         modelName: historyTableName
     }
-    ).sync()
+    ).sync();
 
 });
 

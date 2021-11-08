@@ -62,7 +62,7 @@ router.post('/admin/updateUser',
     , isAuth, adminController.postUpdateUser);
 router.get('/admin/updateAvatar/:userId', isAuth, adminController.getUpdateAvatar);
 router.post('/admin/updateAvatar', isAuth, adminController.postUpdateAvatar);
-router.delete('/admin/delete/user/:id',isAdmin, isAuth, adminController.deleteUser);
+router.delete('/admin/delete/user/:id', isAdmin, isAuth, adminController.deleteUser);
 
 // if(user is normalUser show her only her files)
 router.get("/admin/storage", isAuth, adminController.getAllFiles);
@@ -91,18 +91,18 @@ router.post('/admin/uploadFile', isAuth, [multer({
     } else { callback(null, true); }
 }], adminController.postUploadFile);
 router.get('/admin/storage/fileData', isAuth, adminController.filesApi);
-router.delete("/admin/delete/storage/:fileName",isAdmin, isAuth, adminController.deleteFile);
+router.delete("/admin/delete/storage/:fileName", isAdmin, isAuth, adminController.deleteFile);
 
 //if(user is super User show her menus )
-router.get('/admin/menus',isAdmin, isAuth, adminController.getMenus);
-router.get('/admin/menuData',isAdmin, isAuth, adminController.menuApi);
-router.post('/admin/addMenu',isAdmin, isAuth, adminController.postAddMenu);
-router.get('/admin/updateMenu/:menuId',isAdmin, isAuth, adminController.getEditMenu);
-router.post('/admin/updateMenu',isAdmin, isAuth, adminController.postEditMenu);
-router.delete('/admin/delete/page/:menuId',isAdmin, isAuth, adminController.deleteMenu);
+router.get('/admin/menus', isAdmin, isAuth, adminController.getMenus);
+router.get('/admin/menuData', isAdmin, isAuth, adminController.menuApi);
+router.post('/admin/addMenu', isAdmin, isAuth, adminController.postAddMenu);
+router.get('/admin/updateMenu/:menuId', isAdmin, isAuth, adminController.getEditMenu);
+router.post('/admin/updateMenu', isAdmin, isAuth, adminController.postEditMenu);
+router.delete('/admin/delete/page/:menuId', isAdmin, isAuth, adminController.deleteMenu);
 
 //if user is super user
-router.get('/admin/settings',isAdmin, isAuth, adminController.getSettings);
+router.get('/admin/settings', isAdmin, isAuth, adminController.getSettings);
 
 // if(user is normal user show het only her posts)
 router.get('/admin/posts', isAuth, adminController.getPosts);
@@ -112,7 +112,7 @@ router.post('/admin/posts/deAprovePost/:postName', isAuth, adminController.deApr
 router.get('/admin/addPost', isAuth, adminController.getAddPost);
 router.post('/admin/addPost', isAuth, adminController.postAddPost);
 router.get('/admin/updatePost/:postName', isAuth, adminController.getEditPost);
-router.delete('/admin/delete/post/:postName',isAdmin, isAuth, adminController.deletePost);
+router.delete('/admin/delete/post/:postName', isAdmin, isAuth, adminController.deletePost);
 
 
 // if(user is superUser show her the pages routes)

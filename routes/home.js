@@ -6,7 +6,7 @@ const homeController = require('../controller/home');
 
 // router.get('/post/[postId]', endUserController);
 
-router.get('/',homeController.getHome);
+router.get('/', homeController.getHome);
 
 
 module.exports = router;

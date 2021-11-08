@@ -11,11 +11,23 @@
   <input class="form-control px-5 mx-0" placeholder="عنوان" dir="rtl" id="title"
     value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
   <div id="toolbar" class="">
-    
+
   </div>
   <div id="editor" class="bg-white mh-100"></div>
-  <input class="btn btn-success btn-lg"  value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" data-="" />
+  <div class="d-flex flex-row-reverse bg-secondary">
+    <input class="btn  btn-info font-weight-bolder  m-2" value="تگ" type="button" onclick="tagHandler(this)" />
+    <input class="btn  btn-info font-weight-bolder  m-2" value="نوشته های مرتبط" type="button"
+      onclick="similarPostHandler(this)" />
+    <input class="btn  btn-success font-weight-bolder  m-2" value="<%= update === true ? 'ویرایش' : 'ذخیره' %>"
+      type="submit" />
+  </div>
 </form>
+
+
+
+
+
+
 <!-- Initialize Quill editor -->
 <script>
 
@@ -47,7 +59,7 @@
     theme: "snow",
   });
 
-  
+
 
   if ('<%= oldInput.postPath %>') {
     $.ajax({
@@ -62,6 +74,12 @@
     })
   }
 
+  function tagHandler() {
+    $("#tagModal").modal("show");
+  }
+  function similarPostHandler() {
+    $("#similarPostModal").modal("show");
+  }
   function imageHandler() {
     var range = this.quill.getSelection();
     $("#galleryModal").modal("show");
