@@ -63,7 +63,7 @@ exports.postLogin = (req, res, next) => {
 
       bcrypt.compare(password, editor.dataValues.password).then((doMatch) => {
         if (doMatch) {
-          const allowed = ['id', 'email', 'phoneNumber', "isAdmin", "state"];
+          const allowed = ['id', 'email', 'phoneNumber', "isAdmin", "state",'isAprover'];
           const filteredUser = _.pick(editor.dataValues, allowed);
           req.session.isLoggedIn = true;
           req.session.user = filteredUser;

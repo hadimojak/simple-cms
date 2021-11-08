@@ -2,20 +2,26 @@
 
 
     <section class="vh-100 gradient-custom  p-4 ">
-       
+
         <link rel="stylesheet" href="/assets/css/bootstrap-table.min.css">
         <script src="/assets/js/bootstrap-table.min.js"></script>
-        
+
         <div class="container-fluid">
             <div class="row">
                 <div class=" container-fluid">
-  
+
                     <div id="galleryToolbar">
-                        <button id='deletePost' type="button" class="btn btn-danger mx-1 ">حذف</button>
-                        <button id='aprovePost' type="button" class="btn btn-info mx-1 ">تایید</button>
-                        <button id='deAprovePost' type="button" class="btn btn-warning mx-1 ">لغو تایید</button><button
-                            id='createPost' type="button" class="btn btn-success mx-1 "
-                            onclick="window.location.href='/admin/addPost'">ساخت نوشته</button>
+                        <% if(isAdmin){ %>
+                            <button id='deletePost' type="button" class="btn btn-danger mx-1 ">حذف</button>
+
+                            <% } %>
+                                <% if(isAdmin || isAprover){ %>
+                                    <button id='aprovePost' type="button" class="btn btn-info mx-1 ">تایید</button>
+                                    <button id='deAprovePost' type="button" class="btn btn-warning mx-1 ">لغو
+                                        تایید</button>
+                                    <% } %>
+                                        <button id='createPost' type="button" class="btn btn-success mx-1 "
+                                            onclick="window.location.href='/admin/addPost'">ساخت نوشته</button>
                     </div>
                     <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
                         data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/postData">
@@ -34,7 +40,7 @@
             </div>
         </div>
         <script>
-        
+
             function editRow(value, row, index) {
                 return [
                     `<button id='editPost' onclick="editPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
@@ -50,26 +56,26 @@
                                             d-inline-flex bg-white'>تایید شده
                                             </p>`}
             }
-        
+
             const remove = $('#deletePost')
             const table = $('#table')
             const aprove = $('#aprovePost')
             const deAprove = $('#deAprovePost')
-        
+
             function editPost(e) {
                 const postName = e.parentElement.parentElement.firstChild.innerText
                 window.location.href = `/admin/updatePost/${postName}`
             }
-        
-        
-        
+
+
+
             $(function () {
                 table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
                     remove.prop('disabled', !table.bootstrapTable('getSelections').length)
                     aprove.prop('disabled', !table.bootstrapTable('getSelections').length)
                     deAprove.prop('disabled', !table.bootstrapTable('getSelections').length)
                 })
-        
+
                 deAprove.click(function () {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
                         $.ajax({
@@ -80,9 +86,9 @@
                     })
                     table.bootstrapTable('refresh')
                     deAprove.prop('disabled', true)
-        
+
                 })
-        
+
                 aprove.click(function () {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
                         $.ajax({
@@ -93,7 +99,7 @@
                     })
                     table.bootstrapTable('refresh')
                     aprove.prop('disabled', true)
-        
+
                 })
                 remove.click(function () {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
@@ -119,9 +125,9 @@
                     })
                     remove.prop('disabled', true)
                 })
-        
+
             })
-        
+
         </script>
     </section>
 

@@ -11,7 +11,7 @@
                         <th scope="col ">نام و نام خاوادگی</th>
                         <th scope="col  ">شماره همراه</th>
                         <th scope="col ">ایمیل</th>
-                        <th scope="col ">نقش</th>
+                        <th scope="col ">سطح</th>
                         <th scope="col ">وضعیت</th>
                         <th scope="col ">انتخاب</th>
                         <th scope="col ">حذف</th>
@@ -20,7 +20,7 @@
                 <tbody>
 
                     <% for (var i=0; i < userArray.length; i++) { %>
-                        <tr style = "<%= userArray[i].phoneNumber === currrentUser ? 'background-color: snow;' : '' %>">
+                        <tr style="<%= userArray[i].phoneNumber === currrentUser ? 'background-color: snow;' : '' %>">
                             <th scope="row">
                                 <%= i+1 %>
                             </th>
@@ -33,10 +33,14 @@
                             <td>
                                 <%= userArray[i].email %>
                             </td>
-                            <td><% if(userArray[i].isAdmin){ %> admin
-                            <% }else{ %>
-                                user
-                            <% } %></td>
+                            <td>
+                                <% if(userArray[i].isAdmin){ %><b>admin</b>
+                                    <% }else if(userArray[i].isAprover){ %>
+                                        <b>aprover</b>
+                                        <% }else { %>
+                                            <b>editor</b>
+                                            <% } %>
+                            </td>
                             <td>
                                 <% if (userArray[i].state===true) {%>
                                     <p class=' m-0 p-1 text-success font-weight-bold border rounded border-success

@@ -34,10 +34,10 @@ router.post('/admin/resetPassword',
         if (value !== req.body.password) { throw new Error(); }
         return true;
     })],
-     isAuth, adminController.postPassReset);
+    isAuth, adminController.postPassReset);
 router.get('/admin/users', isAdmin, isAuth, adminController.getUsers);
-router.get('/admin/addUser', isAuth, adminController.getAddUser);
-router.post('/admin/addUser',
+router.get('/admin/addUser', isAdmin, isAuth, adminController.getAddUser);
+router.post('/admin/addUser', isAdmin, isAuth,
     [check('firstName', '.نام باید فقط شامل حروف باشد').isAlpha('fa-IR', { ignore: '\s' }).isLength({ min: 2 }).notEmpty().escape().trim()
         .withMessage('.نام باید بدون فاصله  باشد').toLowerCase(),
     check('lastName', '.نام خانوادگی باید فقط شامل حروف باشد').isAlpha('fa-IR', { ignore: '\s' }).isLength({ min: 2 }).notEmpty().escape().trim()
@@ -48,7 +48,7 @@ router.post('/admin/addUser',
     check('passwordConfirmed', ".تکرار پسورد برابر نیست").trim().notEmpty().escape().custom((value, { req }) => {
         if (value !== req.body.password) { throw new Error(); }
         return true;
-    })], isAuth,
+    })],
     adminController.postAddUser);
 router.get('/admin/userProfile/:userId', isAuth, adminController.getUserProfile);
 router.post('/admin/updateUser',
@@ -62,11 +62,11 @@ router.post('/admin/updateUser',
     , isAuth, adminController.postUpdateUser);
 router.get('/admin/updateAvatar/:userId', isAuth, adminController.getUpdateAvatar);
 router.post('/admin/updateAvatar', isAuth, adminController.postUpdateAvatar);
-router.delete('/admin/delete/user/:id', isAuth, adminController.deleteUser);
+router.delete('/admin/delete/user/:id',isAdmin, isAuth, adminController.deleteUser);
 
 // if(user is normalUser show her only her files)
 router.get("/admin/storage", isAuth, adminController.getAllFiles);
-router.post('/admin/uploadFile', [multer({
+router.post('/admin/uploadFile', isAuth, [multer({
     storage: storage,
     fileFilter: function (req, file, callback) {
         Media.findOne({ where: { fileName: req.body.fileName } })
@@ -89,20 +89,20 @@ router.post('/admin/uploadFile', [multer({
     if (!req.file) {
         res.redirect('/admin/storage');
     } else { callback(null, true); }
-}], isAuth, adminController.postUploadFile);
+}], adminController.postUploadFile);
 router.get('/admin/storage/fileData', isAuth, adminController.filesApi);
-router.delete("/admin/delete/storage/:fileName", isAuth, adminController.deleteFile);
+router.delete("/admin/delete/storage/:fileName",isAdmin, isAuth, adminController.deleteFile);
 
 //if(user is super User show her menus )
-router.get('/admin/menus', isAuth, adminController.getMenus);
-router.get('/admin/menuData', isAuth, adminController.menuApi);
-router.post('/admin/addMenu', isAuth, adminController.postAddMenu);
-router.get('/admin/updateMenu/:menuId', isAuth, adminController.getEditMenu);
-router.post('/admin/updateMenu', isAuth, adminController.postEditMenu);
-router.delete('/admin/delete/page/:menuId', isAuth, adminController.deleteMenu);
+router.get('/admin/menus',isAdmin, isAuth, adminController.getMenus);
+router.get('/admin/menuData',isAdmin, isAuth, adminController.menuApi);
+router.post('/admin/addMenu',isAdmin, isAuth, adminController.postAddMenu);
+router.get('/admin/updateMenu/:menuId',isAdmin, isAuth, adminController.getEditMenu);
+router.post('/admin/updateMenu',isAdmin, isAuth, adminController.postEditMenu);
+router.delete('/admin/delete/page/:menuId',isAdmin, isAuth, adminController.deleteMenu);
 
 //if user is super user
-router.get('/admin/settings', isAuth, adminController.getSettings);
+router.get('/admin/settings',isAdmin, isAuth, adminController.getSettings);
 
 // if(user is normal user show het only her posts)
 router.get('/admin/posts', isAuth, adminController.getPosts);
@@ -112,7 +112,7 @@ router.post('/admin/posts/deAprovePost/:postName', isAuth, adminController.deApr
 router.get('/admin/addPost', isAuth, adminController.getAddPost);
 router.post('/admin/addPost', isAuth, adminController.postAddPost);
 router.get('/admin/updatePost/:postName', isAuth, adminController.getEditPost);
-router.delete('/admin/delete/post/:postName', isAuth, adminController.deletePost);
+router.delete('/admin/delete/post/:postName',isAdmin, isAuth, adminController.deletePost);
 
 
 // if(user is superUser show her the pages routes)

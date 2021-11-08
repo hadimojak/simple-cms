@@ -45,7 +45,6 @@ exports.getUsers = (req, res, next) => {
   });
 
 };
-
 exports.getPassReset = (req, res, next) => {
   const userId = req.params.userId;
   User.findByPk(userId).then(user => {
@@ -225,7 +224,7 @@ exports.getUserProfile = (req, res, next) => {
         },
         validationErrors: [],
         selection: "به روز رسانی",
-        update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: req.session.user.id, avatar: data.dataValues.avatar
+        update: true, isAuhtenticated: req.session.isLoggedIn, isAdmin: req.session.user.isAdmin, userId: userId, avatar: data.dataValues.avatar
       });
     })
     .catch((err) => {
@@ -240,6 +239,7 @@ exports.postUpdateUser = (req, res, next) => {
   const phoneNumber = req.body.phoneNumber;
   const id = req.body.userId;
   const state = req.body.state === "on" ? 1 : 0;
+  const isAprover = req.body.isAprover === 'on' ? 1 : 0;
   User.findByPk(id).then(user => {
     if (!errors.isEmpty()) {
       return res.render("admin/signup", {
@@ -262,7 +262,7 @@ exports.postUpdateUser = (req, res, next) => {
           firstName: firstName,
           lastName: lastName,
           email: email,
-          state: state,
+          state: state, isAprover: isAprover,
           phoneNumber: phoneNumber
         },
         { where: { id: id } }
@@ -270,11 +270,10 @@ exports.postUpdateUser = (req, res, next) => {
         if (req.session.user.isAdmin) {
           res.redirect("/admin/users");
         } else { res.redirect(`/admin/userProfile/${req.session.user.id}`); }
-      });
+      }).catch(err => { console.log(err); });
     }
   });
 };
-
 exports.getUpdateAvatar = (req, res, next) => {
   User.findByPk(req.session.user.id).then(user => {
     res.render('admin/updateAvatar', {
@@ -338,7 +337,7 @@ exports.getAllFiles = (req, res, next) => {
   User.findByPk(req.session.user.id).then(user => {
     res.render("admin/allFiles", {
       pageTitle: "فایل ها", path: "/storage", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
-      avatar: user.dataValues.avatar
+      avatar: user.dataValues.avatar, isAprover: req.session.user.isAprover
     });
 
 
@@ -505,7 +504,7 @@ exports.getPosts = (req, res, next) => {
 
     res.render("admin/allPosts", {
       pageTitle: "نوشته ها", path: "/post", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
-      avatar: user.dataValues.avatar
+      avatar: user.dataValues.avatar, isAprover: req.session.user.isAprover
     });
 
   });

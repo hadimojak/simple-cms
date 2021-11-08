@@ -65,7 +65,8 @@ sequelize.sync({ alter: false }).then(async data => {
                             email: 'arbabi@yahoo.com',
                             password: hasshedPass,
                             phoneNumber: 09121112233,
-                            isAdmin: 1
+                            isAdmin: 1,
+                            isAprover: 1
                         });
 
                     } catch (error) {

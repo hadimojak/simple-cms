@@ -6,16 +6,15 @@
 <link href="/assets/css/quill.snow.css" rel="stylesheet" />
 
 
-<form id="saveData" action="#" method="post">
-  <div class="row container d-flex justify-content-center">
+<form class="container" id="saveData" action="#" method="post">
 
-    <input dir="rtl" id="title" value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
-    <label for="title">: عنوان</label>
-  </div>
+  <input class="form-control px-5 mx-0" placeholder="عنوان" dir="rtl" id="title"
+    value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
   <div id="toolbar" class="">
+    
   </div>
   <div id="editor" class="bg-white mh-100"></div>
-  <input class="btn btn-success btn-lg" value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" data-="" />
+  <input class="btn btn-success btn-lg"  value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" data-="" />
 </form>
 <!-- Initialize Quill editor -->
 <script>
@@ -41,13 +40,14 @@
           [{ color: [] }, { background: [] }], // dropdown with defaults from theme
           [{ font: [] }],
           [{ align: [] }],
-          ["clean"],
         ],
         handlers: { image: imageHandler, video: videoHandler },
       },
     },
     theme: "snow",
   });
+
+  
 
   if ('<%= oldInput.postPath %>') {
     $.ajax({
