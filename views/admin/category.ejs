@@ -1,0 +1,155 @@
+<%- include('../includes/head&side.ejs') %>
+
+
+    <section class="vh-100 gradient-custom  p-4 ">
+
+        <link rel="stylesheet" href="/assets/css/bootstrap-table.min.css">
+        <script src="/assets/js/bootstrap-table.min.js"></script>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class=" container-fluid">
+
+                    <div id="galleryToolbar">
+                        <% if(isAdmin){ %>
+                            <button id='deletePost' type="button" class="btn btn-danger mx-1 ">حذف</button>
+                           
+                            <% } %>
+                                <% if(isAdmin || isAprover){ %>
+                                    <button id='createCat' type="button" class="btn btn-success mx-1" data-toggle="modal"
+                                    data-target="#myModal">ساخت دسته</button>
+                                    <% } %>
+                                        <button id='posts' type="button" class="btn btn-success mx-1 "
+                                            onclick="window.location.href='/admin/posts'">نوشته ها</button>
+
+                                        <button id="refresh" class="btn btn-secondary">refresh</button>
+
+                    </div>
+
+                    <div id="myModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" aria-label="Close" data-dismiss="modal"><span
+                                            class="text-danger" aria-hidden="true">×</span></button>
+                                    <h4 class="modal-title">ساخت دسته جدید</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form name="addCategory" method='post' action='/admin/addCategory'
+                                        onsubmit="return validateForm(event)">
+                                        <label for="catTitle">عنوان دسته بندی</label>
+                                        <input type='text' name='catTitle' id='catTitle' class='form-control' dir="rtl">
+                                        <input type='submit' class='btn btn-info' value='create' id='btn_upload'>
+                                    </form>
+                                    <script>
+                                        function validateForm(e) {
+                                            e.preventDefault();
+
+                                            let x = document.forms["addCategory"]["catTitle"].value;
+                                            if (x == "" || x.includes('.')) {
+                                                alert("نام مناسب برای دسته انتخاب نکرده اید.");
+                                                return false;
+                                            }
+                                            console.log('done')
+
+                                            $.ajax({
+                                                url: '/admin/addCategory',
+                                                type: "POST",
+                                                data: { category: x },
+                                                success(data) {
+                                                    console.log(data)
+                                                    table.bootstrapTable('refresh')
+                                                },
+                                                error() { }
+                                            })
+                                            $('#myModal').modal('hide')
+                                            document.forms["addCategory"]["catTitle"].value = ''
+
+                                        }
+                                    </script>
+                                    <!-- Preview-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
+                        data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/categoryData">
+                        <thead>
+                            <tr>
+                                <th data-field="title" data-sortable="true">عنوان</th>
+                                <th data-field="path" data-formatter="editRow">ویراش</th>
+                                <th data-field="state" data-checkbox="true"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script>
+
+
+
+            function editRow(value, row, index) {
+                return [
+                    `<button id='editPost' onclick="editPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
+                ].join('');
+            }
+
+
+            const remove = $('#deletePost')
+            const table = $('#table')
+            const refresh = $('#refresh')
+
+            refresh.click(function () {
+                table.bootstrapTable('refresh')
+            })
+
+            function editPost(e) {
+                const postName = e.parentElement.parentElement.firstChild.innerText
+                window.location.href = `/admin/updateCategory/${postName}`
+            }
+
+
+
+            $(function () {
+                table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+                    remove.prop('disabled', !table.bootstrapTable('getSelections').length)
+
+                })
+
+                remove.click(function () {
+                    var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
+                        console.log(row)
+                        fetch(`/admin/deleteCategory/${row.title}`, {
+                            method: "DELETE",
+                            headers: {
+                            },
+                        })
+                            .then((response) => {
+                                return response.json();
+                            })
+                            .then((result) => {
+                                console.log(result)
+                                table.bootstrapTable('refresh')
+
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                        return row.id
+                    })
+                    table.bootstrapTable('remove', {
+                        field: 'id',
+                        values: ids
+                    })
+                    remove.prop('disabled', true)
+
+                })
+
+            })
+
+        </script>
+    </section>
+
+    <%- include('../includes/footer.ejs') %>

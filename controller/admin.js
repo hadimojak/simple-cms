@@ -1,4 +1,4 @@
-const { User, Media, Post, Menu, Tag } = require("../models/Model");
+const { User, Media, Post, Menu, Tag, Category } = require("../models/Model");
 const { validationResult, body } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const path = require("path");
@@ -485,6 +485,7 @@ exports.getSettings = (req, res, next) => {
 
 // admin posts
 exports.postsApi = (req, res, next) => {
+
   const postArray = [];
   Post.findAll()
     .then((posts) => {
@@ -524,6 +525,7 @@ exports.getAddPost = (req, res, next) => {
 exports.postAddPost = (req, res, next) => {
   const tags = req.body.tags.split(',');
   console.log(tags);
+  console.log(req.body);
   const userId = req.session.user.id;
   const title = req.body.title;
   if (title.trim() === "") {
@@ -546,7 +548,7 @@ exports.postAddPost = (req, res, next) => {
             }
           );
           Post.update({
-            postName: title, deltaContent: deltaContent, UserId: userId, path: "/uploads/posts/" + postTitle, tags: tags
+            postName: title, deltaContent: deltaContent, UserId: userId, path: "/uploads/posts/" + postTitle, tags: tags,CategoryTitle :req.body.category
           }
             , { where: { path: req.body.postPath } })
             .then(post => {
@@ -636,10 +638,40 @@ exports.deAprovePost = (req, res, next) => {
 };
 
 //category
-exports.getCategory = (req, res, next) => { };
-exports.postAddCategory = (req, res, next) => { };
+exports.apiCategory = (req, res, next) => {
+  let cats = [];
+  Category.findAll({})
+    .then(data => {
+      return data.forEach(p => {
+        cats.push(p.dataValues);
+      });
+    })
+    .then(data => { res.json(cats); }).catch(err => { console.log(err); });
+};
+exports.getCategory = (req, res, next) => {
+  User.findByPk(req.session.user.id).then(user => {
+    console.log(req.session.user.isAprover)
+    res.render('admin/category', {
+      path: '', pageTitle: 'دسته ها',
+      isAuhtenticated: req.session.isLoggedIn,
+      isAdmin: req.session.user.isAdmin,
+      isAprover: req.session.user.isAprover, avatar: user.dataValues.avatar, userId: req.session.user.id
+    });
+  });
+};
+exports.postAddCategory = (req, res, next) => {
+  Category.create({ title: req.body.category }).then(data => {
+    res.json({ data: 'categury created' });
+  }).catch(err => { console.log(err); });
+};
 exports.getEditCategory = (req, res, next) => { };
 exports.postEditCategory = (req, res, next) => { };
+exports.deleteCategory = (req, res, next) => {
+  const catTitle = req.params.catTitle;
+  Category.destroy({ where: { title: catTitle } }).then(category => {
+    return res.json({ data: catTitle + 'is deleted' });
+  });
+};
 
 
 // admin pages

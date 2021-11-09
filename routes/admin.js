@@ -115,8 +115,12 @@ router.get('/admin/updatePost/:postName', isAuth, adminController.getEditPost);
 router.delete('/admin/delete/post/:postName', isAdmin, isAuth, adminController.deletePost);
 
 //category
+router.get('/admin/categoryData', isAuth, adminController.apiCategory);
 router.get('/admin/addCategory', isAuth, adminController.getCategory);
-router.get('/admin/addCategory', isAuth, adminController.getCategory);
+router.post('/admin/addCategory', isAuth, adminController.postAddCategory);
+router.get('/admin/updateCategory', isAuth, adminController.getEditCategory);
+router.post('/admin/updateCategory', isAuth, adminController.postEditCategory);
+router.delete('/admin/deleteCategory/:catTitle', isAuth, adminController.deleteCategory);
 
 // page
 router.get('/admin/pages', isAuth, adminController.getPages);

@@ -18,10 +18,11 @@
                                 <% if(isAdmin || isAprover){ %>
                                     <button id='aprovePost' type="button" class="btn btn-info mx-1 ">تایید</button>
                                     <button id='deAprovePost' type="button" class="btn btn-warning mx-1 ">لغو
-                                        تایید</button>
+                                        تایید</button><button id='createPost' type="button"
+                                        class="btn btn-success mx-1 "
+                                        onclick="window.location.href='/admin/addCategory'">دسته بندی ها</button>
                                     <% } %>
-                                        <button id='createPost' type="button" class="btn btn-success mx-1 "
-                                            onclick="window.location.href='/admin/addCategory'">افزودن دسته بندی</button>
+
                                         <button id='createPost' type="button" class="btn btn-success mx-1 "
                                             onclick="window.location.href='/admin/addPost'">ساخت نوشته</button>
                     </div>

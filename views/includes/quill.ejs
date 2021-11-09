@@ -25,14 +25,20 @@
   </div>
   <div class="d-flex flex-row-reverse bg-secondary align-middle">
     <h3><span class=" col badge badge-secondary align-middle my-2">نوشته های مرتبط</span></h3>
-    <input class=" col form-control m-2" type="search" dir="rtl" name="simPosts" onkeyup="similarPostHandler(this)" />
+    <select class="btn  btn-light font-weight-bolder  m-2" id="text-two">
+      <option selected="" value="base">Please Select</option>
+    </select>
   </div>
   <div class="d-flex flex-row-reverse bg-secondary align-middle">
+
     <h3><span class=" col badge badge-secondary align-middle my-2">دسته بندی</span></h3>
-    <input class=" col form-control m-2" type="search" dir="rtl" name="categuries" onkeyup="categoryHandler(this)" />
+    <select class="btn  btn-light font-weight-bolder  m-2" id="text-one">
+      <option selected="" value="base">Please Select</option>
+    </select>
   </div>
-  <div class="d-flex flex-row-reverse  align-middle"><input class="btn  btn-success font-weight-bolder  m-2"
-      value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" />
+  <div class="d-flex flex-row-reverse  align-middle">
+    <input class="btn  btn-success font-weight-bolder  m-2" value="<%= update === true ? 'ویرایش' : 'ذخیره' %>"
+      type="submit" />
   </div>
 
 </form>
@@ -98,11 +104,38 @@
   }
 
   function similarPostHandler(e) {
-
+    fetch('/admin/categoryData', { method: 'GET', headers: {} })
+      .then(response => { return response.json() })
+      .then(data => { console.log(data) })
   }
-  function categoryHandler(e) {
 
-  }
+  $(document).ready(function () {
+    fetch('/admin/postData', { method: 'GET', headers: {} })
+      .then(response => { return response.json() })
+      .then(data => {
+        console.log(data)
+        data.forEach(p => {
+          console.log(p)
+          const el = document.createElement('option')
+          el.value = p.postName;
+          el.innerText = p.postName
+          document.getElementById('text-two').insertAdjacentElement('beforeend', el)
+        });
+      })
+
+    fetch('/admin/categoryData', { method: 'GET', headers: {} })
+      .then(response => { return response.json() })
+      .then(data => {
+        console.log(data)
+        data.forEach(p => {
+          const el = document.createElement('option')
+          el.value = p.title;
+          el.innerText = p.title
+          document.getElementById('text-one').insertAdjacentElement('beforeend', el)
+        });
+      })
+  })
+
 
   function imageHandler() {
     var range = this.quill.getSelection();
@@ -122,7 +155,8 @@
     $.ajax({
       type: "POST",
       url: "/admin/addPost",
-      data: { htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags },
+      data: { htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags,
+      similarPost:document.getElementById('text-two').value,category:document.getElementById('text-one').value },
       success: function (result) {
         console.log(result);
         window.location.replace("/admin/posts");
