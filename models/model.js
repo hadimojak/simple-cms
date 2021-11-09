@@ -78,6 +78,18 @@ const Media = sequelize.define('Media', {
     modelName: "user"
 });
 
+const Category = sequelize.define('Category', {
+    title: {
+        type: DataTypes.STRING,
+        primaryKey: true
+    },
+    createdAt: Sequelize.DATE,
+    updatedAt: Sequelize.DATE,
+}, {
+    sequelize: sequelize, freezeTableName: true,
+    modelName: "category"
+});
+
 const Post = sequelize.define('Post', {
     postName: {
         type: DataTypes.STRING,
@@ -93,6 +105,9 @@ const Post = sequelize.define('Post', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    }, tags: {
+        type: DataTypes.JSON,
+        allowNull: true,
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
@@ -159,7 +174,9 @@ const Tag = sequelize.define('Tag', {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
-    }
+    },
+    createdAt: Sequelize.DATE,
+    updatedAt: Sequelize.DATE
 }, {
     sequelize: sequelize, freezeTableName: true,
     modelName: "tag"
@@ -171,5 +188,10 @@ User.hasMany(Post, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
 Post.belongsTo(User);
 User.hasMany(Menu, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
 Menu.belongsTo(User);
+
+
+
+Category.hasMany(Post, { onDelete: 'NO ACTION', onUpdate: "NO ACTION" });
+Post.belongsTo(Category);
 
 module.exports = { User, Media, Menu, Page, Setting, Post, Tag };

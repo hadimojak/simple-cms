@@ -21,6 +21,8 @@
                                         تایید</button>
                                     <% } %>
                                         <button id='createPost' type="button" class="btn btn-success mx-1 "
+                                            onclick="window.location.href='/admin/addCategory'">افزودن دسته بندی</button>
+                                        <button id='createPost' type="button" class="btn btn-success mx-1 "
                                             onclick="window.location.href='/admin/addPost'">ساخت نوشته</button>
                     </div>
                     <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
@@ -30,6 +32,7 @@
                                 <th data-field="postName" data-sortable="true">نام</th>
                                 <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
                                 <th data-field="path" data-sortable="true">آدرس</th>
+                                <th data-field="CategoryId" data-sortable="true">دسته</th>
                                 <th data-field="path" data-formatter="editRow">ویراش</th>
                                 <th data-field="aproved" data-formatter="aproveRow">تایید</th>
                                 <th data-field="state" data-checkbox="true"></th>

@@ -1,4 +1,4 @@
-const { User, Media, Post, Menu } = require("../models/Model");
+const { User, Media, Post, Menu, Tag } = require("../models/Model");
 const { validationResult, body } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const path = require("path");
@@ -522,6 +522,8 @@ exports.getAddPost = (req, res, next) => {
 
 };
 exports.postAddPost = (req, res, next) => {
+  const tags = req.body.tags.split(',');
+  console.log(tags);
   const userId = req.session.user.id;
   const title = req.body.title;
   if (title.trim() === "") {
@@ -544,7 +546,7 @@ exports.postAddPost = (req, res, next) => {
             }
           );
           Post.update({
-            postName: title, deltaContent: deltaContent, UserId: userId, path: "/uploads/posts/" + postTitle
+            postName: title, deltaContent: deltaContent, UserId: userId, path: "/uploads/posts/" + postTitle, tags: tags
           }
             , { where: { path: req.body.postPath } })
             .then(post => {
@@ -555,13 +557,14 @@ exports.postAddPost = (req, res, next) => {
                   console.log(err);
                 }
               );
+              tags.forEach(p => { Tag.create({ title: p }).then(data => { }).catch(err => { console.log(err); }); });
               res.redirect("/admin/posts");
             });
         } else {
           Post.create({
             postName: title, deltaContent: deltaContent,
             path: "/uploads/posts/" + postTitle,
-            UserId: userId,
+            UserId: userId, tags: tags
           })
             .then((post) => {
               fs.writeFileSync(
@@ -631,6 +634,13 @@ exports.deAprovePost = (req, res, next) => {
   const postName = req.params.postName;
   Post.update({ aproved: false }, { where: { postName: postName } }).then(post => { res.redirect("/admin/posts"); });
 };
+
+//category
+exports.getCategory = (req, res, next) => { };
+exports.postAddCategory = (req, res, next) => { };
+exports.getEditCategory = (req, res, next) => { };
+exports.postEditCategory = (req, res, next) => { };
+
 
 // admin pages
 exports.getPages = (req, res, next) => {

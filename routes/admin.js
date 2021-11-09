@@ -64,7 +64,7 @@ router.get('/admin/updateAvatar/:userId', isAuth, adminController.getUpdateAvata
 router.post('/admin/updateAvatar', isAuth, adminController.postUpdateAvatar);
 router.delete('/admin/delete/user/:id', isAdmin, isAuth, adminController.deleteUser);
 
-// if(user is normalUser show her only her files)
+// file
 router.get("/admin/storage", isAuth, adminController.getAllFiles);
 router.post('/admin/uploadFile', isAuth, [multer({
     storage: storage,
@@ -93,7 +93,7 @@ router.post('/admin/uploadFile', isAuth, [multer({
 router.get('/admin/storage/fileData', isAuth, adminController.filesApi);
 router.delete("/admin/delete/storage/:fileName", isAdmin, isAuth, adminController.deleteFile);
 
-//if(user is super User show her menus )
+//menu
 router.get('/admin/menus', isAdmin, isAuth, adminController.getMenus);
 router.get('/admin/menuData', isAdmin, isAuth, adminController.menuApi);
 router.post('/admin/addMenu', isAdmin, isAuth, adminController.postAddMenu);
@@ -101,10 +101,10 @@ router.get('/admin/updateMenu/:menuId', isAdmin, isAuth, adminController.getEdit
 router.post('/admin/updateMenu', isAdmin, isAuth, adminController.postEditMenu);
 router.delete('/admin/delete/page/:menuId', isAdmin, isAuth, adminController.deleteMenu);
 
-//if user is super user
+//setting
 router.get('/admin/settings', isAdmin, isAuth, adminController.getSettings);
 
-// if(user is normal user show het only her posts)
+//post
 router.get('/admin/posts', isAuth, adminController.getPosts);
 router.get('/admin/postData', isAuth, adminController.postsApi);
 router.post('/admin/posts/aprovePost/:postName', isAuth, adminController.aprovePost);
@@ -114,8 +114,11 @@ router.post('/admin/addPost', isAuth, adminController.postAddPost);
 router.get('/admin/updatePost/:postName', isAuth, adminController.getEditPost);
 router.delete('/admin/delete/post/:postName', isAdmin, isAuth, adminController.deletePost);
 
+//category
+router.get('/admin/addCategory', isAuth, adminController.getCategory);
+router.get('/admin/addCategory', isAuth, adminController.getCategory);
 
-// if(user is superUser show her the pages routes)
+// page
 router.get('/admin/pages', isAuth, adminController.getPages);
 router.get('/admin/pages/:pageId', isAuth, adminController.getSinglePage);
 router.post('/admin/createPage', isAuth, adminController.postCreatePage);

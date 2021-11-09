@@ -5,6 +5,10 @@
 <!-- Include stylesheet -->
 <link href="/assets/css/quill.snow.css" rel="stylesheet" />
 
+<link rel="stylesheet" href="/assets/css/amsify.suggestags.css">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+  integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<script src="/assets/js/jquery.amsify.suggestags.js"></script>
 
 <form class="container" id="saveData" action="#" method="post">
 
@@ -14,13 +18,23 @@
 
   </div>
   <div id="editor" class="bg-white mh-100"></div>
-  <div class="d-flex flex-row-reverse bg-secondary">
-    <input class="btn  btn-info font-weight-bolder  m-2" value="تگ" type="button" onclick="tagHandler(this)" />
-    <input class="btn  btn-info font-weight-bolder  m-2" value="نوشته های مرتبط" type="button"
-      onclick="similarPostHandler(this)" />
-    <input class="btn  btn-success font-weight-bolder  m-2" value="<%= update === true ? 'ویرایش' : 'ذخیره' %>"
-      type="submit" />
+  <div class="d-flex flex-row-reverse bg-secondary align-middle">
+    <h3><span class=" col badge badge-secondary align-middle my-2 mr-4">برچسب ها</span></h3>
+    <input class="amsify-suggestags-input-area col form-control m-2" type="text" dir="rtl" id=tags
+      placeholder="type tags in here" name="country" />
   </div>
+  <div class="d-flex flex-row-reverse bg-secondary align-middle">
+    <h3><span class=" col badge badge-secondary align-middle my-2">نوشته های مرتبط</span></h3>
+    <input class=" col form-control m-2" type="search" dir="rtl" name="simPosts" onkeyup="similarPostHandler(this)" />
+  </div>
+  <div class="d-flex flex-row-reverse bg-secondary align-middle">
+    <h3><span class=" col badge badge-secondary align-middle my-2">دسته بندی</span></h3>
+    <input class=" col form-control m-2" type="search" dir="rtl" name="categuries" onkeyup="categoryHandler(this)" />
+  </div>
+  <div class="d-flex flex-row-reverse  align-middle"><input class="btn  btn-success font-weight-bolder  m-2"
+      value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" />
+  </div>
+
 </form>
 
 
@@ -59,7 +73,16 @@
     theme: "snow",
   });
 
-
+  $('form input').keydown(function (e) {
+    if (e.keyCode == 13) {
+      if (e.target.name === 'country') {
+        $('input[name="country"]').amsifySuggestags();
+      }
+      if (e.target.name === 'simPosts') { console.log('post done') }
+      e.preventDefault();
+      return false;
+    }
+  });
 
   if ('<%= oldInput.postPath %>') {
     $.ajax({
@@ -74,12 +97,13 @@
     })
   }
 
-  function tagHandler() {
-    $("#tagModal").modal("show");
+  function similarPostHandler(e) {
+
   }
-  function similarPostHandler() {
-    $("#similarPostModal").modal("show");
+  function categoryHandler(e) {
+
   }
+
   function imageHandler() {
     var range = this.quill.getSelection();
     $("#galleryModal").modal("show");
@@ -94,10 +118,11 @@
     const htmlContent = quill.root.innerHTML;
     const deltaContent = JSON.stringify(quill.getContents());
     const title = document.getElementById('title').value;
+    const tags = document.getElementById('tags').value;
     $.ajax({
       type: "POST",
       url: "/admin/addPost",
-      data: { htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>' },
+      data: { htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags },
       success: function (result) {
         console.log(result);
         window.location.replace("/admin/posts");
