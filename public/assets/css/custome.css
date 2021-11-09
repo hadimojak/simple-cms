@@ -91,17 +91,15 @@ body {
 }
 
 .dropdown:hover .dropbtn {
-  background-color: #3e8e41;
+  background-color: #e6f3f3;
 }
 
 .gradient-custom {
   /* fallback for old browsers */
-  background: rgb(223, 166, 209);
+  background: rgb(197, 206, 216);
 }
 
-.invalid {
-  border-color: rgb(255, 140, 140);
-}
+
 
 table {
   text-align: center;

@@ -3,6 +3,9 @@
 <script src="/assets/js/image-resize.min.js"></script>
 <link rel="stylesheet" href="/assets/css/monokai-sublime.min.css" />
 <!-- Include stylesheet -->
+
+
+
 <link href="/assets/css/quill.snow.css" rel="stylesheet" />
 
 <link rel="stylesheet" href="/assets/css/amsify.suggestags.css">
@@ -25,14 +28,15 @@
   </div>
   <div class="d-flex flex-row-reverse bg-secondary align-middle">
     <h3><span class=" col badge badge-secondary align-middle my-2">نوشته های مرتبط</span></h3>
-    <select class="btn  btn-light font-weight-bolder  m-2" id="text-two">
+
+    <select class="btn  btn-light font-weight-bolder  m-2" id="text-two" >
       <option selected="" value="base">Please Select</option>
     </select>
   </div>
   <div class="d-flex flex-row-reverse bg-secondary align-middle">
 
     <h3><span class=" col badge badge-secondary align-middle my-2">دسته بندی</span></h3>
-    <select class="btn  btn-light font-weight-bolder  m-2" id="text-one">
+    <select class="btn  btn-light font-weight-bolder  m-2" id="text-one" >
       <option selected="" value="base">Please Select</option>
     </select>
   </div>
@@ -42,10 +46,6 @@
   </div>
 
 </form>
-
-
-
-
 
 
 <!-- Initialize Quill editor -->
@@ -148,6 +148,7 @@
 
   //send post to backend
   $("form").submit(function (e) {
+    console.log(document.getElementById('text-one').value)
     const htmlContent = quill.root.innerHTML;
     const deltaContent = JSON.stringify(quill.getContents());
     const title = document.getElementById('title').value;
@@ -155,8 +156,10 @@
     $.ajax({
       type: "POST",
       url: "/admin/addPost",
-      data: { htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags,
-      similarPost:document.getElementById('text-two').value,category:document.getElementById('text-one').value },
+      data: {
+        htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags,
+        similarPost: document.getElementById('text-two').value, category: document.getElementById('text-one').value
+      },
       success: function (result) {
         console.log(result);
         window.location.replace("/admin/posts");
