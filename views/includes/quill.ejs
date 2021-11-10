@@ -10,45 +10,60 @@
 
 <link rel="stylesheet" href="/assets/css/amsify.suggestags.css">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-  integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <script src="/assets/js/jquery.amsify.suggestags.js"></script>
 <style>
-  .ql-toolbar{
-  border: solid;
-}
+    .ql-toolbar {
+        border: solid;
+    }
 </style>
 
 <form class="container" id="saveData" action="#" method="post">
 
-  <input class="form-control px-5 mx-0" placeholder="عنوان" dir="rtl" id="title"
-    value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
-  <div id="toolbar" class="">
+    <input class="form-control px-5 mx-0" placeholder="عنوان" dir="rtl" id="title"
+        value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
+    <div id="toolbar" class="">
 
-  </div>
-  <div id="editor" class="bg-white mh-100"></div>
-  <div class="d-flex flex-row-reverse bg-secondary align-middle">
-    <h3><span class=" col badge badge-secondary align-middle my-2 mr-4">برچسب ها</span></h3>
-    <input class="amsify-suggestags-input-area col form-control m-2" type="text" dir="rtl" id=tags
-      placeholder="type tags in here" name="country" />
-  </div>
-  <div class="d-flex flex-row-reverse bg-secondary align-middle">
-    <h3><span class=" col badge badge-secondary align-middle my-2">نوشته های مرتبط</span></h3>
+    </div>
+    <div id="editor" class="bg-white mh-100"></div>
+    <div class="d-flex flex-row-reverse bg-secondary align-middle">
+        <h3><span class=" col badge badge-secondary align-middle my-2 mr-4">برچسب ها</span></h3>
+        <input class="amsify-suggestags-input-area col form-control m-2" type="text" dir="rtl" id=tags
+            placeholder="type tags in here" name="country" value="<%= oldInput.tags  ? oldInput.tags : '' %>" />
+    </div>
+    <div id='similarPosts' class="d-flex flex-row-reverse bg-secondary align-middle">
+        <h3><span class=" col badge badge-secondary align-middle my-2">نوشته های مرتبط</span></h3>
+        <select class="btn  btn-light font-weight-bolder  m-2" id="text-two">
+            <option selected="" value="base">Please Select</option>
+        </select>
+        <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید">
+        <ul id='similarPostList'></ul>
+    </div>
+    <div class="d-flex flex-row-reverse bg-secondary align-middle">
+        <div class="tab">
+            <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید">
 
-    <select class="btn  btn-light font-weight-bolder  m-2" id="text-two">
-      <option selected="" value="base">Please Select</option>
-    </select>
-  </div>
-  <div class="d-flex flex-row-reverse bg-secondary align-middle">
+        </div>
+    </div>
+    <div id='categories' class="d-flex flex-row-reverse bg-secondary align-middle">
 
-    <h3><span class=" col badge badge-secondary align-middle my-2">دسته بندی</span></h3>
-    <select class="btn  btn-light font-weight-bolder  m-2" id="text-one">
-      <option selected="" value="base">Please Select</option>
-    </select>
-  </div>
-  <div class="d-flex flex-row-reverse  align-middle">
-    <input class="btn  btn-success font-weight-bolder  m-2" value="<%= update === true ? 'ویرایش' : 'ذخیره' %>"
-      type="submit" />
-  </div>
+        <h3><span class=" col badge badge-secondary align-middle my-2">دسته بندی</span></h3>
+        <select class="btn  btn-light font-weight-bolder  m-2" id="text-one">
+            <option selected="" value="base">Please Select</option>
+        </select>
+        <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید">
+        
+    </div>
+    <div class="d-flex flex-row-reverse bg-secondary align-middle">
+        <div class="tab">
+            <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید">
+
+        </div>
+    </div>
+    <div class="d-flex flex-row-reverse  align-middle">
+        <input class="btn  btn-success font-weight-bolder  mt-4 mb-5"
+            value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" />
+    </div>
 
 </form>
 
@@ -56,118 +71,121 @@
 <!-- Initialize Quill editor -->
 <script>
 
-  var quill = new Quill("#editor", {
-    modules: {
-      imageResize: {
-        displaySize: true,
-      },
-      syntax: true,
-      toolbar: {
-        container: [
-          ["bold", "italic", "underline", "strike"], // toggled buttons
-          ["blockquote", "code-block"],
-          [{ header: 1 }, { header: 2 }], // custom button values
-          [{ list: "ordered" }, { list: "bullet" }],
-          [{ script: "sub" }, { script: "super" }], // superscript/subscript
-          [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-          [{ direction: "rtl" }], // text direction
-          [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ["link", "image", "video", "formula"],
-          [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-          [{ font: [] }],
-          [{ align: [] }],
-        ],
-        handlers: { image: imageHandler, video: videoHandler },
-      },
-    },
-    theme: "snow",
-  });
-
-  $('form input').keydown(function (e) {
-    if (e.keyCode == 13) {
-      if (e.target.name === 'country') {
-        $('input[name="country"]').amsifySuggestags();
-      }
-      if (e.target.name === 'simPosts') {  }
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  if ('<%= oldInput.postPath %>') {
-    $.ajax({
-      type: 'GET', url: '/admin/postData'
-      , success: function (result) {
-        const title = "<%= oldInput.title %>"
-        let editPost;
-        for (let post of result) { if (post.postName === title) { editPost = post } }
-        const deltaString = JSON.parse(editPost.deltaContent)
-        quill.setContents(deltaString, 'api');
-      }
-    })
-  }
-
-  function similarPostHandler(e) {
-    fetch('/admin/categoryData', { method: 'GET', headers: {} })
-      .then(response => { return response.json() })
-      .then(data => {  })
-  }
-
-  $(document).ready(function () {
-    fetch('/admin/postData', { method: 'GET', headers: {} })
-      .then(response => { return response.json() })
-      .then(data => {
-        data.forEach(p => {
-          const el = document.createElement('option')
-          el.value = p.postName;
-          el.innerText = p.postName
-          document.getElementById('text-two').insertAdjacentElement('beforeend', el)
-        });
-      })
-
-    fetch('/admin/categoryData', { method: 'GET', headers: {} })
-      .then(response => { return response.json() })
-      .then(data => {
-        data.forEach(p => {
-          const el = document.createElement('option')
-          el.value = p.title;
-          el.innerText = p.title
-          document.getElementById('text-one').insertAdjacentElement('beforeend', el)
-        });
-      })
-  })
-
-
-  function imageHandler() {
-    var range = this.quill.getSelection();
-    $("#galleryModal").modal("show");
-  }
-  function videoHandler() {
-    var range = this.quill.getSelection();
-    $("#galleryModal").modal("show");
-  }
-
-  //send post to backend
-  $("form").submit(function (e) {
-    const htmlContent = quill.root.innerHTML;
-    const deltaContent = JSON.stringify(quill.getContents());
-    const title = document.getElementById('title').value;
-    const tags = document.getElementById('tags').value;
-    $.ajax({
-      type: "POST",
-      url: "/admin/addPost",
-      data: {
-        htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags,
-        similarPost: document.getElementById('text-two').value, category: document.getElementById('text-one').value
-      },
-      success: function (result) {
-        window.location.replace("/admin/posts");
-      },
-      error: function (result) {
-        window.location.replace("/admin/updatePost");
-      },
+    var quill = new Quill("#editor", {
+        modules: {
+            imageResize: {
+                displaySize: true,
+            },
+            syntax: true,
+            toolbar: {
+                container: [
+                    ["bold", "italic", "underline", "strike"], // toggled buttons
+                    ["blockquote", "code-block"],
+                    [{ header: 1 }, { header: 2 }], // custom button values
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    [{ script: "sub" }, { script: "super" }], // superscript/subscript
+                    [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+                    [{ direction: "rtl" }], // text direction
+                    [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                    ["link", "image", "video", "formula"],
+                    [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+                    [{ font: [] }],
+                    [{ align: [] }],
+                ],
+                handlers: { image: imageHandler, video: videoHandler },
+            },
+        },
+        theme: "snow",
     });
-    e.preventDefault();
-  });
+
+    $('form input').keydown(function (e) {
+        if (e.keyCode == 13) {
+            if (e.target.name === 'country') {
+                $('input[name="country"]').amsifySuggestags();
+            }
+            if (e.target.name === 'simPosts') { }
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    if ('<%= oldInput.postPath %>') {
+        $.ajax({
+            type: 'GET', url: '/admin/postData'
+            , success: function (result) {
+                const title = "<%= oldInput.title %>"
+                let editPost;
+                for (let post of result) { if (post.postName === title) { editPost = post } }
+                const deltaString = JSON.parse(editPost.deltaContent)
+                quill.setContents(deltaString, 'api');
+            }
+        })
+    }
+
+    function similarPostHandler(e) {
+        fetch('/admin/categoryData', { method: 'GET', headers: {} })
+            .then(response => { return response.json() })
+            .then(data => { })
+    }
+
+    $(document).ready(function () {
+        $('input[name="country"]').amsifySuggestags();
+
+
+        fetch('/admin/postData', { method: 'GET', headers: {} })
+            .then(response => { return response.json() })
+            .then(data => {
+                data.forEach(p => {
+                    const el = document.createElement('option')
+                    el.value = p.postName;
+                    el.innerText = p.postName
+                    document.getElementById('text-two').insertAdjacentElement('beforeend', el)
+                });
+            })
+
+        fetch('/admin/categoryData', { method: 'GET', headers: {} })
+            .then(response => { return response.json() })
+            .then(data => {
+                data.forEach(p => {
+                    const el = document.createElement('option')
+                    el.value = p.title;
+                    el.innerText = p.title
+                    document.getElementById('text-one').insertAdjacentElement('beforeend', el)
+                });
+            })
+    })
+
+
+    function imageHandler() {
+        var range = this.quill.getSelection();
+        $("#galleryModal").modal("show");
+    }
+    function videoHandler() {
+        var range = this.quill.getSelection();
+        $("#galleryModal").modal("show");
+    }
+
+    //send post to backend
+    $("form").submit(function (e) {
+        const htmlContent = quill.root.innerHTML;
+        const deltaContent = JSON.stringify(quill.getContents());
+        const title = document.getElementById('title').value;
+        const tags = document.getElementById('tags').value;
+        $.ajax({
+            type: "POST",
+            url: "/admin/addPost",
+            data: {
+                htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags,
+                similarPost: document.getElementById('text-two').value, category: document.getElementById('text-one').value
+            },
+            success: function (result) {
+                window.location.replace("/admin/posts");
+            },
+            error: function (result) {
+                window.location.replace("/admin/updatePost");
+            },
+        });
+        e.preventDefault();
+    });
 </script>

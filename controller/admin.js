@@ -523,10 +523,10 @@ exports.getAddPost = (req, res, next) => {
 
 };
 exports.postAddPost = (req, res, next) => {
-  let tags = [];
-  if (req.body.tags) {
-     tags = req.body.tags.split(',');
-  }
+  const tags = req.body.tags ? req.body.tags.split(',') : [];
+  const category = req.body.category ? req.body.category : null;
+  const similarPost = req.body.similarPost ? req.body.similarPost : null;
+  console.log(req.body);
   const userId = req.session.user.id;
   const title = req.body.title;
   if (title.trim() === "") {
@@ -549,7 +549,10 @@ exports.postAddPost = (req, res, next) => {
             }
           );
           Post.update({
-            postName: title, deltaContent: deltaContent, UserId: userId, path: "/uploads/posts/" + postTitle, tags: tags, CategoryTitle: req.body.category
+            postName: title, deltaContent: deltaContent,
+            UserId: userId, path: "/uploads/posts/" + postTitle,
+            tags: tags, CategoryTitle: category,
+            similarPost: similarPost
           }
             , { where: { path: req.body.postPath } })
             .then(post => {
@@ -560,14 +563,19 @@ exports.postAddPost = (req, res, next) => {
                   console.log(err);
                 }
               );
-              tags.forEach(p => { Tag.create({ title: p }).then(data => { }).catch(err => { console.log(err); }); });
+              tags.forEach(p => {
+                Tag.create({ title: p })
+                  .then(data => { })
+                  .catch(err => { console.log(err); });
+              });
               res.redirect("/admin/posts");
             });
         } else {
           Post.create({
             postName: title, deltaContent: deltaContent,
             path: "/uploads/posts/" + postTitle,
-            UserId: userId, tags: tags
+            UserId: userId, tags: tags, CategoryTitle: category,
+            similarPost: similarPost
           })
             .then((post) => {
               fs.writeFileSync(
@@ -601,8 +609,13 @@ exports.getEditPost = (req, res, next) => {
           path: "/post",
           update: true,
           oldInput: {
-            title: postName, postPath: postPath,tags:post.dataValues.tags
-          }, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+            title: postName, postPath: postPath,
+            tags: post.dataValues.tags,
+            similarPost: post.dataValues.similarPost,
+            CategoryTitle: post.dataValues.CategoryTitle,
+          }, isAuhtenticated: req.session.isLoggedIn,
+          userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
+          avatar: user.dataValues.avatar
         });
       })
       .catch((err) => {
