@@ -81,7 +81,7 @@ const Media = sequelize.define('Media', {
 const Category = sequelize.define('Category', {
     title: {
         type: DataTypes.STRING,
-        primaryKey: true
+        allowNull: true
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
@@ -96,7 +96,7 @@ const Post = sequelize.define('Post', {
         allowNull: false,
         unique: true
     }, deltaContent: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
     }, path: {
         type: DataTypes.STRING,
@@ -108,6 +108,12 @@ const Post = sequelize.define('Post', {
     }, tags: {
         type: DataTypes.JSON,
         allowNull: true,
+    }, similarPost: {
+        type: DataTypes.JSON,
+        allowNull: true
+    }, CategoryTitle: {
+        type: DataTypes.JSON,
+        allowNull: true
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
@@ -194,4 +200,4 @@ Menu.belongsTo(User);
 Category.hasMany(Post, { onDelete: 'NO ACTION', onUpdate: "NO ACTION" });
 Post.belongsTo(Category);
 
-module.exports = { User, Media, Menu, Page, Setting, Post, Tag };
+module.exports = { User, Media, Menu, Page, Setting, Post, Tag, Category };

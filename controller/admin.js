@@ -523,9 +523,10 @@ exports.getAddPost = (req, res, next) => {
 
 };
 exports.postAddPost = (req, res, next) => {
-  const tags = req.body.tags.split(',');
-  console.log(tags);
-  console.log(req.body);
+  let tags = [];
+  if (req.body.tags) {
+     tags = req.body.tags.split(',');
+  }
   const userId = req.session.user.id;
   const title = req.body.title;
   if (title.trim() === "") {
@@ -548,7 +549,7 @@ exports.postAddPost = (req, res, next) => {
             }
           );
           Post.update({
-            postName: title, deltaContent: deltaContent, UserId: userId, path: "/uploads/posts/" + postTitle, tags: tags,CategoryTitle :req.body.category
+            postName: title, deltaContent: deltaContent, UserId: userId, path: "/uploads/posts/" + postTitle, tags: tags, CategoryTitle: req.body.category
           }
             , { where: { path: req.body.postPath } })
             .then(post => {
@@ -600,7 +601,7 @@ exports.getEditPost = (req, res, next) => {
           path: "/post",
           update: true,
           oldInput: {
-            title: postName, postPath: postPath
+            title: postName, postPath: postPath,tags:post.dataValues.tags
           }, isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
         });
       })
@@ -650,7 +651,7 @@ exports.apiCategory = (req, res, next) => {
 };
 exports.getCategory = (req, res, next) => {
   User.findByPk(req.session.user.id).then(user => {
-    console.log(req.session.user.isAprover)
+    console.log(req.session.user.isAprover);
     res.render('admin/category', {
       path: '', pageTitle: 'دسته ها',
       isAuhtenticated: req.session.isLoggedIn,

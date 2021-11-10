@@ -89,7 +89,7 @@
       if (e.target.name === 'country') {
         $('input[name="country"]').amsifySuggestags();
       }
-      if (e.target.name === 'simPosts') { console.log('post done') }
+      if (e.target.name === 'simPosts') {  }
       e.preventDefault();
       return false;
     }
@@ -111,16 +111,14 @@
   function similarPostHandler(e) {
     fetch('/admin/categoryData', { method: 'GET', headers: {} })
       .then(response => { return response.json() })
-      .then(data => { console.log(data) })
+      .then(data => {  })
   }
 
   $(document).ready(function () {
     fetch('/admin/postData', { method: 'GET', headers: {} })
       .then(response => { return response.json() })
       .then(data => {
-        console.log(data)
         data.forEach(p => {
-          console.log(p)
           const el = document.createElement('option')
           el.value = p.postName;
           el.innerText = p.postName
@@ -131,7 +129,6 @@
     fetch('/admin/categoryData', { method: 'GET', headers: {} })
       .then(response => { return response.json() })
       .then(data => {
-        console.log(data)
         data.forEach(p => {
           const el = document.createElement('option')
           el.value = p.title;
@@ -153,7 +150,6 @@
 
   //send post to backend
   $("form").submit(function (e) {
-    console.log(document.getElementById('text-one').value)
     const htmlContent = quill.root.innerHTML;
     const deltaContent = JSON.stringify(quill.getContents());
     const title = document.getElementById('title').value;
@@ -166,7 +162,6 @@
         similarPost: document.getElementById('text-two').value, category: document.getElementById('text-one').value
       },
       success: function (result) {
-        console.log(result);
         window.location.replace("/admin/posts");
       },
       error: function (result) {
