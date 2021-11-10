@@ -39,7 +39,7 @@
         <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید" onclick="addsimilar(this)">
     </div>
     <div class="d-flex flex-row-reverse bg-secondary align-middle">
-        <div id='similarPostList' class="tab" onclick="removeSimilar(this)">
+        <div id='similarPostList' class="tab" onclick="removeSimilar(event)">
         </div>
     </div>
     <div id='categories' class="d-flex flex-row-reverse bg-secondary align-middle">
@@ -51,8 +51,7 @@
 
     </div>
     <div class="d-flex flex-row-reverse bg-secondary align-middle">
-        <div id='categoryList' class="tab" onclick="removeCategory(this)">
-            <input class="btn  btn-info font-weight-bolder  m-2" type="button" value="دسته">
+        <div id='categoryList' class="tab" onclick="removeCategory(event)">
         </div>
     </div>
     <div class="d-flex flex-row-reverse  align-middle">
@@ -121,7 +120,7 @@
     function addsimilar(e) {
         const items = [];
         [...e.parentElement.nextElementSibling.children[0].children].forEach(p => { items.push(p.value) })
-        if (items.includes(document.getElementById('similarSelect').value) || document.getElementById('similarSelect').value ==='base' ) {
+        if (items.includes(document.getElementById('similarSelect').value) || document.getElementById('similarSelect').value === 'base') {
             return
         }
         const el = document.createElement('input')
@@ -131,11 +130,40 @@
         document.getElementById('similarPostList').insertAdjacentElement('beforeend', el)
     }
 
-    function similarPostHandler(e) {
-        fetch('/admin/categoryData', { method: 'GET', headers: {} })
-            .then(response => { return response.json() })
-            .then(data => { })
+    function removeSimilar(e) {
+        e.target.parentElement.removeChild(e.target)
+
     }
+
+    function similarPostGetter() {
+        const similarValues = []
+        document.getElementById('similarPostList').children.forEach(p => { similarValues.push(p.value) })
+        return similarValues
+    }
+
+    function addCategory(e) {
+        const items = [];
+        [...e.parentElement.nextElementSibling.children[0].children].forEach(p => { items.push(p.value) })
+        if (items.includes(document.getElementById('categorySelect').value) || document.getElementById('categorySelect').value === 'base') {
+            return
+        }
+        const el = document.createElement('input')
+        el.className = 'btn  btn-info font-weight-bolder  m-2'
+        el.type = 'button'
+        el.value = document.getElementById('categorySelect').value
+        document.getElementById('categoryList').insertAdjacentElement('beforeend', el)
+    }
+
+    function removeCategory(e) {
+        e.target.parentElement.removeChild(e.target)
+    }
+
+    function categoryGetter() {
+        const categoryValues = []
+        document.getElementById('categoryList').children.forEach(p => { categoryValues.push(p.value) })
+        return categoryValues
+    }
+  
 
     $(document).ready(function () {
         $('input[name="country"]').amsifySuggestags();
@@ -185,7 +213,7 @@
             url: "/admin/addPost",
             data: {
                 htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags,
-                similarPost: document.getElementById('similarSelect').value, category: document.getElementById('categorySelect').value
+                similarPost: similarPostGetter(), category: categoryGetter()
             },
             success: function (result) {
                 window.location.replace("/admin/posts");
