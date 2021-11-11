@@ -559,22 +559,33 @@ exports.postAddPost = (req, res, next) => {
                         similarPost: similarIds.length > 0 ? similarIds : null
                     }
                         , { where: { path: req.body.postPath } })
-                        .then( post => {
-                            console.log(post)
-                             fs.writeFileSync(
+                        .then(updatedPost => {
+                            // console.log(post);
+                            fs.writeFileSync(
                                 path.join(__dirname, "..", "uploads", "posts", postTitle),
                                 htmlContent,
                                 (err) => {
                                     console.log(err);
                                 }
                             );
-                             tags.forEach(p => {
-                                Tag.create({ title: p })
-                                    .then(tag => {
-                                     })
-                                    .catch(err => { console.log(err); });
+                            tags.forEach(p => {
+                                Tag.findOne({ where: { title: p } }).then(tag => {
+                                    if (tag) {
+                                        console.log(tag.dataValues.id)
+                                        console.log(post)
+                                        post.addTag(tag.dataValues.id);
+
+                                    }
+                                });
+
+                                // console.log(p);
+                                // Tag.create({ title: p })
+                                //     .then(tag => {
+                                //     })
+                                //     .catch(err => { console.log(err); });
+
                             });
-                             res.redirect("/admin/posts");
+                            res.redirect("/admin/posts");
                         });
                 } else {
                     Post.create({
@@ -584,7 +595,6 @@ exports.postAddPost = (req, res, next) => {
                         similarPost: similarIds.length > 0 ? similarIds : null
                     })
                         .then(async (post) => {
-                            post.addTag(3)
 
                             await fs.writeFileSync(
                                 path.join(__dirname, "..", "uploads", "posts", postTitle),
