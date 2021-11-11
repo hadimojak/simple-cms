@@ -71,9 +71,7 @@ exports.postPassReset = (req, res, next) => {
         return user;
     }).then(user => {
         bcrypt.compare(currentPassword, user.dataValues.password).then(doMatch => {
-            console.log(doMatch);
             if (!doMatch) {
-                console.log(doMatch);
                 //some flash message
                 return res.render("admin/passwordReset", {
                     pageTitle: "تغییر پسورد",
@@ -99,7 +97,6 @@ exports.postPassReset = (req, res, next) => {
                     bcrypt
                         .hash(password, 12)
                         .then(async (hashedPassword) => {
-                            console.log('heeerrrreeee');
                             try {
                                 await User.update({
                                     password: hashedPassword,
@@ -523,7 +520,6 @@ exports.getAddPost = (req, res, next) => {
 
 };
 exports.postAddPost = (req, res, next) => {
-    console.log(req.body);
     const tags = req.body.tags ? req.body.tags.split(',') : [];
     const category = req.body.category ? req.body.category : null;
     const similarPost = req.body.similarPost ? req.body.similarPost : null;
@@ -535,7 +531,6 @@ exports.postAddPost = (req, res, next) => {
     if (similarPost) {
         similarPost.forEach(p => { Post.findOne({ where: { postName: p } }).then(data => { similarIds.push(data.dataValues.id); }); });
     }
-    console.log(similarIds);
     const userId = req.session.user.id;
     const title = req.body.title;
     if (title.trim() === "") {
@@ -564,20 +559,22 @@ exports.postAddPost = (req, res, next) => {
                         similarPost: similarIds.length > 0 ? similarIds : null
                     }
                         , { where: { path: req.body.postPath } })
-                        .then(post => {
-                            fs.writeFileSync(
+                        .then( post => {
+                            console.log(post)
+                             fs.writeFileSync(
                                 path.join(__dirname, "..", "uploads", "posts", postTitle),
                                 htmlContent,
                                 (err) => {
                                     console.log(err);
                                 }
                             );
-                            tags.forEach(p => {
+                             tags.forEach(p => {
                                 Tag.create({ title: p })
-                                    .then(data => { })
+                                    .then(tag => {
+                                     })
                                     .catch(err => { console.log(err); });
                             });
-                            res.redirect("/admin/posts");
+                             res.redirect("/admin/posts");
                         });
                 } else {
                     Post.create({
@@ -586,15 +583,22 @@ exports.postAddPost = (req, res, next) => {
                         UserId: userId, tags: tags, CategoryTitle: categoryIds.length > 0 ? categoryIds : null,
                         similarPost: similarIds.length > 0 ? similarIds : null
                     })
-                        .then((post) => {
-                            fs.writeFileSync(
+                        .then(async (post) => {
+                            post.addTag(3)
+
+                            await fs.writeFileSync(
                                 path.join(__dirname, "..", "uploads", "posts", postTitle),
                                 htmlContent,
                                 (err) => {
                                     console.log(err);
                                 }
                             );
-                            res.redirect("/admin/posts");
+                            await tags.forEach(p => {
+                                Tag.create({ title: p })
+                                    .then(data => { })
+                                    .catch(err => { console.log(err); });
+                            });
+                            await res.redirect("/admin/posts");
                         })
                         .catch((err) => {
                             console.log(err);
@@ -673,7 +677,6 @@ exports.apiCategory = (req, res, next) => {
 };
 exports.getCategory = (req, res, next) => {
     User.findByPk(req.session.user.id).then(user => {
-        console.log(req.session.user.isAprover);
         res.render('admin/category', {
             path: '', pageTitle: 'دسته ها',
             isAuhtenticated: req.session.isLoggedIn,
