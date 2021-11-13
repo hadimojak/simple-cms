@@ -30,12 +30,14 @@
                         data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/postData">
                         <thead>
                             <tr>
-                                <th data-field="postName" data-sortable="true">نام</th>
-                                <th data-field="createdAt" data-sortable="true">زمان ساخت</th>
-                                <th data-field="path" data-sortable="true">آدرس</th>
-                                <th data-field="CategoryTitle" data-sortable="true">دسته</th>
+                                <th data-field="post.postName" data-sortable="true">نام</th>
+                                <th data-field="post.createdAt" data-sortable="true">زمان ساخت</th>
+                                <th data-field="post.path" data-sortable="true">آدرس</th>
+                                <th data-field="category" data-sortable="true">دسته</th>
+                                <th data-field="tag" data-sortable="true">تگ</th>
+                                <th data-field="simlar" data-sortable="true">مرتبط</th>
                                 <th data-field="path" data-formatter="editRow">ویراش</th>
-                                <th data-field="aproved" data-formatter="aproveRow">تایید</th>
+                                <th data-field="post.aproved" data-formatter="aproveRow">تایید</th>
                                 <th data-field="state" data-checkbox="true"></th>
                             </tr>
                         </thead>
@@ -47,7 +49,7 @@
 
             function editRow(value, row, index) {
                 return [
-                    `<button id='editPost' onclick="editPost(${row.id})" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
+                    `<button id='editPost' onclick="editPost(${row.post.id})" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
                 ].join('');
             }
             function aproveRow(value, row, index) {
@@ -84,7 +86,7 @@
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
                         $.ajax({
                             type: 'POST',
-                            url: `/admin/posts/deAprovePost/${row.postName}`,
+                            url: `/admin/posts/deAprovePost/${row.post.postName}`,
                             success: function (result) { window.location.replace('/admin/posts') }
                         })
                     })
@@ -95,9 +97,10 @@
 
                 aprove.click(function () {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
+                        console.log(row)
                         $.ajax({
                             type: 'POST',
-                            url: `/admin/posts/aprovePost/${row.postName}`,
+                            url: `/admin/posts/aprovePost/${row.post.postName}`,
                             success: function (result) { window.location.replace('/admin/posts') }
                         })
                     })
@@ -107,7 +110,7 @@
                 })
                 remove.click(function () {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
-                        fetch(`/admin/delete/post/${row.postName}`, {
+                        fetch(`/admin/delete/post/${row.post.postName}`, {
                             method: "DELETE",
                             headers: {
                             },

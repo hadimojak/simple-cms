@@ -481,26 +481,47 @@ exports.getSettings = (req, res, next) => {
 
 // admin posts
 exports.postsApi = (req, res, next) => {
-    Post.findAll({ include: [{ model: [Tag,Category] }] }).then(data => {
+    let postArr = [];
+    Post.findAll({ include: [{ model: Tag }, { model: Category }, { model: Post, as: 'similar' }] }).then(data => {
         data.forEach(p => {
-            console.log('postId  :', p.dataValues.id);
-            p.dataValues.Tags.forEach(t => { console.log(t.dataValues.id); });
-        });
-    });
-
-    const postArray = [];
-    Post.findAll()
-        .then((posts) => {
-            return posts.forEach((post) => {
-                postArray.push(post.dataValues);
+            const myPost = new Object();
+            myPost.post = p.dataValues;
+            const tags = [];
+            p.dataValues.Tags.forEach(t => {
+                tags.push(t.dataValues.title);
             });
-        })
-        .then((data) => {
-            res.json(postArray);
-        })
-        .catch((err) => {
-            console.log(err);
+            myPost.tag = tags;
+            const categories = [];
+            p.dataValues.Categories.forEach(j => {
+                categories.push(j.dataValues.title);
+            });
+            myPost.category = categories;
+            const similars = [];
+            p.dataValues.similar.forEach(k => {
+                similars.push(k.dataValues.postName);
+            });
+            myPost.simlar = similars;
+            postArr.push(myPost);
         });
+        // console.log(postArr);
+        return postArr;
+
+    }).then(data => { res.json(postArr); });
+
+    // const postArray = [];
+    // Post.findAll({ include: [{ model: Tag }, { model: Category }, { model: Post, as: 'similar' }] })
+    //     .then((posts) => {
+    //         return posts.forEach((post) => {
+    //             console.log(post.dataValues);
+    //             postArray.push(post.dataValues);
+    //         });
+    //     })
+    //     .then((data) => {
+    //         res.json(postArray);
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //     });
 };
 exports.getPosts = (req, res, next) => {
     User.findByPk(req.session.user.id).then(user => {
@@ -672,6 +693,7 @@ exports.getEditPost = (req, res, next) => {
         const postId = req.params.postId;
         Post.findOne({ where: { id: postId } })
             .then((post) => {
+                console.log('aaaaaaaaaaaaa',post)
                 res.render("admin/updatePost", {
                     pageTitle: "ویرایش",
                     path: "/post",

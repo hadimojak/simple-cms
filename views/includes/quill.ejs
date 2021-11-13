@@ -117,9 +117,13 @@
                     , success: function (result) {
                         const title = "<%= oldInput.title %>"
                         let editPost;
-                        for (let post of result) { if (post.postName === title) { editPost = post } }
-                        const deltaString = JSON.parse(editPost.deltaContent)
-                        quill.setContents(deltaString, 'api');
+                        result.forEach(p => {
+                            if (p.post.postName === title) {
+                                const deltaString = JSON.parse(p.post.deltaContent)
+                                quill.setContents(deltaString, 'api');
+                            }
+                        })
+
                     }
                 })
             }
@@ -190,14 +194,14 @@
                     .then(response => { return response.json() })
                     .then(data => {
                         data.forEach(p => {
+                            console.log(p)
                             // for filter allrady selected post
                             if ("<%= update %>") {
                                 if (p.id == '<%= postId %>') { return }
                             }
-
                             const el = document.createElement('option')
-                            el.value = p.postName;
-                            el.innerText = p.postName
+                            el.value = p.post.postName;
+                            el.innerText = p.post.postName;
                             document.getElementById('similarSelect').insertAdjacentElement('beforeend', el)
                         });
                     })
