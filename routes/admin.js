@@ -111,7 +111,7 @@ router.post('/admin/posts/aprovePost/:postName', isAuth, adminController.aproveP
 router.post('/admin/posts/deAprovePost/:postName', isAuth, adminController.deAprovePost);
 router.get('/admin/addPost', isAuth, adminController.getAddPost);
 router.post('/admin/addPost', isAuth, adminController.postAddPost);
-router.get('/admin/updatePost/:postName', isAuth, adminController.getEditPost);
+router.get('/admin/updatePost/:postId', isAuth, adminController.getEditPost);
 router.delete('/admin/delete/post/:postName', isAdmin, isAuth, adminController.deletePost);
 
 //category

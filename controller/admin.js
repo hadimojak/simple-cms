@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const path = require("path");
 const fs = require("fs");
 const imageThumbnail = require("image-thumbnail");
-const { Op } = require('../sequelize');
 
 
 // admin home page
@@ -482,6 +481,12 @@ exports.getSettings = (req, res, next) => {
 
 // admin posts
 exports.postsApi = (req, res, next) => {
+    Post.findAll({ include: [{ model: [Tag,Category] }] }).then(data => {
+        data.forEach(p => {
+            console.log('postId  :', p.dataValues.id);
+            p.dataValues.Tags.forEach(t => { console.log(t.dataValues.id); });
+        });
+    });
 
     const postArray = [];
     Post.findAll()
@@ -513,132 +518,172 @@ exports.getAddPost = (req, res, next) => {
             pageTitle: "نوشته جدید",
             path: "/post",
             update: false,
-            oldInput: "", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar
+            oldInput: "", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar,
+            postId: null
         });
 
     });
 
 };
-exports.postAddPost = (req, res, next) => {
+exports.postAddPost = async (req, res, next) => {
+    const postId = req.body.postId;
     const tags = req.body.tags ? req.body.tags.split(',') : [];
-    const category = req.body.category ? req.body.category : null;
-    const similarPost = req.body.similarPost ? req.body.similarPost : null;
-    const categoryIds = [];
-    if (category) {
-        category.forEach(p => { Category.findOne({ where: { title: p } }).then(data => { categoryIds.push(data.dataValues.id); }); });
-    }
-    const similarIds = [];
-    if (similarPost) {
-        similarPost.forEach(p => { Post.findOne({ where: { postName: p } }).then(data => { similarIds.push(data.dataValues.id); }); });
-    }
+    const category = req.body.category ? req.body.category : [];
+    const similarPostArr = req.body.similarPost ? req.body.similarPost : [];
+    console.log(category);
+    console.log(similarPostArr);
+
     const userId = req.session.user.id;
     const title = req.body.title;
     if (title.trim() === "") {
-        //falsg m,essage
-        return res.json({ error: "no content name" });
-    } else {
-        const deltaContent = req.body.deltaContent;
-        const htmlContent = req.body.htmlContent;
-        const postTitle = title + ".html";
-        Post.findOne({ where: { path: req.body.postPath } }).then((post) => {
-            if (post && req.body.postPath === '') {
-                //flash message
-                return res.json({ error: "allready exxict" });
-            } else {
-                if (req.body.postPath) {
-                    fs.unlinkSync(
-                        path.join(__dirname, "..", req.body.postPath),
-                        function (err) {
-                            if (err) return console.log(err);
-                        }
-                    );
-                    Post.update({
-                        postName: title, deltaContent: deltaContent,
-                        UserId: userId, path: "/uploads/posts/" + postTitle,
-                        tags: tags, CategoryTitle: categoryIds.length > 0 ? categoryIds : null,
-                        similarPost: similarIds.length > 0 ? similarIds : null
-                    }
-                        , { where: { path: req.body.postPath } })
-                        .then(updatedPost => {
-                            // console.log(post);
-                            fs.writeFileSync(
-                                path.join(__dirname, "..", "uploads", "posts", postTitle),
-                                htmlContent,
-                                (err) => {
-                                    console.log(err);
-                                }
-                            );
-                            tags.forEach(p => {
-                                Tag.findOne({ where: { title: p } }).then(tag => {
-                                    if (tag) {
-                                        console.log(tag.dataValues.id)
-                                        console.log(post)
-                                        post.addTag(tag.dataValues.id);
-
-                                    }
-                                });
-
-                                // console.log(p);
-                                // Tag.create({ title: p })
-                                //     .then(tag => {
-                                //     })
-                                //     .catch(err => { console.log(err); });
-
-                            });
-                            res.redirect("/admin/posts");
-                        });
-                } else {
-                    Post.create({
-                        postName: title, deltaContent: deltaContent,
-                        path: "/uploads/posts/" + postTitle,
-                        UserId: userId, tags: tags, CategoryTitle: categoryIds.length > 0 ? categoryIds : null,
-                        similarPost: similarIds.length > 0 ? similarIds : null
-                    })
-                        .then(async (post) => {
-
-                            await fs.writeFileSync(
-                                path.join(__dirname, "..", "uploads", "posts", postTitle),
-                                htmlContent,
-                                (err) => {
-                                    console.log(err);
-                                }
-                            );
-                            await tags.forEach(p => {
-                                Tag.create({ title: p })
-                                    .then(data => { })
-                                    .catch(err => { console.log(err); });
-                            });
-                            await res.redirect("/admin/posts");
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            if (err) {
-                            }
-                        });
-                }
-            }
-        });
+        //falsg message
+        return res.status(500).json({ data: 'no title !' });
     }
+    const deltaContent = req.body.deltaContent;
+    const htmlContent = req.body.htmlContent;
+    const postTitle = title + ".html";
+    const post = await Post.findOne({ where: { id: postId } });
+    if (post) {
+        if (post.dataValues.postName === title && req.body.postPath === '') {
+            //flash message
+            return res.status(500).json({ error: "allready exxict" });
+        }
+    }
+
+    if (req.body.postPath)
+    //update term
+    {
+        fs.unlinkSync(
+            path.join(__dirname, "..", req.body.postPath),
+            function (err) {
+                if (err) return console.log(err);
+            }
+        );
+        post.set({
+            postName: title, deltaContent: deltaContent,
+            UserId: userId, path: "/uploads/posts/" + postTitle,
+        });
+        await post.save();
+        fs.writeFileSync(
+            path.join(__dirname, "..", "uploads", "posts", postTitle),
+            htmlContent,
+            (err) => {
+                console.log(err);
+            }
+        );
+
+        const similarArr = [];
+        const similarPosts = await Post.findByPk(postId, { include: [{ model: Post, as: 'similar' }] });
+        // post.addSimilar(3);
+        similarPosts.similar.forEach(t => { similarArr.push(t.dataValues.id); });
+        similarArr.forEach(async t => { await post.removeSimilar(t); });
+        similarPostArr.forEach(p => {
+            Post.findOne({ where: { postName: p } })
+                .then(data => {
+                    post.addSimilar(data.dataValues.id);
+                });
+        });
+
+
+
+        const catsArr = [];
+        const postCategories = await Post.findByPk(postId, { include: [{ model: Category }] });
+        postCategories.Categories.forEach(t => { catsArr.push(t.dataValues.id); });
+        catsArr.forEach(async t => { await post.removeCategory(t); });
+        category.forEach(p => {
+            Category.findOne({ where: { title: p } })
+                .then(category => {
+                    if (category) { post.addCategory(category.dataValues.id); }
+                    else {
+                        Category.create({ title: p })
+                            .then(category => { post.addCategory(category.dataValues.id); });
+                    }
+                });
+        });
+
+        const tagsArr = [];
+        const postTags = await Post.findByPk(postId, { include: [{ model: Tag }] });
+        postTags.Tags.forEach(t => { tagsArr.push(t.dataValues.id); });
+        tagsArr.forEach(async t => { await post.removeTag(t); });
+        tags.forEach(p => {
+            Tag.findOne({ where: { title: p } })
+                .then(tag => {
+                    if (tag) { post.addTag(tag.dataValues.id); }
+                    else {
+                        Tag.create({ title: p })
+                            .then(tag => { post.addTag(tag.dataValues.id); });
+                    }
+                });
+        });
+        res.redirect("/admin/posts");
+    }
+    else {
+        //create term
+        const createdPost = await Post.create({
+            postName: title, deltaContent: deltaContent,
+            path: "/uploads/posts/" + postTitle,
+            UserId: userId
+        });
+        fs.writeFileSync(
+            path.join(__dirname, "..", "uploads", "posts", postTitle),
+            htmlContent,
+            (err) => {
+                console.log(err);
+            }
+        );
+
+
+        similarPostArr.forEach(p => {
+            Post.findOne({ where: { postName: p } })
+                .then(data => {
+                    createdPost.addSimilar(data.dataValues.id);
+                });
+        });
+
+        category.forEach(p => {
+            Category.findOne({ where: { title: p } })
+                .then(category => {
+                    if (category) { createdPost.addCategory(category.dataValues.id); }
+                    else {
+                        Category.create({ title: p })
+                            .then(category => { createdPost.addCategory(category.dataValues.id); });
+                    }
+                });
+        });
+
+        tags.forEach(p => {
+            Tag.findOne({ where: { title: p } })
+                .then(tag => {
+                    if (tag) { createdPost.addTag(tag.dataValues.id); }
+                    else {
+                        Tag.create({ title: p })
+                            .then(tag => { createdPost.addTag(tag.dataValues.id); });
+                    }
+                });
+        });
+
+        res.redirect("/admin/posts");
+
+    }
+
 };
 exports.getEditPost = (req, res, next) => {
     User.findByPk(req.session.user.id).then(user => {
-
-        const postName = req.params.postName;
-        Post.findOne({ where: { postName: postName } })
+        const postId = req.params.postId;
+        Post.findOne({ where: { id: postId } })
             .then((post) => {
-                const postPath = post.dataValues.path;
                 res.render("admin/updatePost", {
                     pageTitle: "ویرایش",
                     path: "/post",
                     update: true,
                     oldInput: {
-                        title: postName, postPath: postPath,
+                        title: post.dataValues.postName, postPath: post.dataValues.path,
                         tags: post.dataValues.tags,
                         similarPost: post.dataValues.similarPost,
                         CategoryTitle: post.dataValues.CategoryTitle,
                     }, isAuhtenticated: req.session.isLoggedIn,
                     userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
-                    avatar: user.dataValues.avatar
+                    avatar: user.dataValues.avatar, postId: postId
                 });
             })
             .catch((err) => {

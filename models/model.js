@@ -150,15 +150,6 @@ const Post = sequelize.define('Post', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
-    }, tags: {
-        type: DataTypes.JSON,
-        allowNull: true
-    }, similarPost: {
-        type: DataTypes.JSON,
-        allowNull: true
-    }, CategoryTitle: {
-        type: DataTypes.JSON,
-        allowNull:true
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
@@ -199,8 +190,13 @@ Post.belongsTo(User);
 User.hasMany(Menu, { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' });
 Menu.belongsTo(User);
 
-Post.belongsToMany(Tag,{through:'post_tag'})
-Tag.belongsToMany(Post,{through:'post_tag'})
+Post.belongsToMany(Tag, { through: 'post_tag' });
+Tag.belongsToMany(Post, { through: 'post_tag' });
+
+Post.belongsToMany(Category, { through: 'post_category' });
+Category.belongsToMany(Post, { through: 'post_category' });
+
+Post.belongsToMany(Post, { as: 'similar', through: 'post_similar' });
 
 
 module.exports = { User, Media, Menu, Page, Setting, Post, Tag, Category };

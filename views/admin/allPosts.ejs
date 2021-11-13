@@ -47,7 +47,7 @@
 
             function editRow(value, row, index) {
                 return [
-                    `<button id='editPost' onclick="editPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
+                    `<button id='editPost' onclick="editPost(${row.id})" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
                 ].join('');
             }
             function aproveRow(value, row, index) {
@@ -67,8 +67,8 @@
             const deAprove = $('#deAprovePost')
 
             function editPost(e) {
-                const postName = e.parentElement.parentElement.firstChild.innerText
-                window.location.href = `/admin/updatePost/${postName}`
+                const postId = e
+                window.location.href = `/admin/updatePost/${postId}`
             }
 
 

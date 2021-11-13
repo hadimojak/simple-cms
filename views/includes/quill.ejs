@@ -18,221 +18,244 @@
     }
 </style>
 
-<form class="container" id="saveData" action="#" method="post">
+<% if(update){ %>
+    <input id='postId' type="hidden" value="<%= postId %>">
+    <% } %>
 
-    <input class="form-control px-5 mx-0" placeholder="عنوان" dir="rtl" id="title"
-        value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
-    <div id="toolbar" class="">
+        <form class="container" id="saveData" action="#" method="post">
 
-    </div>
-    <div id="editor" class="bg-white mh-100"></div>
-    <div class="d-flex flex-row-reverse bg-secondary align-middle">
-        <h3><span class=" col badge badge-secondary align-middle my-2 mr-4">برچسب ها</span></h3>
-        <input class="amsify-suggestags-input-area col form-control m-2" type="text" dir="rtl" id=tags
-            placeholder="type tags in here" name="country" value="<%= oldInput.tags  ? oldInput.tags : '' %>" />
-    </div>
-    <div id='similarPosts' class="d-flex flex-row-reverse bg-secondary align-middle">
-        <h3><span class=" col badge badge-secondary align-middle my-2">نوشته های مرتبط</span></h3>
-        <select class="btn  btn-light font-weight-bolder  m-2" id="similarSelect">
-            <option selected="" value="base">Please Select</option>
-        </select>
-        <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید" onclick="addsimilar(this)">
-    </div>
-    <div class="d-flex flex-row-reverse bg-secondary align-middle">
-        <div id='similarPostList' class="tab" onclick="removeSimilar(event)">
-        </div>
-    </div>
-    <div id='categories' class="d-flex flex-row-reverse bg-secondary align-middle">
-        <h3><span class=" col badge badge-secondary align-middle my-2">دسته بندی ها</span></h3>
-        <select class="btn  btn-light font-weight-bolder  m-2" id="categorySelect">
-            <option selected="" value="base">Please Select</option>
-        </select>
-        <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید" onclick="addCategory(this)">
+            <input class="form-control px-5 mx-0" placeholder="عنوان" dir="rtl" id="title"
+                value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
+            <div id="toolbar" class="">
 
-    </div>
-    <div class="d-flex flex-row-reverse bg-secondary align-middle">
-        <div id='categoryList' class="tab" onclick="removeCategory(event)">
-        </div>
-    </div>
-    <div class="d-flex flex-row-reverse  align-middle">
-        <input class="btn  btn-success font-weight-bolder  mt-4 mb-5"
-            value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" />
-    </div>
+            </div>
+            <div id="editor" class="bg-white mh-100"></div>
+            <div class="d-flex flex-row-reverse bg-secondary align-middle">
+                <h3><span class=" col badge badge-secondary align-middle my-2 mr-4">برچسب ها</span></h3>
+                <input class="amsify-suggestags-input-area col form-control m-2" type="text" dir="rtl" id=tags
+                    placeholder="type tags in here" name="country" value="<%= oldInput.tags  ? oldInput.tags : '' %>" />
+            </div>
+            <div id='similarPosts' class="d-flex flex-row-reverse bg-secondary align-middle">
+                <h3><span class=" col badge badge-secondary align-middle my-2">نوشته های مرتبط</span></h3>
+                <select class="btn  btn-light font-weight-bolder  m-2" id="similarSelect">
+                    <option selected="" value="base">Please Select</option>
+                </select>
+                <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید"
+                    onclick="addsimilar(this)">
+            </div>
+            <div class="d-flex flex-row-reverse bg-secondary align-middle">
+                <div id='similarPostList' class="tab" onclick="removeSimilar(event)">
+                </div>
+            </div>
+            <div id='categories' class="d-flex flex-row-reverse bg-secondary align-middle">
+                <h3><span class=" col badge badge-secondary align-middle my-2">دسته بندی ها</span></h3>
+                <select class="btn  btn-light font-weight-bolder  m-2" id="categorySelect">
+                    <option selected="" value="base">Please Select</option>
+                </select>
+                <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید"
+                    onclick="addCategory(this)">
 
-</form>
+            </div>
+            <div class="d-flex flex-row-reverse bg-secondary align-middle">
+                <div id='categoryList' class="tab" onclick="removeCategory(event)">
+                </div>
+            </div>
+            <div class="d-flex flex-row-reverse  align-middle">
+                <input class="btn  btn-success font-weight-bolder  mt-4 mb-5"
+                    value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" />
+            </div>
+
+        </form>
 
 
-<!-- Initialize Quill editor -->
-<script>
 
-    var quill = new Quill("#editor", {
-        modules: {
-            imageResize: {
-                displaySize: true,
-            },
-            syntax: true,
-            toolbar: {
-                container: [
-                    ["bold", "italic", "underline", "strike"], // toggled buttons
-                    ["blockquote", "code-block"],
-                    [{ header: 1 }, { header: 2 }], // custom button values
-                    [{ list: "ordered" }, { list: "bullet" }],
-                    [{ script: "sub" }, { script: "super" }], // superscript/subscript
-                    [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-                    [{ direction: "rtl" }], // text direction
-                    [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                    ["link", "image", "video", "formula"],
-                    [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-                    [{ font: [] }],
-                    [{ align: [] }],
-                ],
-                handlers: { image: imageHandler, video: videoHandler },
-            },
-        },
-        theme: "snow",
-    });
+        <!-- Initialize Quill editor -->
+        <script>
 
-    $('form input').keydown(function (e) {
-        if (e.keyCode == 13) {
-            if (e.target.name === 'country') {
+            var quill = new Quill("#editor", {
+                modules: {
+                    imageResize: {
+                        displaySize: true,
+                    },
+                    syntax: true,
+                    toolbar: {
+                        container: [
+                            ["bold", "italic", "underline", "strike"], // toggled buttons
+                            ["blockquote", "code-block"],
+                            [{ header: 1 }, { header: 2 }], // custom button values
+                            [{ list: "ordered" }, { list: "bullet" }],
+                            [{ script: "sub" }, { script: "super" }], // superscript/subscript
+                            [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+                            [{ direction: "rtl" }], // text direction
+                            [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            ["link", "image", "video", "formula"],
+                            [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+                            [{ font: [] }],
+                            [{ align: [] }],
+                        ],
+                        handlers: { image: imageHandler, video: videoHandler },
+                    },
+                },
+                theme: "snow",
+            });
+
+            $('form input').keydown(function (e) {
+                if (e.keyCode == 13) {
+                    if (e.target.name === 'country') {
+                        $('input[name="country"]').amsifySuggestags();
+                    }
+                    if (e.target.name === 'simPosts') { }
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            if ('<%= oldInput.postPath %>') {
+                $.ajax({
+                    type: 'GET', url: '/admin/postData'
+                    , success: function (result) {
+                        const title = "<%= oldInput.title %>"
+                        let editPost;
+                        for (let post of result) { if (post.postName === title) { editPost = post } }
+                        const deltaString = JSON.parse(editPost.deltaContent)
+                        quill.setContents(deltaString, 'api');
+                    }
+                })
+            }
+
+            function addsimilar(e, val) {
+                if (val) {
+                    const exEl = document.createElement('input');
+                    exEl.className = 'btn  btn-info font-weight-bolder  m-2';
+                    exEl.type = 'button';
+                    exEl.value = document.getElementById('similarSelect').value;
+                    document.getElementById('similarPostList').insertAdjacentElement('beforeend', exEl);
+                    return;
+                }
+                const items = [];
+                [...e.parentElement.nextElementSibling.children[0].children].forEach(p => { items.push(p.value) })
+                if (items.includes(document.getElementById('similarSelect').value) || document.getElementById('similarSelect').value === 'base') {
+                    return
+                }
+                const el = document.createElement('input')
+                el.className = 'btn  btn-info font-weight-bolder  m-2'
+                el.type = 'button'
+                el.value = document.getElementById('similarSelect').value
+                document.getElementById('similarPostList').insertAdjacentElement('beforeend', el)
+            }
+
+            function removeSimilar(e) {
+                e.target.parentElement.removeChild(e.target)
+
+            }
+
+            function similarPostGetter() {
+                const similarValues = []
+                document.getElementById('similarPostList').children.forEach(p => { similarValues.push(p.value) })
+                return similarValues
+            }
+
+
+            function addCategory(e) {
+                const items = [];
+                [...e.parentElement.nextElementSibling.children[0].children].forEach(p => { items.push(p.value) })
+                if (items.includes(document.getElementById('categorySelect').value) || document.getElementById('categorySelect').value === 'base') {
+                    return
+                }
+                const el = document.createElement('input')
+                el.className = 'btn  btn-info font-weight-bolder  m-2'
+                el.type = 'button'
+                el.value = document.getElementById('categorySelect').value
+                document.getElementById('categoryList').insertAdjacentElement('beforeend', el)
+            }
+
+            function removeCategory(e) {
+                e.target.parentElement.removeChild(e.target)
+            }
+
+            function categoryGetter() {
+                const categoryValues = []
+                document.getElementById('categoryList').children.forEach(p => { categoryValues.push(p.value) })
+                return categoryValues
+            }
+
+
+            $(document).ready(function () {
                 $('input[name="country"]').amsifySuggestags();
-            }
-            if (e.target.name === 'simPosts') { }
-            e.preventDefault();
-            return false;
-        }
-    });
 
-    if ('<%= oldInput.postPath %>') {
-        $.ajax({
-            type: 'GET', url: '/admin/postData'
-            , success: function (result) {
-                const title = "<%= oldInput.title %>"
-                let editPost;
-                for (let post of result) { if (post.postName === title) { editPost = post } }
-                const deltaString = JSON.parse(editPost.deltaContent)
-                quill.setContents(deltaString, 'api');
-            }
-        })
-    }
+                const similarExitingVal = "<%= oldInput.similarPost %>"
 
-    function addsimilar(e, val) {
-        if (val) {
-            const exEl = document.createElement('input');
-            exEl.className = 'btn  btn-info font-weight-bolder  m-2';
-            exEl.type = 'button';
-            exEl.value = document.getElementById('similarSelect').value;
-            document.getElementById('similarPostList').insertAdjacentElement('beforeend', exEl);
-            return;
-        }
-        const items = [];
-        [...e.parentElement.nextElementSibling.children[0].children].forEach(p => { items.push(p.value) })
-        if (items.includes(document.getElementById('similarSelect').value) || document.getElementById('similarSelect').value === 'base') {
-            return
-        }
-        const el = document.createElement('input')
-        el.className = 'btn  btn-info font-weight-bolder  m-2'
-        el.type = 'button'
-        el.value = document.getElementById('similarSelect').value
-        document.getElementById('similarPostList').insertAdjacentElement('beforeend', el)
-    }
+                fetch('/admin/postData', { method: 'GET', headers: {} })
+                    .then(response => { return response.json() })
+                    .then(data => {
+                        data.forEach(p => {
+                            // for filter allrady selected post
+                            if ("<%= update %>") {
+                                if (p.id == '<%= postId %>') { return }
+                            }
 
-    function removeSimilar(e) {
-        e.target.parentElement.removeChild(e.target)
+                            const el = document.createElement('option')
+                            el.value = p.postName;
+                            el.innerText = p.postName
+                            document.getElementById('similarSelect').insertAdjacentElement('beforeend', el)
+                        });
+                    })
 
-    }
-
-    function similarPostGetter() {
-        const similarValues = []
-        document.getElementById('similarPostList').children.forEach(p => { similarValues.push(p.value) })
-        return similarValues
-    }
-
-
-    function addCategory(e) {
-        const items = [];
-        [...e.parentElement.nextElementSibling.children[0].children].forEach(p => { items.push(p.value) })
-        if (items.includes(document.getElementById('categorySelect').value) || document.getElementById('categorySelect').value === 'base') {
-            return
-        }
-        const el = document.createElement('input')
-        el.className = 'btn  btn-info font-weight-bolder  m-2'
-        el.type = 'button'
-        el.value = document.getElementById('categorySelect').value
-        document.getElementById('categoryList').insertAdjacentElement('beforeend', el)
-    }
-
-    function removeCategory(e) {
-        e.target.parentElement.removeChild(e.target)
-    }
-
-    function categoryGetter() {
-        const categoryValues = []
-        document.getElementById('categoryList').children.forEach(p => { categoryValues.push(p.value) })
-        return categoryValues
-    }
-
-
-    $(document).ready(function () {
-        $('input[name="country"]').amsifySuggestags();
-         
-        const similarExitingVal = "<%= oldInput.similarPost %>"
-        console.log(similarExitingVal)
-
-        fetch('/admin/postData', { method: 'GET', headers: {} })
-            .then(response => { return response.json() })
-            .then(data => {
-                data.forEach(p => {
-                    const el = document.createElement('option')
-                    el.value = p.postName;
-                    el.innerText = p.postName
-                    document.getElementById('similarSelect').insertAdjacentElement('beforeend', el)
-                });
+                fetch('/admin/categoryData', { method: 'GET', headers: {} })
+                    .then(response => { return response.json() })
+                    .then(data => {
+                        data.forEach(p => {
+                            const el = document.createElement('option')
+                            el.value = p.title;
+                            el.innerText = p.title
+                            document.getElementById('categorySelect').insertAdjacentElement('beforeend', el)
+                        });
+                    })
             })
 
-        fetch('/admin/categoryData', { method: 'GET', headers: {} })
-            .then(response => { return response.json() })
-            .then(data => {
-                data.forEach(p => {
-                    const el = document.createElement('option')
-                    el.value = p.title;
-                    el.innerText = p.title
-                    document.getElementById('categorySelect').insertAdjacentElement('beforeend', el)
+
+            function imageHandler() {
+                var range = this.quill.getSelection();
+                $("#galleryModal").modal("show");
+            }
+            function videoHandler() {
+                var range = this.quill.getSelection();
+                $("#galleryModal").modal("show");
+            }
+
+            //send post to backend
+            $("form").submit(function (e) {
+                e.preventDefault();
+                const htmlContent = quill.root.innerHTML;
+                const deltaContent = JSON.stringify(quill.getContents());
+                const title = document.getElementById('title').value;
+                const tags = document.getElementById('tags').value;
+                const update = '<%= update %>';
+                var postId;
+                if (update === 'true') {
+                    postId = document.getElementById('postId').value;
+                } else if (update === 'false') { postId = null }
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/addPost",
+                    data: {
+                        htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags,
+                        similarPost: similarPostGetter(), category: categoryGetter(), postId: postId
+                    },
+                    success: function (result) {
+                        window.location.replace("/admin/posts");
+                    },
+                    error: function (result) {
+                        if (update === 'true') {
+                            window.location.replace("/admin/updatePost");
+                        } else {
+                            console.log(result)
+                            window.location.replace("/admin/addPost");
+                        }
+                    },
                 });
-            })
-    })
-
-
-    function imageHandler() {
-        var range = this.quill.getSelection();
-        $("#galleryModal").modal("show");
-    }
-    function videoHandler() {
-        var range = this.quill.getSelection();
-        $("#galleryModal").modal("show");
-    }
-
-    //send post to backend
-    $("form").submit(function (e) {
-        const htmlContent = quill.root.innerHTML;
-        const deltaContent = JSON.stringify(quill.getContents());
-        const title = document.getElementById('title').value;
-        const tags = document.getElementById('tags').value;
-        $.ajax({
-            type: "POST",
-            url: "/admin/addPost",
-            data: {
-                htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags,
-                similarPost: similarPostGetter(), category: categoryGetter()
-            },
-            success: function (result) {
-                window.location.replace("/admin/posts");
-            },
-            error: function (result) {
-                window.location.replace("/admin/updatePost");
-            },
-        });
-        e.preventDefault();
-    });
-</script>
+            });
+        </script>
