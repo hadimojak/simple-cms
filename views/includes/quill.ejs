@@ -22,7 +22,7 @@
     <input id='postId' type="hidden" value="<%= postId %>">
     <% } %>
 
-        <form class="container" id="saveData" action="#" method="post">
+        <form class="container " id="saveData" action="#" method="post">
 
             <input class="form-control px-5 mx-0" placeholder="عنوان" dir="rtl" id="title"
                 value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />
@@ -40,7 +40,7 @@
                 <select class="btn  btn-light font-weight-bolder  m-2" id="similarSelect">
                     <option selected="" value="base">Please Select</option>
                 </select>
-                <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید"
+                <input class="btn  btn-success font-weight-bolder  m-2 " type="button" value="افزودن"
                     onclick="addsimilar(this)">
             </div>
             <div class="d-flex flex-row-reverse bg-secondary align-middle">
@@ -52,7 +52,7 @@
                 <select class="btn  btn-light font-weight-bolder  m-2" id="categorySelect">
                     <option selected="" value="base">Please Select</option>
                 </select>
-                <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="تایید"
+                <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="افزودن"
                     onclick="addCategory(this)">
 
             </div>
@@ -60,9 +60,17 @@
                 <div id='categoryList' class="tab" onclick="removeCategory(event)">
                 </div>
             </div>
-            <div class="d-flex flex-row-reverse  align-middle">
-                <input class="btn  btn-success font-weight-bolder  mt-4 mb-5"
+            <div class="d-flex justify-content-around  flex-row-reverse  align-items-center">
+                <input class=" col-2 btn  btn-success font-weight-bolder align-items-center "
                     value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" />
+                <div class="col-6 card m-3 p-0 d-flex justify-content-around align-items-center align-items-center">
+                    <img class="mt-2 card-img-top " style="height: 250px;width: 400px;border:5px solid slategrey" src="/pictures/avatar.png"
+                        alt="Card image cap">
+                    <div class="card-body p-0">
+                        <h5 class="card-title m-1 ">تصویر شاخص</h5>
+                        <a href="#" class="btn btn-info mb-1">Go somewhere</a>
+                    </div>
+                </div>
             </div>
 
         </form>
@@ -151,7 +159,6 @@
 
             function removeSimilar(e) {
                 e.target.parentElement.removeChild(e.target)
-
             }
 
             function similarPostGetter() {
@@ -189,15 +196,34 @@
                 $('input[name="country"]').amsifySuggestags();
 
                 const similarExitingVal = "<%= oldInput.similarPost %>"
+                const categoryTitle = "<%= oldInput.categoryTitle %>"
+                if (similarExitingVal) {
+                    similarExitingVal.split(',').forEach(p => {
+                        const el = document.createElement('input')
+                        el.className = 'btn  btn-info font-weight-bolder  m-2'
+                        el.type = 'button'
+                        el.value = p
+                        document.getElementById('similarPostList').insertAdjacentElement('beforeend', el)
+                    })
+                }
+                if (categoryTitle) {
+                    categoryTitle.split(',').forEach(p => {
+                        const el = document.createElement('input')
+                        el.className = 'btn  btn-info font-weight-bolder  m-2'
+                        el.type = 'button'
+                        el.value = p
+                        document.getElementById('categoryList').insertAdjacentElement('beforeend', el)
+                    })
+                }
+
 
                 fetch('/admin/postData', { method: 'GET', headers: {} })
                     .then(response => { return response.json() })
                     .then(data => {
                         data.forEach(p => {
-                            console.log(p)
                             // for filter allrady selected post
                             if ("<%= update %>") {
-                                if (p.id == '<%= postId %>') { return }
+                                if (p.post.id == '<%= postId %>') { return }
                             }
                             const el = document.createElement('option')
                             el.value = p.post.postName;
@@ -256,7 +282,6 @@
                         if (update === 'true') {
                             window.location.replace("/admin/updatePost");
                         } else {
-                            console.log(result)
                             window.location.replace("/admin/addPost");
                         }
                     },

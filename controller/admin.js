@@ -577,11 +577,11 @@ exports.postAddPost = async (req, res, next) => {
             }
         );
 
-        const similarArr = [];
         const similarPosts = await Post.findByPk(postId, { include: [{ model: Post, as: 'similar' }] });
-        // post.addSimilar(3);
-        similarPosts.similar.forEach(t => { similarArr.push(t.dataValues.id); });
-        similarArr.forEach(async t => { await post.removeSimilar(t); });
+        similarPosts.similar.forEach(async t => {
+            if (similarPostArr.includes(t.dataValues.postName)) { return; }
+            await post.removeSimilar(t.dataValues.id);
+        });
         similarPostArr.forEach(p => {
             Post.findOne({ where: { postName: p } })
                 .then(data => {
@@ -590,26 +590,29 @@ exports.postAddPost = async (req, res, next) => {
         });
 
 
-
-        const catsArr = [];
         const postCategories = await Post.findByPk(postId, { include: [{ model: Category }] });
-        postCategories.Categories.forEach(t => { catsArr.push(t.dataValues.id); });
-        catsArr.forEach(async t => { await post.removeCategory(t); });
-        category.forEach(p => {
-            Category.findOne({ where: { title: p } })
-                .then(category => {
-                    if (category) { post.addCategory(category.dataValues.id); }
+        await postCategories.Categories.forEach(async t => {
+            if (category.includes(t.dataValues.title)) { return; }
+            await post.removeCategory(t.dataValues.id);
+        });
+        await category.forEach(async p => {
+            await Category.findOne({ where: { title: p } })
+                .then(async category => {
+                    if (category) {
+                        post.addCategory(category.dataValues.id);
+                    }
                     else {
-                        Category.create({ title: p })
+                        await Category.create({ title: p })
                             .then(category => { post.addCategory(category.dataValues.id); });
                     }
                 });
         });
 
-        const tagsArr = [];
         const postTags = await Post.findByPk(postId, { include: [{ model: Tag }] });
-        postTags.Tags.forEach(t => { tagsArr.push(t.dataValues.id); });
-        tagsArr.forEach(async t => { await post.removeTag(t); });
+        postTags.Tags.forEach(async t => {
+            if (tags.includes(t.dataValues.title)) { return; }
+            await post.removeTag(t.dataValues.id);
+        });
         tags.forEach(p => {
             Tag.findOne({ where: { title: p } })
                 .then(tag => {
@@ -681,30 +684,39 @@ exports.getEditPost = (req, res, next) => {
                 myPost.post = post.dataValues;
                 const tags = [];
                 post.dataValues.Tags.forEach(t => {
-                    tags.push(t.dataValues.title);
+                    const tagObj = new Object();
+                    tagObj.id = t.dataValues.id;
+                    tagObj.title = t.dataValues.title;
+                    tags.push(tagObj);
                 });
                 myPost.tag = tags;
                 const categories = [];
                 post.dataValues.Categories.forEach(j => {
-                    categories.push(j.dataValues.title);
+                    const catObj = new Object();
+                    catObj.id = j.dataValues.id;
+                    catObj.title = j.dataValues.title;
+                    categories.push(catObj);
                 });
                 myPost.category = categories;
                 const similars = [];
                 post.dataValues.similar.forEach(k => {
-                    similars.push(k.dataValues.postName);
+                    const postObj = new Object();
+                    postObj.id = k.dataValues.id;
+                    postObj.postName = k.dataValues.postName;
+                    similars.push(postObj);
                 });
-                myPost.simlar = similars;
-                console.log(myPost);
+                myPost.similar = similars;
+
 
                 res.render("admin/updatePost", {
                     pageTitle: "ویرایش",
                     path: "/post",
                     update: true,
                     oldInput: {
-                        title: post.dataValues.postName, postPath: post.dataValues.path,
-                        tags: post.dataValues.tags,
-                        similarPost: post.dataValues.similarPost,
-                        CategoryTitle: post.dataValues.CategoryTitle,
+                        title: myPost.post.postName, postPath: myPost.post.path,
+                        tags: myPost.tag.map(p => { return p.title; }),
+                        similarPost: myPost.similar.map(p => { return p.postName; }),
+                        categoryTitle: myPost.category.map(p => { return p.title; }),
                     }, isAuhtenticated: req.session.isLoggedIn,
                     userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
                     avatar: user.dataValues.avatar, postId: postId
