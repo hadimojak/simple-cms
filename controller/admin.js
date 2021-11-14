@@ -503,29 +503,14 @@ exports.postsApi = (req, res, next) => {
             myPost.simlar = similars;
             postArr.push(myPost);
         });
-        // console.log(postArr);
         return postArr;
 
     }).then(data => { res.json(postArr); });
 
-    // const postArray = [];
-    // Post.findAll({ include: [{ model: Tag }, { model: Category }, { model: Post, as: 'similar' }] })
-    //     .then((posts) => {
-    //         return posts.forEach((post) => {
-    //             console.log(post.dataValues);
-    //             postArray.push(post.dataValues);
-    //         });
-    //     })
-    //     .then((data) => {
-    //         res.json(postArray);
-    //     })
-    //     .catch((err) => {
-    //         console.log(err);
-    //     });
+
 };
 exports.getPosts = (req, res, next) => {
     User.findByPk(req.session.user.id).then(user => {
-
         res.render("admin/allPosts", {
             pageTitle: "نوشته ها", path: "/post", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
             avatar: user.dataValues.avatar, isAprover: req.session.user.isAprover
@@ -551,8 +536,7 @@ exports.postAddPost = async (req, res, next) => {
     const tags = req.body.tags ? req.body.tags.split(',') : [];
     const category = req.body.category ? req.body.category : [];
     const similarPostArr = req.body.similarPost ? req.body.similarPost : [];
-    console.log(category);
-    console.log(similarPostArr);
+
 
     const userId = req.session.user.id;
     const title = req.body.title;
@@ -691,9 +675,27 @@ exports.postAddPost = async (req, res, next) => {
 exports.getEditPost = (req, res, next) => {
     User.findByPk(req.session.user.id).then(user => {
         const postId = req.params.postId;
-        Post.findOne({ where: { id: postId } })
+        Post.findByPk(postId, { include: [{ model: Tag }, { model: Category }, { model: Post, as: 'similar' }] })
             .then((post) => {
-                console.log('aaaaaaaaaaaaa',post)
+                const myPost = new Object();
+                myPost.post = post.dataValues;
+                const tags = [];
+                post.dataValues.Tags.forEach(t => {
+                    tags.push(t.dataValues.title);
+                });
+                myPost.tag = tags;
+                const categories = [];
+                post.dataValues.Categories.forEach(j => {
+                    categories.push(j.dataValues.title);
+                });
+                myPost.category = categories;
+                const similars = [];
+                post.dataValues.similar.forEach(k => {
+                    similars.push(k.dataValues.postName);
+                });
+                myPost.simlar = similars;
+                console.log(myPost);
+
                 res.render("admin/updatePost", {
                     pageTitle: "ویرایش",
                     path: "/post",
