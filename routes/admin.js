@@ -13,8 +13,8 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads/media');
     }, filename: function (req, file, cb) {
-        let fileName = req.body.fileName
-        if(!req.body.fileName){fileName=req.params.fileName}
+        let fileName = req.body.fileName;
+        if (!req.body.fileName) { fileName = Date.now(); }
         if (file.mimetype === 'application/octet-stream') {
             return cb(null, fileName + '.rar');
         }
@@ -68,10 +68,10 @@ router.delete('/admin/delete/user/:id', isAdmin, isAuth, adminController.deleteU
 
 // file
 router.get("/admin/storage", isAuth, adminController.getAllFiles);
-router.post('/admin/uploadFile/:fileName', isAuth, [multer({
+router.post('/admin/uploadFile', isAuth, [multer({
     storage: storage,
     fileFilter: function (req, file, callback) {
-        if (!req.body.fileName) {return callback(null, true); }
+        if (!req.body.fileName) { return callback(null, true); }
         Media.findOne({ where: { fileName: req.body.fileName } })
             .then(data => {
                 if (data) {

@@ -70,7 +70,6 @@
                     <div class="card-body p-0">
                         <h5 class="card-title m-1 text-center">تصویر شاخص</h5>
                         <input type="file" name="file" id="file" onchange="loadFile(event)">
-                        <input type='text' name='fileName' id='fileName' dir="rtl" placeholder="عنوان فایل">
                         <a class="btn btn-info mb-1" onclick="uploadImage(event)">بارگذاری</a>
                         <a class="btn btn-info mb-1" onclick="chooseImage(event)">انتخاب</a>
                         <div class='progress py-2 my-2' id="progressDivId">
@@ -269,16 +268,13 @@
 
             function chooseImage() {
                 $("#galleryModal").modal("show");
+                var toMainImage = true
 
             }
 
             function uploadImage(e) {
-                var imageInput = e.target.previousElementSibling.previousElementSibling
-                var fileName = e.target.previousElementSibling.value
-                if (fileName.trim() === '') {
-                    alert('عنوانی برای عکس انتخاب نکدره اید')
-                    return
-                }
+                var imageInput = e.target.previousElementSibling
+                console.log(imageInput)
                 if (!imageInput.files[0]) {
                     alert('عکسی انتخاب نکرده اید')
                     return
@@ -300,7 +296,7 @@
                 $.ajax({
                     type: 'post',
                     dataType: 'json',
-                    url: `/admin/uploadFile/${fileName}`,
+                    url: `/admin/uploadFile`,
                     enctype: 'multipart/form-data',
                     processData: false,
                     contentType: false,
