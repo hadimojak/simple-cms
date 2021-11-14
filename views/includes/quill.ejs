@@ -63,15 +63,16 @@
             <div class="d-flex justify-content-around  flex-row-reverse  align-items-center">
                 <input class=" col-2 btn  btn-success font-weight-bolder align-items-center "
                     value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" />
-                <div class="col-6 card m-3 p-0 d-flex justify-content-around align-items-center align-items-center">
+                <div class="col-9 card m-3 p-0 d-flex justify-content-around align-items-center">
                     <img id='output' class="mt-2 card-img-top rounded "
                         style="height: 250px;width: 400px;border:5px solid slategrey" src="/pictures/view.png"
                         alt="Card image cap">
                     <div class="card-body p-0">
                         <h5 class="card-title m-1 text-center">تصویر شاخص</h5>
                         <input type="file" name="file" id="file" onchange="loadFile(event)">
-
-                        <a class="btn btn-info mb-1" onclick="mainImage(this)">بروزرسانی</a>
+                        <input type='text' name='fileName' id='fileName' dir="rtl" placeholder="عنوان فایل">
+                        <a class="btn btn-info mb-1" onclick="uploadImage(event)">بارگذاری</a>
+                        <a class="btn btn-info mb-1" onclick="chooseImage(event)">انتخاب</a>
                         <div class='progress py-2 my-2' id="progressDivId">
                             <div class='progress-bar' id='progressBar'></div>
                             <div class='percent ' id='percent'>0%</div>
@@ -266,9 +267,32 @@
                 $("#galleryModal").modal("show");
             }
 
-            function mainImage(e) {
-                console.log(e.previousElementSibling.files[0].value)
-                const imageFile = e.previousElementSibling.files[0];
+            function chooseImage() {
+                $("#galleryModal").modal("show");
+
+            }
+
+            function uploadImage(e) {
+                var imageInput = e.target.previousElementSibling.previousElementSibling
+                var fileName = e.target.previousElementSibling.value
+                if (fileName.trim() === '') {
+                    alert('عنوانی برای عکس انتخاب نکدره اید')
+                    return
+                }
+                if (!imageInput.files[0]) {
+                    alert('عکسی انتخاب نکرده اید')
+                    return
+                }
+                const type = imageInput.files[0].type
+                if (type !== 'image/jpg' || type !== 'image/png' || type !== "image/jpeg"
+                    || type !== 'image/Jpeg') {
+
+                } else {
+                    alert('فقط فایل تصویری مجاز است')
+                    return
+                }
+                console.log(imageInput.files[0])
+                const imageFile = imageInput.files[0];
                 var data = new FormData()
                 data.append('file', imageFile)
 
@@ -276,25 +300,13 @@
                 $.ajax({
                     type: 'post',
                     dataType: 'json',
-                    url: '/admin/uploadFile',
+                    url: `/admin/uploadFile/${fileName}`,
                     enctype: 'multipart/form-data',
                     processData: false,
                     contentType: false,
                     data: data,
                     success: function (result) { console.log(result) }
                 })
-                // if (!$("#file").get(0).files[0]) {
-                //     alert('عکسی انتخاب نکرده اید')
-                //     return false
-                // }
-                // const type = $("#file").get(0).files[0].type
-                // if (type === 'image/jpg' || type === 'image/png' || type === "image/jpeg"
-                //     || type === 'image/Jpeg') {
-
-                // } else {
-                //     alert('فقط فایل تصویری مجاز است')
-                //     return false
-                // }
             }
 
             var loadFile = function (event) {
@@ -305,7 +317,6 @@
                     event.target.files[0].type === 'image/Jpeg') {
                     var file = event.target.files[0];
                     output.onload = function () {
-                        console.log(file)
                         URL.revokeObjectURL(file) // free memory
 
                     };

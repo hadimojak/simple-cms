@@ -1,24 +1,18 @@
 <%- include('../includes/head&side.ejs') %>
 
 
-  <section class="vh-100 gradient-custom px-5 mt-5 d-flex flex-column ">
-    <link rel="stylesheet" href="/assets/css/monokai-sublime.min.css">
-    <!-- Include stylesheet -->
-    <link href="/assets/css/quill.snow.css" rel="stylesheet">
-    <div class="modal fade" id="galleryModal">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content p-2">
-          <%- include('../includes/fileGallery.ejs') %>
+    <section class="vh-100 gradient-custom px-5 mt-5 d-flex flex-column ">
+        <link rel="stylesheet" href="/assets/css/monokai-sublime.min.css">
+        <!-- Include stylesheet -->
+        <link href="/assets/css/quill.snow.css" rel="stylesheet">
+        <div class="modal fade" id="galleryModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content p-2">
+                    <%- include('../includes/fileGallery.ejs') %>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
+        <%- include('../includes/quill.ejs') %>
+    </section>
 
-    <%- include('../includes/quill.ejs') %>
-
-     
-
-
-
-  </section>
-
-  <%- include('../includes/footer.ejs') %>
+    <%- include('../includes/footer.ejs') %>

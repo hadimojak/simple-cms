@@ -340,7 +340,6 @@ exports.getAllFiles = (req, res, next) => {
     });
 };
 exports.postUploadFile = (req, res, next) => {
-    console.log(req.file)
     const userId = req.session.user.id;
     const ext = path.extname(req.file.originalname);
     const options = { width: 128, height: 128 };

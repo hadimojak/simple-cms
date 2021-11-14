@@ -114,8 +114,8 @@
             })
             remove.prop('disabled', true)
         })
-        select.click(function () {
-
+        select.click(function (e) {
+            
             var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
                 const length = quill.getLength();
                 if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg' || row.ext === ".Jpeg") {
