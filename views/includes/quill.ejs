@@ -64,11 +64,18 @@
                 <input class=" col-2 btn  btn-success font-weight-bolder align-items-center "
                     value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" />
                 <div class="col-6 card m-3 p-0 d-flex justify-content-around align-items-center align-items-center">
-                    <img class="mt-2 card-img-top " style="height: 250px;width: 400px;border:5px solid slategrey" src="/pictures/avatar.png"
+                    <img id='output' class="mt-2 card-img-top rounded "
+                        style="height: 250px;width: 400px;border:5px solid slategrey" src="/pictures/view.png"
                         alt="Card image cap">
                     <div class="card-body p-0">
-                        <h5 class="card-title m-1 ">تصویر شاخص</h5>
-                        <a href="#" class="btn btn-info mb-1">Go somewhere</a>
+                        <h5 class="card-title m-1 text-center">تصویر شاخص</h5>
+                        <input type="file" name="file" id="file" onchange="loadFile(event)">
+
+                        <a class="btn btn-info mb-1" onclick="mainImage(this)">بروزرسانی</a>
+                        <div class='progress py-2 my-2' id="progressDivId">
+                            <div class='progress-bar' id='progressBar'></div>
+                            <div class='percent ' id='percent'>0%</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -79,6 +86,8 @@
 
         <!-- Initialize Quill editor -->
         <script>
+
+
 
             var quill = new Quill("#editor", {
                 modules: {
@@ -191,6 +200,9 @@
                 return categoryValues
             }
 
+            function mainImage(e) {
+                console.log(e.target)
+            }
 
             $(document).ready(function () {
                 $('input[name="country"]').amsifySuggestags();
@@ -252,6 +264,52 @@
             function videoHandler() {
                 var range = this.quill.getSelection();
                 $("#galleryModal").modal("show");
+            }
+
+            function mainImage(e) {
+                console.log(e.previousElementSibling.files[0].value)
+                const imageFile = e.previousElementSibling.files[0];
+                var data = new FormData()
+                data.append('file', imageFile)
+
+
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: '/admin/uploadFile',
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: false,
+                    data: data,
+                    success: function (result) { console.log(result) }
+                })
+                // if (!$("#file").get(0).files[0]) {
+                //     alert('عکسی انتخاب نکرده اید')
+                //     return false
+                // }
+                // const type = $("#file").get(0).files[0].type
+                // if (type === 'image/jpg' || type === 'image/png' || type === "image/jpeg"
+                //     || type === 'image/Jpeg') {
+
+                // } else {
+                //     alert('فقط فایل تصویری مجاز است')
+                //     return false
+                // }
+            }
+
+            var loadFile = function (event) {
+                var output = document.getElementById('output');
+                output.src = URL.createObjectURL(event.target.files[0]);
+
+                if (event.target.files[0].type === 'image/jpg' || event.target.files[0].type === 'image/png' || event.target.files[0].type === 'image/jpeg' ||
+                    event.target.files[0].type === 'image/Jpeg') {
+                    var file = event.target.files[0];
+                    output.onload = function () {
+                        console.log(file)
+                        URL.revokeObjectURL(file) // free memory
+
+                    };
+                }
             }
 
             //send post to backend

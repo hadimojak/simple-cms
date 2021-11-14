@@ -69,6 +69,7 @@ router.get("/admin/storage", isAuth, adminController.getAllFiles);
 router.post('/admin/uploadFile', isAuth, [multer({
     storage: storage,
     fileFilter: function (req, file, callback) {
+        console.log(file)
         Media.findOne({ where: { fileName: req.body.fileName } })
             .then(data => {
                 if (data) {
