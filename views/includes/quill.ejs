@@ -63,6 +63,7 @@
             <div class="d-flex justify-content-around  flex-row-reverse  align-items-center">
                 <input class=" col-2 btn  btn-success font-weight-bolder align-items-center "
                     value="<%= update === true ? 'ویرایش' : 'ذخیره' %>" type="submit" />
+
                 <div class="col-9 card m-3 p-0 d-flex justify-content-around align-items-center">
                     <img id='output' class="mt-2 card-img-top rounded "
                         style="height: 250px;width: 400px;border:5px solid slategrey" src="/pictures/view.png"
@@ -82,7 +83,7 @@
 
         </form>
 
-
+       
 
         <!-- Initialize Quill editor -->
         <script>
@@ -267,7 +268,7 @@
             }
 
             function chooseImage() {
-                $("#galleryModal").modal("show");
+                $("#miniModal").modal("show");
 
             }
 
@@ -300,7 +301,8 @@
                     processData: false,
                     contentType: false,
                     data: data,
-                    success: function (result) { console.log(result) }
+                    success: function (result) { console.log(result) },
+                    error: function (err) { console.log(err) }
                 })
             }
 
@@ -337,7 +339,7 @@
                     url: "/admin/addPost",
                     data: {
                         htmlContent: htmlContent, deltaContent: deltaContent, title: title, postPath: '<%= oldInput.postPath %>', tags: tags,
-                        similarPost: similarPostGetter(), category: categoryGetter(), postId: postId
+                        similarPost: similarPostGetter(), category: categoryGetter(), postId: postId, mainImage: output.src
                     },
                     success: function (result) {
                         window.location.replace("/admin/posts");

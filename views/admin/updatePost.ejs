@@ -5,6 +5,8 @@
         <link rel="stylesheet" href="/assets/css/monokai-sublime.min.css">
         <!-- Include stylesheet -->
         <link href="/assets/css/quill.snow.css" rel="stylesheet">
+
+        
         <div class="modal fade" id="galleryModal">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content pb-5">
@@ -13,6 +15,15 @@
             </div>
             <br>
         </div>
+        <div class="modal fade" id="miniModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content pb-5">
+                    <%- include('../includes/miniGallery.ejs') %>
+                </div>
+            </div>
+            <br>
+        </div>
+
         <%- include('../includes/quill.ejs') %>
     </section>
 

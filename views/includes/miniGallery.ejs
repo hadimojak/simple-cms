@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="/assets/css/bootstrap-table.min.css">
+<script src="/assets/js/bootstrap-table.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+
+<div class="container-fluid">
+
+
+    <div class="row">
+        <div class=" container-fluid">
+            <div id='miniGalleryToolbar'>
+                <button id='miniSelectFile' type="button" class="btn btn-success my-2 my-sm-0">انتخاب</button>
+            </div>
+            <table id="miniTable" data-toggle="table" data-flat="true" data-search="true" data-height='500'
+                data-single-select='true' data-click-to-select='true' data-toolbar="#miniGalleryToolbar"
+                data-url="http://localhost:3000/admin/storage/fileData">
+                <thead>
+                    <tr>
+                        <th data-field="fileName" data-sortable="true">نام</th>
+                        <th data-field="ext" data-sortable="true">نوع</th>
+                        <th data-field="thumb" data-sortable="true" data-formatter="imgFormatter">پیش نمایش</th>
+                        <th data-field="state" data-checkbox="true"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const selectMainImage = $('#miniSelectFile')
+    const miniTable = $('#miniTable')
+
+    $(function () {
+        table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+            selectMainImage.prop('disabled', !miniTable.bootstrapTable('getSelections').length)
+        })
+        selectMainImage.click(function (e) {
+            var ids = $.map(miniTable.bootstrapTable('getSelections'), function (row) {
+                if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg' || row.ext === ".Jpeg") {
+                    console.log(row.path)
+                    output.src = row.path;
+
+                }
+
+            })
+            $('#miniModal').modal('hide')
+        })
+    })
+</script>

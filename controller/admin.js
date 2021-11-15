@@ -376,7 +376,10 @@ exports.postUploadFile = (req, res, next) => {
         size: req.file.size / 1000,
         UserId: userId,
     }).then((file) => {
-        res.redirect("/admin/storage");
+        if (req.body.fileName) {
+            return res.redirect("/admin/storage");
+        }
+        res.status(200).json(req.file.destination.split(".")[1] + `/${req.file.filename}`);
     });
 };
 exports.deleteFile = (req, res, next) => {

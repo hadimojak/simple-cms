@@ -78,10 +78,6 @@ const Media = sequelize.define('Media', {
     modelName: "user"
 });
 
-
-
-
-
 const Menu = sequelize.define('Menu', {
 
     title: {
@@ -150,6 +146,12 @@ const Post = sequelize.define('Post', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    }, imageTitle: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    }, imagePath: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
