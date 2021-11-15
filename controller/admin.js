@@ -785,7 +785,17 @@ exports.postAddCategory = (req, res, next) => {
         res.json({ data: 'categury created' });
     }).catch(err => { console.log(err); });
 };
-exports.getEditCategory = (req, res, next) => { };
+exports.getEditCategory = (req, res, next) => {
+    User.findByPk(req.session.user.id).then(user => {
+
+        res.render('admin/updateCategory', {
+            path: '', pageTitle: 'دسته ها',
+            isAuhtenticated: req.session.isLoggedIn,
+            isAdmin: req.session.user.isAdmin,
+            isAprover: req.session.user.isAprover, avatar: user.dataValues.avatar, userId: req.session.user.id
+        });
+    });
+};
 exports.postEditCategory = (req, res, next) => { };
 exports.deleteCategory = (req, res, next) => {
     const catTitle = req.params.catTitle;

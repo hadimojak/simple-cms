@@ -25,8 +25,6 @@ const storage = multer.diskStorage({
     }
 });
 
-
-
 // users
 router.get('/admin', isAuth, adminController.getAdminHomePage);
 router.get('/admin/resetPassword/:userId', isAuth, adminController.getPassReset);
@@ -121,7 +119,7 @@ router.delete('/admin/delete/post/:postName', isAdmin, isAuth, adminController.d
 router.get('/admin/categoryData', isAuth, adminController.apiCategory);
 router.get('/admin/addCategory', isAuth, adminController.getCategory);
 router.post('/admin/addCategory', isAuth, adminController.postAddCategory);
-router.get('/admin/updateCategory', isAuth, adminController.getEditCategory);
+router.get('/admin/updateCategory/:categoryId', isAuth, adminController.getEditCategory);
 router.post('/admin/updateCategory', isAuth, adminController.postEditCategory);
 router.delete('/admin/deleteCategory/:catTitle', isAuth, adminController.deleteCategory);
 

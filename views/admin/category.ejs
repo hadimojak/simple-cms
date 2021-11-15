@@ -13,11 +13,11 @@
                     <div id="galleryToolbar">
                         <% if(isAdmin){ %>
                             <button id='deletePost' type="button" class="btn btn-danger mx-1 ">حذف</button>
-                           
+
                             <% } %>
                                 <% if(isAdmin || isAprover){ %>
-                                    <button id='createCat' type="button" class="btn btn-success mx-1" data-toggle="modal"
-                                    data-target="#myModal">ساخت دسته</button>
+                                    <button id='createCat' type="button" class="btn btn-success mx-1"
+                                        data-toggle="modal" data-target="#myModal">ساخت دسته</button>
                                     <% } %>
                                         <button id='posts' type="button" class="btn btn-success mx-1 "
                                             onclick="window.location.href='/admin/posts'">نوشته ها</button>
@@ -75,8 +75,10 @@
                         data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/categoryData">
                         <thead>
                             <tr>
+                                <th data-field="id" data-sortable="true">id</th>
                                 <th data-field="title" data-sortable="true">عنوان</th>
                                 <th data-field="path" data-formatter="editRow">ویراش</th>
+
                                 <th data-field="state" data-checkbox="true"></th>
                             </tr>
                         </thead>
@@ -89,8 +91,9 @@
 
 
             function editRow(value, row, index) {
+                console.log(row.id)
                 return [
-                    `<button id='editPost' onclick="editPost(this)" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
+                    `<button id='editPost' onclick="editPost(${row.id})" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
                 ].join('');
             }
 
@@ -103,9 +106,9 @@
                 table.bootstrapTable('refresh')
             })
 
-            function editPost(e) {
-                const postName = e.parentElement.parentElement.firstChild.innerText
-                window.location.href = `/admin/updateCategory/${postName}`
+            function editPost(catId) {
+               
+                window.location.href = `/admin/updateCategory/${catId}`
             }
 
 
