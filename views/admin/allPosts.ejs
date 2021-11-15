@@ -12,7 +12,8 @@
 
                     <div id="galleryToolbar">
                         <% if(isAdmin){ %>
-                            <button id='deletePost' type="button" class="btn btn-danger mx-1 ">حذف</button>
+                            <button id='deletePost' type="button" class="btn btn-danger mx-1 "
+                                onclick="confirmDelete()">حذف</button>
 
                             <% } %>
                                 <% if(isAdmin || isAprover){ %>
@@ -26,15 +27,17 @@
                                         <button id='createPost' type="button" class="btn btn-success mx-1 "
                                             onclick="window.location.href='/admin/addPost'">ساخت نوشته</button>
                     </div>
-                    <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500' data-click-to-select='true'
-                        data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/postData">
+                    <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
+                        data-click-to-select='true' data-toolbar="#galleryToolbar"
+                        data-url="http://localhost:3000/admin/postData">
                         <thead>
                             <tr>
                                 <th data-field="post.postName" data-sortable="true">نام</th>
                                 <th data-field="post.createdAt" data-sortable="true">زمان ساخت</th>
                                 <th data-field="category" data-sortable="true">دسته</th>
-                                <th data-field="tag" data-sortable="true">تگ</th>
                                 <th data-field="simlar" data-sortable="true">مرتبط</th>
+                                <th data-field="imagePath" data-sortable="true" data-formatter="imgFormatter">تصویر شاخص
+                                </th>
                                 <th data-field="path" data-formatter="editRow">ویراش</th>
                                 <th data-field="post.aproved" data-formatter="aproveRow">تایید</th>
                                 <th data-field="state" data-checkbox="true"></th>
@@ -44,8 +47,30 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id='deleteConfirm'>
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-right">از حذف کردن اطمینان دارید ؟</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id='delete'>تایید</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script>
 
+            function imgFormatter(val, row) {
+                return `<img width="48" hegiht="48" src="${row.post.imagePath}" alt="${row.post.imagePath}" />`;
+            }
             function editRow(value, row, index) {
                 return [
                     `<button id='editPost' onclick="editPost(${row.post.id})" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
@@ -62,7 +87,7 @@
                                             </p>`}
             }
 
-            const remove = $('#deletePost')
+            const remove = $('#delete')
             const table = $('#table')
             const aprove = $('#aprovePost')
             const deAprove = $('#deAprovePost')
@@ -72,7 +97,12 @@
                 window.location.href = `/admin/updatePost/${postId}`
             }
 
+            function confirmDelete() {
+                if (table.bootstrapTable('getSelections').length) {
+                    $("#deleteConfirm").modal("show");
+                }
 
+            }
 
             $(function () {
                 table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
@@ -96,18 +126,16 @@
 
                 aprove.click(function () {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
-                        console.log(row)
                         $.ajax({
                             type: 'POST',
                             url: `/admin/posts/aprovePost/${row.post.postName}`,
                             success: function (result) { window.location.replace('/admin/posts') }
                         })
                     })
-                    table.bootstrapTable('refresh')
                     aprove.prop('disabled', true)
 
                 })
-                remove.click(function () {
+                remove.click(function (cb) {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
                         fetch(`/admin/delete/post/${row.post.postName}`, {
                             method: "DELETE",
@@ -119,6 +147,8 @@
                             })
                             .then((result) => {
                                 console.log(result)
+                                table.bootstrapTable('refresh')
+
                             })
                             .catch((err) => {
                                 console.log(err);
@@ -129,7 +159,11 @@
                         field: 'id',
                         values: ids
                     })
+
                     remove.prop('disabled', true)
+                    $("#deleteConfirm").modal("hide");
+
+
                 })
 
             })

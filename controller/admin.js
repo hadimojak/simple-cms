@@ -535,6 +535,7 @@ exports.getAddPost = (req, res, next) => {
 
 };
 exports.postAddPost = async (req, res, next) => {
+    const mainImage = req.body.mainImage ? req.body.mainImage : null;
     const postId = req.body.postId;
     const tags = req.body.tags ? req.body.tags.split(',') : [];
     const category = req.body.category ? req.body.category : [];
@@ -569,7 +570,7 @@ exports.postAddPost = async (req, res, next) => {
         );
         post.set({
             postName: title, deltaContent: deltaContent,
-            UserId: userId, path: "/uploads/posts/" + postTitle,
+            UserId: userId, path: "/uploads/posts/" + postTitle, imagePath: mainImage
         });
         await post.save();
         fs.writeFileSync(
@@ -633,7 +634,7 @@ exports.postAddPost = async (req, res, next) => {
         const createdPost = await Post.create({
             postName: title, deltaContent: deltaContent,
             path: "/uploads/posts/" + postTitle,
-            UserId: userId
+            UserId: userId, imagePath: mainImage
         });
         fs.writeFileSync(
             path.join(__dirname, "..", "uploads", "posts", postTitle),
@@ -746,7 +747,7 @@ exports.deletePost = (req, res, next) => {
         })
         .catch((err) => console.log(err));
     Post.destroy({ where: { postName: postName } }).then((post) => {
-        return res.json({ data: post + " is deleted" });
+        return res.json({ data: postName + " is deleted" });
     });
 };
 exports.aprovePost = (req, res, next) => {

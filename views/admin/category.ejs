@@ -50,14 +50,12 @@
                                                 alert("نام مناسب برای دسته انتخاب نکرده اید.");
                                                 return false;
                                             }
-                                            console.log('done')
 
                                             $.ajax({
                                                 url: '/admin/addCategory',
                                                 type: "POST",
                                                 data: { category: x },
                                                 success(data) {
-                                                    console.log(data)
                                                     table.bootstrapTable('refresh')
                                                 },
                                                 error() { }
@@ -120,7 +118,6 @@
 
                 remove.click(function () {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
-                        console.log(row)
                         fetch(`/admin/deleteCategory/${row.title}`, {
                             method: "DELETE",
                             headers: {

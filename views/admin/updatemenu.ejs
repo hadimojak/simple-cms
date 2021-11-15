@@ -153,7 +153,6 @@
                                 var str = editor.getString();
                                 if (str === '[]' || title.trim() === '') { return }
                                 let strArr = JSON.parse(str)
-                                // console.log(strArr)
                                 const navMenu = document.getElementById('navMenu')
                                 strArr.forEach(p => {
                                     if (!('children' in p)) {

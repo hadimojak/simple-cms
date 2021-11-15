@@ -45,7 +45,6 @@
                                             if (event.target.files[0].type === 'image/jpg' || event.target.files[0].type === 'image/png' || event.target.files[0].type === 'image/jpeg' ||
                                                 event.target.files[0].type === 'image/Jpeg') {
                                                 var file = event.target.files[0];
-                                                console.log(file)
                                                 var resize_width = 128;
                                                 var reader = new FileReader();
                                                 reader.readAsDataURL(file);
@@ -80,7 +79,6 @@
                                                         /*Now you can send "srcEncoded" to the server and
                                                         convert it to a png o jpg. Also can send
                                                         "el.target.name" that is the file's name.*/
-                                                        console.log(srcEncoded);
                                                         document.forms['avatarForm']['imageBase'].value = srcEncoded
                                                     }
                                                 }

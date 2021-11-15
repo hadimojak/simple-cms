@@ -38,9 +38,8 @@
         selectMainImage.click(function (e) {
             var ids = $.map(miniTable.bootstrapTable('getSelections'), function (row) {
                 if (row.ext === '.jpg' || row.ext === ".png" || row.ext === '.jpeg' || row.ext === ".Jpeg") {
-                    console.log(row.path)
                     output.src = row.path;
-
+                    mainImage = row.path
                 }
 
             })
