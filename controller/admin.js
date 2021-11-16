@@ -482,6 +482,11 @@ exports.getSettings = (req, res, next) => {
     });
 };
 
+exports.postSettings = (req, res, next) => {
+    console.log(req.body);
+    res.json('settings posted');
+};
+
 // admin posts
 exports.postsApi = (req, res, next) => {
     let postArr = [];

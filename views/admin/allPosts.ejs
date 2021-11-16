@@ -78,13 +78,13 @@
             }
             function aproveRow(value, row, index) {
                 if (value === false) {
-                    return ` <p class=' m-0 p-1 text-danger font-weight-bold border rounded border-danger
+                    return ` <small class=' m-0 text-danger font-weight-bold border rounded border-danger
                                             d-inline-flex bg-white'>تایید نشده
-                                            </p>`
+                                            </small>`
                 } else {
-                    return ` <p class=' m-0 p-1 text-success font-weight-bold border rounded border-success
+                    return ` <small class=' m-0 text-success font-weight-bold border rounded border-success
                                             d-inline-flex bg-white'>تایید شده
-                                            </p>`}
+                                            </small>`}
             }
 
             const remove = $('#delete')

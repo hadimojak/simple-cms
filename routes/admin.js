@@ -104,7 +104,7 @@ router.delete('/admin/delete/page/:menuId', isAdmin, isAuth, adminController.del
 
 //setting
 router.get('/admin/settings', isAdmin, isAuth, adminController.getSettings);
-router.post('/admin/settings', isAdmin, isAuth, adminController.getSettings);
+router.post('/admin/settings', isAdmin, isAuth, adminController.postSettings);
 
 //post
 router.get('/admin/posts', isAuth, adminController.getPosts);
