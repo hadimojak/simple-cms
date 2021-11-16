@@ -474,7 +474,7 @@ exports.deleteMenu = (req, res, next) => {
 exports.getSettings = (req, res, next) => {
     User.findByPk(req.session.user.id).then(user => {
 
-        res.render("admin/admin", {
+        res.render("admin/settings", {
             pageTitle: "تنظیمات", path: "/setting", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
             avatar: user.dataValues.avatar
         });

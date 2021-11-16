@@ -37,7 +37,6 @@
     "sequelize": "6.7.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.13",
-    "source-map-loader": "^1.0.0"
+    "nodemon": "^2.0.13"
   }
 }
