@@ -121,7 +121,7 @@ router.get('/admin/addCategory', isAuth, adminController.getCategory);
 router.post('/admin/addCategory', isAuth, adminController.postAddCategory);
 router.get('/admin/updateCategory/:categoryId', isAuth, adminController.getEditCategory);
 router.post('/admin/updateCategory', isAuth, adminController.postEditCategory);
-router.delete('/admin/deleteCategory/:catTitle', isAuth, adminController.deleteCategory);
+router.delete('/admin/deleteCategory/:categoryId', isAuth, adminController.deleteCategory);
 
 // page
 router.get('/admin/pages', isAuth, adminController.getPages);

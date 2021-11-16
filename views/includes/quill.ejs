@@ -22,7 +22,7 @@
     <input id='postId' type="hidden" value="<%= postId %>">
     <% } %>
 
-        <form class="container " id="saveData" action="#" method="post">
+        <form class="container " id="saveData" action="#" method="post" autocomplete="off">
 
             <input class="form-control px-5 mx-0" placeholder="عنوان" dir="rtl" id="title"
                 value="<%= oldInput.title  ? oldInput.title : '' %>" type="text" name="title" />

@@ -786,17 +786,25 @@ exports.postAddCategory = (req, res, next) => {
     }).catch(err => { console.log(err); });
 };
 exports.getEditCategory = (req, res, next) => {
+    const categoryId = req.params.categoryId;
     User.findByPk(req.session.user.id).then(user => {
-
-        res.render('admin/updateCategory', {
-            path: '', pageTitle: 'دسته ها',
-            isAuhtenticated: req.session.isLoggedIn,
-            isAdmin: req.session.user.isAdmin,
-            isAprover: req.session.user.isAprover, avatar: user.dataValues.avatar, userId: req.session.user.id
+        Category.findByPk(categoryId).then(cat => {
+            res.render('admin/updateCategory', {
+                path: '', pageTitle: 'دسته ها',
+                isAuhtenticated: req.session.isLoggedIn,
+                isAdmin: req.session.user.isAdmin,
+                isAprover: req.session.user.isAprover, avatar: user.dataValues.avatar,
+                userId: req.session.user.id,
+                oldInput: { catTitle: cat.dataValues.title, catId: cat.dataValues.id }
+            });
         });
+
     });
 };
-exports.postEditCategory = (req, res, next) => { };
+exports.postEditCategory = (req, res, next) => {
+    Category.update({ title: req.body.catTitle }, { where: { id: req.body.catId } });
+    res.redirect('/admin/addCategory');
+};
 exports.deleteCategory = (req, res, next) => {
     const catTitle = req.params.catTitle;
     Category.destroy({ where: { title: catTitle } }).then(category => {

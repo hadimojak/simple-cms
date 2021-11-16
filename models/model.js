@@ -146,9 +146,6 @@ const Post = sequelize.define('Post', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
-    }, imageTitle: {
-        type: DataTypes.STRING,
-        allowNull: true,
     }, imagePath: {
         type: DataTypes.STRING,
         allowNull: true
