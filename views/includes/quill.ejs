@@ -38,7 +38,7 @@
             <div id='similarPosts' class="d-flex flex-row-reverse bg-secondary align-middle">
                 <h3><span class=" col badge badge-secondary align-middle my-2">نوشته های مرتبط</span></h3>
                 <select class="btn  btn-light font-weight-bolder  m-2" id="similarSelect">
-                    <option selected="" value="base">Please Select</option>
+                    <option selected="" value="base">انتخاب کنید</option>
                 </select>
                 <input class="btn  btn-success font-weight-bolder  m-2 " type="button" value="افزودن"
                     onclick="addsimilar(this)">
@@ -50,7 +50,7 @@
             <div id='categories' class="d-flex flex-row-reverse bg-secondary align-middle">
                 <h3><span class=" col badge badge-secondary align-middle my-2">دسته بندی ها</span></h3>
                 <select class="btn  btn-light font-weight-bolder  m-2" id="categorySelect">
-                    <option selected="" value="base">Please Select</option>
+                    <option selected="" value="base">انتخاب کنید</option>
                 </select>
                 <input class="btn  btn-success font-weight-bolder  m-2" type="button" value="افزودن"
                     onclick="addCategory(this)">
@@ -231,27 +231,33 @@
                 fetch('/admin/postData', { method: 'GET', headers: {} })
                     .then(response => { return response.json() })
                     .then(data => {
-                        data.forEach(p => {
-                            // for filter allrady selected post
-                            if ("<%= update %>") {
-                                if (p.post.id == '<%= postId %>') { return }
-                            }
-                            const el = document.createElement('option')
-                            el.value = p.post.postName;
-                            el.innerText = p.post.postName;
-                            document.getElementById('similarSelect').insertAdjacentElement('beforeend', el)
-                        });
+                        if (data.length > 0) {
+                            data.forEach(p => {
+                                // for filter allrady selected post
+                                if ("<%= update %>") {
+                                    if (p.post.id == '<%= postId %>') { return }
+                                }
+                                const el = document.createElement('option')
+                                el.value = p.post.postName;
+                                el.innerText = p.post.postName;
+                                document.getElementById('similarSelect').insertAdjacentElement('beforeend', el)
+                            });
+                        }
+
                     })
 
                 fetch('/admin/categoryData', { method: 'GET', headers: {} })
                     .then(response => { return response.json() })
                     .then(data => {
-                        data.forEach(p => {
-                            const el = document.createElement('option')
-                            el.value = p.title;
-                            el.innerText = p.title
-                            document.getElementById('categorySelect').insertAdjacentElement('beforeend', el)
-                        });
+                        if (data.length > 0) {
+                            data.forEach(p => {
+                                const el = document.createElement('option')
+                                el.value = p.title;
+                                el.innerText = p.title
+                                document.getElementById('categorySelect').insertAdjacentElement('beforeend', el)
+                            });
+                        }
+
                     })
             })
 

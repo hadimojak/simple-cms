@@ -481,7 +481,6 @@ exports.getSettings = (req, res, next) => {
 
     });
 };
-
 exports.postSettings = (req, res, next) => {
     console.log(req.body);
     res.json('settings posted');
@@ -520,7 +519,9 @@ exports.postsApi = (req, res, next) => {
 exports.getPosts = (req, res, next) => {
     User.findByPk(req.session.user.id).then(user => {
         res.render("admin/allPosts", {
-            pageTitle: "نوشته ها", path: "/post", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
+            pageTitle: "نوشته ها",
+             path: "/post", isAuhtenticated: req.session.isLoggedIn,
+              userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
             avatar: user.dataValues.avatar, isAprover: req.session.user.isAprover
         });
 
@@ -532,7 +533,9 @@ exports.getAddPost = (req, res, next) => {
             pageTitle: "نوشته جدید",
             path: "/post",
             update: false,
-            oldInput: "", isAuhtenticated: req.session.isLoggedIn, userId: req.session.user.id, isAdmin: req.session.user.isAdmin, avatar: user.dataValues.avatar,
+            oldInput: "", isAuhtenticated: req.session.isLoggedIn, 
+            userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
+             avatar: user.dataValues.avatar,
             postId: null
         });
 
