@@ -1,6 +1,3 @@
-
-
-
 const { sequelize, DataTypes, Sequelize } = require('../sequelize');
 
 const User = sequelize.define('User', {

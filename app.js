@@ -15,13 +15,25 @@ const homeRoutes = require('./routes/home');
 const installRoutes = require('./routes/installer');
 
 const store = new SequelizeStore({
-    db: sequelize
+    db: sequelize,
+    checkExpirationInterval: 5 * 60 * 1000, // The interval at which to cleanup expired sessions in milliseconds.
+    expiration: 2 * 60 * 60 * 1000
 });
 
 process.setMaxListeners(50);
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+app.use(function (req, res, next) {
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
+    next();
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 app.use('/uploads', express.static('uploads'));
@@ -44,13 +56,13 @@ app.use(homeRoutes);
 
 sequelize.sync({ alter: false }).then(async data => {
 
-     app.listen(3000, () => {
+    app.listen(3000, () => {
         console.log('Listening on port: ', 3000);
     }).on('error', (e) => {
         throw new Error(e.message);
     });
 }).then(async data => {
-    
+
     console.log('db connected');
     await User.findAll({ where: { isAdmin: true } })
         .then(async user => {

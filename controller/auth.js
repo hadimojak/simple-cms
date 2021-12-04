@@ -1,8 +1,6 @@
 const { validationResult } = require("express-validator");
 const { User } = require("../models/Model");
 const bcrypt = require("bcryptjs");
-const { ValidationError, Op } = require("sequelize");
-const { sequelize } = require("../sequelize");
 const _ = require('lodash');
 
 
@@ -24,7 +22,6 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-
   const phoneNumber = req.body.phoneNumber;
   const password = req.body.password;
   const errors = validationResult(req);
