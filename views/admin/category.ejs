@@ -12,7 +12,7 @@
 
                     <div id="galleryToolbar">
                         <% if(isAdmin){ %>
-                            <button id='deletePost' type="button" class="btn btn-danger mx-1 ">حذف</button>
+                            <button id='deleteCategory' type="button" class="btn btn-danger mx-1 ">حذف</button>
 
                             <% } %>
                                 <% if(isAdmin || isAprover){ %>
@@ -43,8 +43,8 @@
                                             <select class="btn btn-secondary btn-sm font-weight-bolder  "
                                                 id="categorySelect">
                                                 <option selected="" value="base">بدون دسته بندی</option>
+                                                <option value="main">دسته مادر</option>
                                             </select>
-                                            <label>دسته مادر</label>
                                             <input dir="rtl" type='submit' class='btn btn-sm btn-success ' value='ایجاد'
                                                 id='btn_upload'>
                                         </div>
@@ -53,17 +53,16 @@
                                     <script>
                                         function validateForm(e) {
                                             e.preventDefault();
-
+                                            let selectedCat = document.getElementById('categorySelect').value;
                                             let x = document.forms["addCategory"]["catTitle"].value;
                                             if (x == "" || x.includes('.')) {
                                                 alert("نام مناسب برای دسته انتخاب نکرده اید.");
                                                 return false;
                                             }
-
                                             $.ajax({
                                                 url: '/admin/addCategory',
                                                 type: "POST",
-                                                data: { category: x },
+                                                data: { category: x ,subCat:selectedCat},
                                                 success(data) {
                                                     table.bootstrapTable('refresh')
                                                 },
@@ -81,13 +80,13 @@
                     </div>
 
                     <table id="table" data-toggle="table" data-flat="true" data-search="true" data-height='500'
-                        data-toolbar="#galleryToolbar" data-url="http://localhost:3000/admin/categoryData">
+                        data-click-to-select="true" data-toolbar="#galleryToolbar"
+                        data-url="http://localhost:3000/admin/categoryData">
                         <thead>
                             <tr>
                                 <th data-field="id" data-sortable="true">id</th>
                                 <th data-field="title" data-sortable="true">عنوان</th>
                                 <th data-field="path" data-formatter="editRow">ویراش</th>
-
                                 <th data-field="state" data-checkbox="true"></th>
                             </tr>
                         </thead>
@@ -101,7 +100,6 @@
                 fetch('/admin/categoryData', { method: 'GET', headers: {} })
                     .then(response => { return response.json() })
                     .then(data => {
-                        console.log(data)
                         if (data.length > 0) {
                             data.forEach(p => {
                                 const el = document.createElement('option')
@@ -121,7 +119,7 @@
                     `<button id='editPost' onclick="editPost(${row.id})" type="button" class="btn btn-info m-0 p-1">ویرایش</button>`
                 ].join('');
             }
-            const remove = $('#deletePost')
+            const remove = $('#deleteCategory')
             const table = $('#table')
             const refresh = $('#refresh')
             refresh.click(function () {
@@ -138,7 +136,7 @@
 
                 remove.click(function () {
                     var ids = $.map(table.bootstrapTable('getSelections'), function (row) {
-                        fetch(`/admin/deleteCategory/${row.title}`, {
+                        fetch(`/admin/deleteCategory/${row.id}`, {
                             method: "DELETE",
                             headers: {
                             },
@@ -147,7 +145,6 @@
                                 return response.json();
                             })
                             .then((result) => {
-                                console.log(result)
                                 table.bootstrapTable('refresh')
 
                             })

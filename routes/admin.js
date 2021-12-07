@@ -117,7 +117,7 @@ router.get('/admin/updatePost/:postId', isAuth, adminController.getEditPost);
 router.delete('/admin/delete/post/:postName', isAdmin, isAuth, adminController.deletePost);
 
 //category
-router.get('/admin/categoryData',isAuth, adminController.apiCategory);
+router.get('/admin/categoryData', adminController.apiCategory);
 router.get('/admin/addCategory', isAuth, adminController.getCategory);
 router.post('/admin/addCategory', isAuth, adminController.postAddCategory);
 router.get('/admin/updateCategory/:categoryId', isAuth, adminController.getEditCategory);

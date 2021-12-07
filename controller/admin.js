@@ -520,8 +520,8 @@ exports.getPosts = (req, res, next) => {
     User.findByPk(req.session.user.id).then(user => {
         res.render("admin/allPosts", {
             pageTitle: "نوشته ها",
-             path: "/post", isAuhtenticated: req.session.isLoggedIn,
-              userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
+            path: "/post", isAuhtenticated: req.session.isLoggedIn,
+            userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
             avatar: user.dataValues.avatar, isAprover: req.session.user.isAprover
         });
 
@@ -533,9 +533,9 @@ exports.getAddPost = (req, res, next) => {
             pageTitle: "نوشته جدید",
             path: "/post",
             update: false,
-            oldInput: "", isAuhtenticated: req.session.isLoggedIn, 
+            oldInput: "", isAuhtenticated: req.session.isLoggedIn,
             userId: req.session.user.id, isAdmin: req.session.user.isAdmin,
-             avatar: user.dataValues.avatar,
+            avatar: user.dataValues.avatar,
             postId: null
         });
 
@@ -789,6 +789,7 @@ exports.getCategory = (req, res, next) => {
     });
 };
 exports.postAddCategory = (req, res, next) => {
+    console.log(req.body);
     Category.create({ title: req.body.category }).then(data => {
         res.json({ data: 'categury created' });
     }).catch(err => { console.log(err); });
@@ -814,8 +815,8 @@ exports.postEditCategory = (req, res, next) => {
     res.redirect('/admin/addCategory');
 };
 exports.deleteCategory = (req, res, next) => {
-    const catTitle = req.params.catTitle;
-    Category.destroy({ where: { title: catTitle } }).then(category => {
+    const categoryId = req.params.categoryId;
+    Category.destroy({ where: { id: categoryId } }).then(category => {
         return res.json({ data: catTitle + 'is deleted' });
     });
 };
